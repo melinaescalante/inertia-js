@@ -9,9 +9,12 @@ Route::get('/', function () {
 Route::get('/chat', function () {
     return inertia::render('ChatView');
 });
-Route::get('/descubrimiento', function () {
+Route::get('/descubrir', function () {
     return inertia::render('DiscoverView');
 });
 Route::get('/perfil', function () {
     return inertia::render('ProfileView');
+});
+Route::get('/miseries', function () {
+    return inertia::render('SeriesView');
 });
