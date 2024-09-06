@@ -8,7 +8,7 @@
     @vite('resources/css/app.css')
     @inertiaHead
   </head>
-  <body>
+  <body class=" font-sans font max-w-xl mx-auto">
     @inertia
   </body>
 </html>
