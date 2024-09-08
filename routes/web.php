@@ -10,11 +10,11 @@ Route::get('/', function () {
 Route::get('/chat', function () {
     return inertia::render('ChatView');
 });
-Route::get('/descubrir', function () {
+Route::get('', function () {
     return inertia::render('DiscoverView');
 });
 
-Route::get('/serie/{name}', [SearchSerieController::class, 'getSerieByName'])->name('View');
+Route::get('/descubrir', [SearchSerieController::class, 'getSerieByName'])->name('SearchView');
 
 Route::get('/perfil', function () {
     return inertia::render('ProfileView');
