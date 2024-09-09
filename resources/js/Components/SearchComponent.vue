@@ -4,16 +4,13 @@ import { ref } from 'vue'; // Ref para manejar el estado del input
 const router= useRouter()
 const form = ref(''); // Modelo para el campo de búsqueda
 
-// function submit() {
-  
-// //     router.get(`/serie/${form.value}`);
-//     router.replace(`/serie/${form.value}`)
+// function async input(form) {
 
 // }
 </script>
 
 <template>
-  <form @input="submit" class="max-w-2xl m-4 mb-5 mt-5" action="SearchView" method="get">   
+  <form @input="" class="max-w-2xl m-4 mb-5 mt-5" action="#" method="get">   
     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
       Busca tu serie
     </label>

@@ -2,23 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\SearchSerieController;
+use App\Http\Controllers\SerieController;
 
-Route::get('/', function () {
-    return inertia::render('HomeView');
-});
-Route::get('/chat', function () {
-    return inertia::render('ChatView');
-});
-Route::get('', function () {
-    return inertia::render('DiscoverView');
-});
 
-Route::get('/descubrir', [SearchSerieController::class, 'getSerieByName'])->name('SearchView');
+Route::get('/', [\App\Http\Controllers\AppController::class,"home"])
+->name('home');
 
-Route::get('/perfil', function () {
-    return inertia::render('ProfileView');
-});
-Route::get('/miseries', function () {
-    return inertia::render('SeriesView');
-});
+Route::get('/chat', [\App\Http\Controllers\AppController::class,"chat"])
+->name('chat');
+
+Route::get('/perfil', [\App\Http\Controllers\AppController::class,"profile"])
+->name('profile');
+
+Route::get('/misSeries', [\App\Http\Controllers\AppController::class,"mySeries"])
+->name('mySeries');
+
+Route::get('/descubrir', [\App\Http\Controllers\AppController::class,"discover"])
+->name('discover');
+
+Route::get('/buscador/{name}', [SerieController::class,"getSerie"])
+->name('search');
+Route::get('/buscador', [SerieController::class,"buscador"]);
