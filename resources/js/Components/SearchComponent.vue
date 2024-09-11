@@ -59,21 +59,9 @@ watch(formInput, async (newQuestion, oldQuestion) => {
     loading.value = true
     answer.value = 'Buscando series...'
     Inertia.visit('/buscador',{ name: newQuestion});
-  //   try {
-  //     // Hacer una solicitud al controlador de Laravel
-  //     const res = await fetch(`/buscador?name=${newQuestion}`)
-  //     if (res.ok) {
-  //       const data = await res.json()
-  //       answer.value = data.series
-  //       console.log(data)
-  //     } else {
-  //       throw new Error('Error en la solicitud.')
+  
       }
-  //   } catch (error) {
-  //     answer.value = 'Error! Could not reach the API. '
-  //   }
-
-  // }
+ 
 })
 
 </script>
