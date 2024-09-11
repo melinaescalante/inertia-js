@@ -9,23 +9,51 @@ use Illuminate\Http\Request;
 class SerieController extends Controller
 {
 
-    public function getSerie($name)
+    // public function getSerie(Request $name)
+    // {
+    //     $response = Http::get("https://api.tvmaze.com/search/shows?q={$name}");
+
+    //     if (!$response) {
+    //         return response()->json([]); // Si no hay término de búsqueda, devuelve un array vacío
+    //     }
+    //     if ($response->successful()) {
+
+    //         $series = $response->json();
+
+    //         return response()->json($series);
+    //         // return Inertia::render('Pages/ViewSearch', [
+    //         //     'series' => $series
+    //         // ]);
+
+
+    //     }
+
+    // }
+    public function index(Request $request)
     {
-        $response = Http::get("https://api.tvmaze.com/search/shows?q={$name}");
-        if ($response->successful()) {
-     
-            $series = $response->json();
-            dd($series);
 
-            return Inertia::render('Pages/SeriesView', [
-                'series' => $series
+            if ($request->has('name') && $request->name) {
+                $response = Http::get("https://api.tvmaze.com/search/shows?q={$request->name}");
+    
+                if ($response->successful()) {
+                    return response()->json([
+                        'series' => $response->json()
+                    ]);
+                }
+            
+    
+        } else {
+            // Renderiza la vista para solicitudes no AJAX
+            return Inertia::render('Pages/ViewSearch', [
+                'series' => []
             ]);
-
         }
-
     }
+    
+
+
     public function buscador()
-    {        
-        return Inertia::render('SeriesView');
+    {
+        return Inertia::render('ViewSearch');
     }
 }

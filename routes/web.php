@@ -20,6 +20,6 @@ Route::get('/misSeries', [\App\Http\Controllers\AppController::class,"mySeries"]
 Route::get('/descubrir', [\App\Http\Controllers\AppController::class,"discover"])
 ->name('discover');
 
-Route::get('/buscador/{name}', [SerieController::class,"getSerie"])
-->name('search');
-Route::get('/buscador', [SerieController::class,"buscador"]);
+// Route::get('/buscador/{name}', [SerieController::class,"getSerie"]);
+
+Route::get('/buscador', [SerieController::class, 'buscador'])->name('search.index');

@@ -3,15 +3,39 @@ import { Link } from '@inertiajs/vue3'
 </script>
 <template>
     <nav class="flex justify-between items-center p-4 bg-slate-200 text-slate-800">
-        <Link to="/" class="text-xl">Red Social</Link>
+        <Link href="/" class="text-xl">Red Social</Link>
 
-        <ul class="flex gap-4 items-center">
-           
+        <ul class="flex items-center">
 
             <li>
-                <Link class="block py-1 px-2" href="/chat">Chat</Link>
+                <Link data-tooltip-target="tooltip-search" href="/buscador"
+                    class="block px-4 rounded-s-full dark:hover:fill-gray-800 group m-auto">
+
+                <svg class="w-7 h-6  text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+                    aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" >
+                    
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C11.8487 18 13.551 17.3729 14.9056 16.3199L20.2929 21.7071C20.6834 22.0976 21.3166 22.0976 21.7071 21.7071C22.0976 21.3166 22.0976 20.6834 21.7071 20.2929L16.3199 14.9056C17.3729 13.551 18 11.8487 18 10C18 5.58172 14.4183 2 10 2Z"
+                        />
+                </svg>
+                <span class="sr-only">Buscador</span>
+                </Link>
             </li>
-            
+
+            <li>
+                <Link data-tooltip-target="tooltip-chat" href="/chat"
+                    class="block px-3 rounded-s-full dark:hover:fill-gray-800 group m-auto">
+
+
+                <svg class="w-6 h-6  text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 rotate-[270]"
+                    aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  >
+                    <path
+                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z" />
+                </svg>
+                <span class="sr-only">Chat</span>
+                </Link>
+            </li>
+
         </ul>
     </nav>
     <div
@@ -35,10 +59,8 @@ import { Link } from '@inertiajs/vue3'
             <Link href="/descubrir" data-tooltip-target="tooltip-wallet"
                 class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
             <svg class="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
-            fill="#6b7280"
-            color="state-"
-                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1"
-                viewBox="0 0 511.995 511.995" xml:space="preserve">
+                fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                version="1.1" id="Layer_1" viewBox="0 0 511.995 511.995" xml:space="preserve">
                 <g>
                     <g>
                         <g>
@@ -78,7 +100,7 @@ import { Link } from '@inertiajs/vue3'
                     </g>
                 </g>
             </svg>
-          
+
             <span class="sr-only">Descubrir</span>
             </Link>
             <div id="tooltip-wallet" role="tooltip"
@@ -87,7 +109,7 @@ import { Link } from '@inertiajs/vue3'
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
             <div class="flex items-center justify-center">
-                <Link  data-tooltip-target="tooltip-new"
+                <Link href="#" data-tooltip-target="tooltip-new"
                     class="inline-flex items-center justify-center w-10 h-10 font-medium bg-blue-600 rounded-full hover:bg-blue-700 group focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
                 <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 18 18">
@@ -104,16 +126,18 @@ import { Link } from '@inertiajs/vue3'
             </div>
             <Link href="/misSeries" data-tooltip-target="tooltip-settings"
                 class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
-            <svg class="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
-                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <svg class="w-7 h-7 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+                aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M3 17V9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 12.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M4 19v-2.25m6-13.5V1m0 2.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM16 19v-2" />
+                    d="M12 7h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h7zm0 0L8 3m4 4 4-4" />
             </svg>
-            <span class="sr-only">Settings</span>
+
+            <span class="sr-only">Mis Series</span>
             </Link>
             <div id="tooltip-settings" role="tooltip"
                 class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                Settings
+                Mis Series
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
             <Link href="/perfil" data-tooltip-target="tooltip-profile"

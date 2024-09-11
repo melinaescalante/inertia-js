@@ -9,14 +9,10 @@ let serie = ref([]);
 
 onMounted(async () => {
     try {
-        const response = await fetch('https://api.tvmaze.com/search/shows?q=all');
+        const response = await fetch('https://api.tvmaze.com/search/shows?q=alll');
         const json = await response.json();
         console.log(json);
-        serie.value = json
-        console.log(serie.value);
-        for (const se of serie.value) {
-            console.log(se.show)
-        }
+        serie.value = json 
     } catch (error) {
         console.error('Error fetching posts:', error.message);
         
