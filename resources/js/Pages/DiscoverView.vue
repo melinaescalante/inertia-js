@@ -18,18 +18,28 @@ onMounted(async () => {
         
     }
 })
+defineProps({genres:Array})
 </script>
 <template>
     <NavBar></NavBar>
     <SearchComponent></SearchComponent>
-    <DiscoverFeature v-for="series in serie"
-    :titleSerie="series.show.name"
-    :dateSerie="series.show.premiered"
-    :synopsis="series.show.summary"
-    :cover="series.show.image"
-    :text="series.show.schedule.time"
-    >
+    <section v-for="genre in [,,,]"  class="flex  flex-col ">
+        <div>
 
-    </DiscoverFeature>
+            <p class="m-3 mt-4 ms-5 font-medium">Segun tus generos favoritos:</p>
+        </div>
+        <div  class="flex overflow-x-auto scroll overflow-scroll ">
+
+            <DiscoverFeature class="" v-for="series in serie"
+            :titleSerie="series.show.name"
+            :dateSerie="series.show.premiered"
+            :synopsis="series.show.summary"
+            :cover="series.show.image"
+            :text="series.show.schedule.time"
+            >
+            
+        </DiscoverFeature>
+    </div>
+    </section>
 
 </template>

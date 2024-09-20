@@ -1,69 +1,90 @@
-<!-- 
-<script setup>
-import { ref } from 'vue';
-
-const formInput = ref(''); // El término de búsqueda que ingresa el usuario
-const results = ref([]); // Los resultados de la búsqueda
-
-const searchSeries = async () => {
-  if (formInput.value.length > 3) { // Solo realizar la búsqueda si hay más de 3 caracteres
-    try {
-      // Llamar directamente a la API de TVMaze con fetch
-      const response = await fetch(`/buscador/${formInput.value}`);
-      if (response.ok) {
-        const data = await response.json();
-        results.value = data;
-        console.log(data)
-      } else {
-        console.error('NO HAY RESULTADOS');
+<!-- <script>
+export default {
+  props: {
+    series: {
+      type: Array,
+      default: () => []
+    },
+  },
+  data() {
+    return {
+      formInput: '',
+      answer: '',
+      loading: false
+    };
+  },
+  watch: {
+    formInput(value) {
+      if (value.length >= 2) {
+        this.getAnswer(value);
       }
-    } catch (error) {
-      console.error('Error en la solicitud a la API externa', error);
     }
-  } else {
-    results.value = []; // Limpiar resultados si no hay más de 3 caracteres
+  },
+methods: {
+  async getAnswer(value) {
+    this.loading = true;
+
+    try {
+      this.$inertia.replace(`/buscador?name=${value}`, {
+        onFinish: () => {
+          this.loading = false; // Esto asegurará que el estado loading se actualice cuando la llamada termine
+        }
+      });
+    } catch (error) {
+      console.error('Error al buscar series:', error);
+      this.loading = false; // Asegurarte de que el estado loading cambie incluso si hay un error
+    }
   }
-};
+}
+
+}
 </script> -->
 <script setup>
-import { ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { Inertia } from '@inertiajs/inertia';
+import { ref, watch, onMounted } from 'vue'
+import { usePage, router } from '@inertiajs/vue3' 
 
-const formInput = ref('');
-const answer = ref('');
-const router = useRouter()
-const results = ref([]);
+const { props } = usePage()
+const seriesArray =ref([])
 
-// const searchSeries = async () => {
-//   if (formInput.value.length > 3) {
-//     try {
-//       console.log(formInput.value)
-//       // $inertia.replace(this.route('notes.index', {q:value}))
-//       Inertia.get('search',formInput.value)
-
-//     } catch (error) {
-//       console.error('Error en la solicitud', error);
-//     }
-//   } else {
-
-//   }
-// };
-const question = ref('')
-
+const formInput = ref('')
+const response = ref('')
 const loading = ref(false)
+const series = ref([]) 
 
-// watch works directly on a ref
-watch(formInput, async (newQuestion, oldQuestion) => {
-  if (newQuestion.length > 3) {
-    loading.value = true
-    answer.value = 'Buscando series...'
-    Inertia.visit('/buscador',{ name: newQuestion});
-  
-      }
- 
+onMounted(() => {
+  series.value = seriesArray.value || []
+  seriesArray.value= props.seriesArray
+  console.log(props.seriesArray)
+
 })
 
+watch(formInput, (newValue) => {
+  if (newValue.length % 2 == 0) {
+    getAnswer(newValue)
+  }
+})
+
+const getAnswer = async (value) => {
+  loading.value = true
+  response.value = "Buscando series"
+
+  try {
+    response.value = "Buscando series.."
+    router.replace(`/buscador?name=${value}`, {
+      onFinish: () => {
+        seriesArray.value = props.seriesArray 
+        series.value = seriesArray.value || []
+        loading.value = false
+        response.value = series.value.length ? '' : "No se encontraron series"
+        console.log(props.seriesArray)
+      }
+    })
+  } catch (error) {
+    response.value = "Error al buscar series"
+    console.error('Error al buscar series:', error)
+    loading.value = false
+  }
+}
 </script>
 
 <template>
@@ -88,5 +109,10 @@ watch(formInput, async (newQuestion, oldQuestion) => {
       </button>
     </div>
   </form>
-  <h2>{{ answer }}</h2>
+  <div v-if="loading">{{ response }}</div>
+  <div v-else-if="series.length == 0">{{response}}</div>
+  <ul v-if="!loading && series.length">
+    <li v-for="show in series">{{ show.name }}</li>
+  </ul>
+
 </template>

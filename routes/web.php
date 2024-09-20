@@ -1,25 +1,27 @@
 <?php
 
+use App\Http\Controllers\AppController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\SerieController;
 
 
-Route::get('/', [\App\Http\Controllers\AppController::class,"home"])
+Route::get('/', [AppController::class,"home"])
 ->name('home');
 
-Route::get('/chat', [\App\Http\Controllers\AppController::class,"chat"])
+Route::get('/chat', [AppController::class,"chat"])
 ->name('chat');
 
-Route::get('/perfil', [\App\Http\Controllers\AppController::class,"profile"])
+Route::get('/perfil', [AppController::class,"profile"])
 ->name('profile');
 
-Route::get('/misSeries', [\App\Http\Controllers\AppController::class,"mySeries"])
+Route::get('/misSeries', [AppController::class,"mySeries"])
 ->name('mySeries');
 
-Route::get('/descubrir', [\App\Http\Controllers\AppController::class,"discover"])
+Route::get('/descubrir', [AppController::class,"discover"])
 ->name('discover');
 
-// Route::get('/buscador/{name}', [SerieController::class,"getSerie"]);
 
-Route::get('/buscador', [SerieController::class, 'buscador'])->name('search.index');
+Route::get('/buscador', [SerieController::class, 'buscador']);
+
+Route::get('/subirPublicacion', [AppController::class,"uploadPost"]);

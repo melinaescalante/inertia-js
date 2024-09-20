@@ -28,4 +28,8 @@ class AppController extends Controller
     {
         return Inertia::render('SeriesView');
     }
+    public function uploadPost()
+    {
+        return Inertia::render('UploadPostView');
+    }
 }

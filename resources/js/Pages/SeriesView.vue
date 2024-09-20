@@ -3,7 +3,7 @@ import NavBar from '../components/NavBar.vue'
 </script>
 <template>
 <NavBar></NavBar>
-<!-- <h1>Pagina de mis series</h1> -->
-<SearchComponent></SearchComponent>
+<h1 class="text-2xl m-4">Pagina de mis series</h1>
+<!-- <SearchComponent></SearchComponent> -->
  
 </template>
