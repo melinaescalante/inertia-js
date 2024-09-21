@@ -9,6 +9,7 @@ class AppController extends Controller
 {
     public function home()
     {
+        
         return Inertia::render('HomeView');
     }
 
@@ -31,5 +32,15 @@ class AppController extends Controller
     public function uploadPost()
     {
         return Inertia::render('UploadPostView');
+    }
+    public function uploadPostProcess(Request $request)
+    {
+        $request->validate(
+            [
+                'serie' => 'required',
+                
+            ],
+            ['serie.required' => 'Debes ingresar una serie para que los demás sepan de cuál hablas.'],
+        );
     }
 }

@@ -1,8 +1,9 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import { db, storage } from '../../services/firebase'
-import { collection, addDoc, getDocs, onSnapshot } from 'firebase/firestore'
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { uploadPost, uploadPhoto } from '../../services/posts'
+import { collection, addDoc, getDocs, onSnapshot, serverTimestamp } from 'firebase/firestore'
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 import { ref } from 'vue';
 
@@ -15,45 +16,28 @@ const newPost = ref({
 })
 async function handlePost() {
   let imageURL
-  if (imageInput!==null) {
-    imageURL = await uploadPhoto();  
+  if (imageInput !== null) {
+    imageURL = await uploadPhoto(newPost.value.image);
+  } else {
+    imageURL = null
   }
-  const postRef = collection(db, 'posts-public')
-  addDoc(postRef, {
-    text: newPost.value.text,
-    serie: newPost.value.serie,
-    image: newPost.value.image ? imageURL : null,
-    date: new Date().toLocaleString('es-AR', {
-      timeZone: 'America/Argentina/Buenos_Aires'
-    })
-  });
-
+  newPost.value.image=imageURL
+  newPost.value.date = new Date().toLocaleString('es-AR', {
+    timeZone: 'America/Argentina/Buenos_Aires'
+  })
+  uploadPost({ ...newPost.value })
   newPost.value.text = '';
   newPost.value.serie = '';
   newPost.value.image = null;
-
   if (imageInput.value) {
-    imageInput.value = '';
+    imageInput.value.value = '';
   }
 }
 function handleImageChange(e) {
   const file = e.target.files[0];
   newPost.value.image = file;
 }
-async function uploadPhoto() {
-  const fileInput = newPost.value.image
-    try {
-      const storageRefe = storageRef(storage, `posts/${fileInput.name}`);
-      await uploadBytes(storageRefe, fileInput);
-      // Obtén la URL de descarga
-      const downloadURL = await getDownloadURL(storageRefe);
-      // Agrega la URL y los datos asociados a la colección 'fotos' en Firestore
-      return downloadURL
-    } catch (error) {
-      console.error('Error al subir la imagen:', error);
-    }
-  
-}
+
 </script>
 <template>
   <nav class="flex justify-between items-center p-4 bg-slate-200 text-slate-800">

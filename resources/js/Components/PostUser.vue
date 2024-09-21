@@ -24,7 +24,7 @@ export default {
             <div class="flex flex-col mx-2">
                 
                 <a href="#" class="text-[1.04rem] font-medium  ">Name</a>
-                <a href="#" class="decoration-none text-slate-900   ">Serie</a>
+                <a href="#" class="decoration-none text-blue-500   ">{{serie}}</a>
             </div>
         </div>
         <div class="my-3">

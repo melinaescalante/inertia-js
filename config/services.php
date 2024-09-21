@@ -34,5 +34,15 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    
+ 'firebase' =>[
+    'apiKey'=> "AIzaSyCz_KoXd3WP5QIRj3sK7ctg3z0-ZbLPrWo",
+    'authDomain'=> "tvon-escalante.firebaseapp.com",
+    'projectId'=> "tvon-escalante",
+    'storageBucket'=> "tvon-escalante.appspot.com",
+    'messagingSenderId'=> "233458040213",
+    'appId'=> "1:233458040213:web:b7b5b2cc4a71e030904a9c",
+    'measurementId'=> "G-SSVE9QJHRY"
+ ],
 
 ];
