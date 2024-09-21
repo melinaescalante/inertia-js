@@ -1,15 +1,15 @@
-import { db, storage} from './firebase'
-import { collection, addDoc, onSnapshot, serverTimestamp } from 'firebase/firestore'
+import { db, storage } from './firebase'
+import { collection, addDoc, onSnapshot, serverTimestamp,query, orderBy } from 'firebase/firestore'
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
-export async function uploadPost({text,serie,image, date}){
-    const postRef = collection(db, 'posts-public')
-    await addDoc(postRef, {
-        text,
-        serie,
-        image,
-        date,
-        created_at: serverTimestamp()
-      });
+export async function uploadPost({ text, serie, image, date }) {
+  const postRef = collection(db, 'posts-public')
+  await addDoc(postRef, {
+    text,
+    serie,
+    image,
+    date,
+    created_at: serverTimestamp()
+  });
 }
 export async function uploadPhoto(image) {
   // const fileInput = image
@@ -23,4 +23,21 @@ export async function uploadPhoto(image) {
   } catch (error) {
     console.error('Error al subir la imagen:', error);
   }
+}
+export async function readPosts(callback) {
+  const postsRef = collection(db, 'posts-public')
+  const postQuery = query(postsRef, orderBy("created_at"));
+  // const snapshot = await getDocs(postsRef)
+  onSnapshot(postQuery, snapshot => {
+    const posts = snapshot.docs.map(doc => {
+      return {
+        id: doc.id,
+        serie: doc.data().serie,
+        text: doc.data().text,
+        image: doc.data().image,
+        date: doc.data().date
+      }
+    })
+    callback(posts)
+  })
 }

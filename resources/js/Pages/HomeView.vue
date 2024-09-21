@@ -1,19 +1,11 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
 import PostUser from '../components/PostUser.vue'
-import { db } from '../../services/firebase'
-import { collection, addDoc, getDocs , onSnapshot} from 'firebase/firestore'
 import { onMounted, ref } from 'vue';
+import { readPosts } from '../../services/posts';
 const posts = ref([])
 onMounted(async () => {
-  const postsRef = collection(db, 'posts-public')
-  // const snapshot = await getDocs(postsRef)
-  onSnapshot(postsRef, snapshot=>{
-    posts.value = snapshot.docs.map(doc => {
-      return { id: doc.id, serie: doc.data().serie, text: doc.data().text, image: doc.data().image , date: doc.data().date}
-    })
-
-  })
+  readPosts(newPosts => posts.value = newPosts)
 })
 </script>
 <template>
@@ -27,7 +19,7 @@ onMounted(async () => {
     :imgAlt="post.image"
     :serie="post.serie"
     :date="post.date"
-    >{{ console.log(posts.value) }}</PostUser>
+    ></PostUser>
   </section>
 
 </template>
