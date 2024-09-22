@@ -28,11 +28,11 @@ public function buscador(Request $request)
     if ($request->has('name')) {
         // echo $request->has('name');
         $seriesArray = $this->getSeriesByName($request->input('name'));
-        var_dump($seriesArray);
+        // var_dump($seriesArray);
     }
 
     return Inertia::render('ViewSearch', [
-        'seriesArray' => $seriesArray
+        'series' => $seriesArray
     ]);
 }
 

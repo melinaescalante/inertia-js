@@ -15,6 +15,12 @@ Route::get('/chat', [AppController::class,"chat"])
 Route::get('/perfil', [AppController::class,"profile"])
 ->name('profile');
 
+Route::get('/ingresar', [AppController::class,"login"])
+->name('login');
+
+Route::get('/registrarme', [AppController::class,"signUp"])
+->name('signUp');
+
 Route::get('/misSeries', [AppController::class,"mySeries"])
 ->name('mySeries');
 

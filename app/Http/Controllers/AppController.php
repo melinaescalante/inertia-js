@@ -25,6 +25,12 @@ class AppController extends Controller
     public function profile()
     {        return Inertia::render('ProfileView');
     }
+    public function login()
+    {        return Inertia::render('LoginView');
+    }
+    public function signUp()
+    {        return Inertia::render('SignUpView');
+    }
     public function mySeries()
     {
         return Inertia::render('SeriesView');

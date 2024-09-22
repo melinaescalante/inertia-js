@@ -7,6 +7,7 @@ const posts = ref([])
 onMounted(async () => {
   readPosts(newPosts => posts.value = newPosts)
 })
+
 </script>
 <template>
   <NavBar></NavBar>
