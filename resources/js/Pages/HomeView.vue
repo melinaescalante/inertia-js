@@ -6,6 +6,7 @@ import { readPosts } from '../../services/posts';
 const posts = ref([])
 onMounted(async () => {
   readPosts(newPosts => posts.value = newPosts)
+  {{ console.log(posts) }}
 })
 
 </script>
@@ -15,11 +16,12 @@ onMounted(async () => {
   <section class="posts px-3">
 
     <PostUser v-for="post in posts"
-    :descriptionUser="post.text"
+    :id="post.id"    :descriptionUser="post.text"
     :img="post.image"
     :imgAlt="post.image"
     :serie="post.serie"
     :date="post.date"
+    :likes="post.likes"
     ></PostUser>
   </section>
 

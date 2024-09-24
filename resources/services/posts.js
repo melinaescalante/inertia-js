@@ -1,5 +1,5 @@
 import { db, storage } from './firebase'
-import { collection, addDoc, onSnapshot, serverTimestamp,query, orderBy } from 'firebase/firestore'
+import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, updateDoc, doc, getDoc } from 'firebase/firestore'
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 export async function uploadPost({ text, serie, image, date }) {
   const postRef = collection(db, 'posts-public')
@@ -35,9 +35,39 @@ export async function readPosts(callback) {
         serie: doc.data().serie,
         text: doc.data().text,
         image: doc.data().image,
-        date: doc.data().date
+        date: doc.data().date,
+        likes: doc.data().likes,
+        comments: doc.data().comments,
+        shares: doc.data().shares
       }
     })
     callback(posts)
   })
+}
+export async function like(id, operador) {
+try {
+  
+  const postRef = doc(db, 'posts-public', id);
+  const postSnapshot = await getDoc(postRef);
+  console.log(postSnapshot)
+  if (postSnapshot) {
+    const currentLikes = postSnapshot.data().likes;
+    let result
+    if (operador == 'plus') {
+
+      result = Number(currentLikes)+1
+    } else {
+      result = Number(currentLikes)-1
+
+    }
+    await updateDoc(postRef, {
+      likes: result
+    });
+    console.log("Like añadido correctamente.");
+  }
+} catch (error) {
+  console.log("Documento no existente");
+  
+}
+ 
 }

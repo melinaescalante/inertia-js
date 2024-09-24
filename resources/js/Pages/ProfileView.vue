@@ -6,6 +6,10 @@ import { ref, onMounted } from 'vue'
 import { auth } from "../../services/firebase";
 import { onAuthStateChanged } from 'firebase/auth';
 
+defineProps({
+  userName: String,
+  followers: Number,
+})
 
 const loginUser = ref({ id: null, email: null })
 onMounted(() => {
@@ -36,7 +40,18 @@ onMounted(() => {
         </div>
     </template>
     <template v-else>
-        <h1 class="font-semibold  text-center">Hola {{ loginUser.email }}</h1>
+      <div class="flex items-center mt-4 justify-around">
+        <img src="/public/no-image.jpg" :alt="'Foto de perfil de '+ loginUser.email " class="w-20 h-20 rounded-full ">
+        <div class="flex flex-col">
+
+          <p class="font-medium">{{ loginUser.email }}</p>
+          <div class="flex justify-around">
+            <p>Series vistas</p>
+            <p>Amigos</p>
+          </div>
+        </div>
+      </div>
+        
     </template>
         
 </template>

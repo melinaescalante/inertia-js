@@ -1,5 +1,5 @@
 <script>
-import { router } from '@inertiajs/vue3';
+import { router, Link } from '@inertiajs/vue3';
 
 export default {
   props: {
@@ -94,7 +94,7 @@ export default {
     <img class="h-[100%] w-12" :src="item.show.image.medium" :alt="item.show.name">  
     <div class="flex flex-col">
       
-      <p class="ms-3 font-medium">  {{ item.show.name, console.log(item) }}</p>
+      <Link href="#" class="ms-3 font-medium block">  {{ item.show.name, console.log(item) }}</Link>
       <p class="ms-3 text-blue-400 ">{{ item.show.type }}</p>
     </div>
     </li>
