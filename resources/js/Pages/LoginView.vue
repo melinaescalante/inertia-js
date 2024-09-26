@@ -85,7 +85,7 @@ async function handleSubmit() {
 
         <div class="mb-6">
             <label for="text" class="block mb-2">Constraseña</label>
-            <input id="password" type="password" class=" p-2 w-full border rounded-md bg-slate-100"
+            <input id="password" type="password" class="p-2 w-full border rounded-md bg-slate-100"
                 v-model="user.password" required placeholder="Contraseña" />
         </div>
 

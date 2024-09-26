@@ -45,29 +45,68 @@ export async function readPosts(callback) {
   })
 }
 export async function like(id, operador) {
-try {
-  
-  const postRef = doc(db, 'posts-public', id);
-  const postSnapshot = await getDoc(postRef);
-  console.log(postSnapshot)
-  if (postSnapshot) {
-    const currentLikes = postSnapshot.data().likes;
-    let result
-    if (operador == 'plus') {
+  try {
 
-      result = Number(currentLikes)+1
-    } else {
-      result = Number(currentLikes)-1
+    const postRef = doc(db, 'posts-public', id);
+    const postSnapshot = await getDoc(postRef);
+    console.log(postSnapshot)
+    if (postSnapshot) {
+      const currentLikes = postSnapshot.data().likes;
+      let result
+      if (operador == 'plus') {
 
+        result = Number(currentLikes) + 1
+      } else {
+        result = Number(currentLikes) - 1
+
+      }
+      await updateDoc(postRef, {
+        likes: result
+      });
+      console.log("Like añadido correctamente.");
     }
-    await updateDoc(postRef, {
-      likes: result
-    });
-    console.log("Like añadido correctamente.");
+  } catch (error) {
+    console.log("Documento no existente");
+
   }
-} catch (error) {
-  console.log("Documento no existente");
-  
+
 }
- 
+export async function comment(id, comment) {
+  try {
+
+    const postRef = doc(db, 'posts-public', id);
+    const postSnapshot = await getDoc(postRef);
+    console.log(postSnapshot)
+    if (postSnapshot) {
+      const currentComments = postSnapshot.data().comments;
+
+      if (currentComments) {
+
+        await currentComments.push(comment)
+      }
+
+      await updateDoc(postRef, {
+        comments: currentComments
+      });
+    }
+  } catch (error) {
+    console.log("No se ha podido comentar correctamente");
+
+  }
+
+}
+
+export async function getComments(id) {
+  try {
+    const postRef = doc(db, 'posts-public', id);
+    const postSnapshot = await getDoc(postRef);
+    const commentsObtained= await postSnapshot.data().comments
+    return commentsObtained
+    
+    
+  } catch (error) {
+    console.log("Documento no existente");
+
+  }
+
 }

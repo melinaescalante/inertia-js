@@ -22,6 +22,7 @@ onMounted(async () => {
     :serie="post.serie"
     :date="post.date"
     :likes="post.likes"
+    :comments="post.comments"
     ></PostUser>
   </section>
 
