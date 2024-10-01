@@ -1,18 +1,24 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import { db, storage } from '../../services/firebase'
 import { uploadPost, uploadPhoto } from '../../services/posts'
-import { collection, addDoc, getDocs, onSnapshot, serverTimestamp } from 'firebase/firestore'
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
-
-import { ref } from 'vue';
+import { suscribeToAuthChanged } from "../../services/auth";
+import { ref, onMounted } from 'vue';
+onMounted(() => {
+    suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
+})
 
 const imageInput = ref(null); // Ref para el input de tipo file
 const newPost = ref({
+  userid:null,
   serie: '',
   text: '',
   image: '',
   date: ''
+})
+const loginUser = ref({
+    id: null,
+    email: null,
+    displayName: null,
 })
 async function handlePost() {
   let imageURL
@@ -22,6 +28,8 @@ async function handlePost() {
     imageURL = null
   }
   newPost.value.image=imageURL
+  newPost.value.userid =loginUser.value.id
+
   newPost.value.date = new Date().toLocaleString('es-AR', {
     timeZone: 'America/Argentina/Buenos_Aires'
   })

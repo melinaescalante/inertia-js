@@ -1,9 +1,19 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import { like, comment, getComments } from '../../services/posts';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { suscribeToAuthChanged } from "../../services/auth";
+
+const loginUser = ref({
+    id: null,
+    email: null,
+    displayName: null,
+})
+onMounted(() => {
+    suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
+})
 defineProps({
-    // userName:String,
+    userName:String,
     // pictureProfile:String,
     id: String,
     descriptionUser: String,
@@ -18,11 +28,11 @@ defineProps({
 const commentText = ref('')
 const commentsObtained = ref([])
 async function giveComment(id) {
-    comment(id, commentText.value)
+    comment(id, commentText.value, loginUser.value.id)
     commentText.value = ''
 }
 
-const areCommentsVisible = ref(false); 
+const areCommentsVisible = ref(false);
 async function seeComments(id) {
     if (areCommentsVisible.value) {
         // Si los comentarios están visibles, los ocultamos
@@ -40,18 +50,14 @@ async function seeComments(id) {
 function giveLike(e) {
     const heart = e.target
     if (heart.style.fill == 'white') {
-
         heart.style.fill = 'red'
         heart.style.stroke = 'red'
         like(e.target.id, 'plus')
     } else {
         heart.style.fill = 'white'
         heart.style.stroke = 'black'
-
         like(e.target.id, 'less')
-
     }
-    console.log(e.target.id)
 }
 </script>
 <template>
@@ -64,7 +70,7 @@ function giveLike(e) {
             </div>
             <div class="flex flex-col mx-2">
 
-                <a href="#" class="text-[1.04rem] font-medium  ">Name</a>
+                <a href="#" class="text-[1.04rem] font-medium  ">{{userName}}</a>
                 <a href="#" class="decoration-none text-blue-500   ">{{ serie }}</a>
             </div>
         </div>
@@ -102,8 +108,9 @@ function giveLike(e) {
                     <p v-if="comments != undefined">
                         <span>{{ comments.length }}</span>
                     </p>
-                    <svg @click="seeComments(id)" id=":id" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                        class="h-6 w-6 cursor-pointer" version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+                    <svg @click="seeComments(id)" id=":id" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" class="h-6 w-6 cursor-pointer" version="1.1"
+                        viewBox="0 0 512 512" xml:space="preserve">
                         <title>Comentar</title>
 
                         <g>
@@ -140,8 +147,10 @@ function giveLike(e) {
 
             </div>
         </div>
-        <ul id="commentObtained" open="false" v-if="commentsObtained" class="p-4">
-            <li v-for="comment in commentsObtained" class="border-b-2 mt-3 mb-3 ">{{ comment }}</li>
+        <ul id="commentObtained" open="false" v-if="commentsObtained" >
+            <li v-for="comment in commentsObtained" class="border-b-2 ms-2 mt-3 mb-3">
+                <strong>{{ Object.keys(comment)[0] }}</strong>: {{ Object.values(comment)[0] }}
+            </li>
         </ul>
         <span class="sr-only">Deja tu comentario debajo:</span>
         <div class="relative">

@@ -6,7 +6,7 @@ import { readPosts } from '../../services/posts';
 const posts = ref([])
 onMounted(async () => {
   readPosts(newPosts => posts.value = newPosts)
-  {{ console.log(posts) }}
+  {{ console.log(posts.value) }}
 })
 
 </script>
@@ -23,6 +23,7 @@ onMounted(async () => {
     :date="post.date"
     :likes="post.likes"
     :comments="post.comments"
+    :userName="post.user"
     ></PostUser>
   </section>
 
