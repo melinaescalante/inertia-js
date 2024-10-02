@@ -22,7 +22,6 @@ export default {
         this.loading = true;
         this.answer = 'Buscando series...';
         try {
-          
           // Usamos el método "reload" del router para refrescar la ruta de la vista "/buscador".
           // https://inertiajs.com/manual-visits
           router.reload({

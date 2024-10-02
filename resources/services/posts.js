@@ -1,5 +1,5 @@
 import { db, storage } from './firebase'
-import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, updateDoc, doc, getDoc } from 'firebase/firestore'
+import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, updateDoc, doc, getDoc, where } from 'firebase/firestore'
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { getNameUser } from './users';
 
@@ -58,44 +58,40 @@ export async function readPosts(callback) {
 * @param {{callback:function, id: string}} data
 * @returns {{Promise}}
 */
-export async function readPostsById(callback, id) {
-  const postQuery = query(collection(db, "posts-user"), where(uid, "==", id));
-  onSnapshot(postQuery, async (snapshot) => {
-    const posts = [];
-    //Utilizo este metodo para poder llamar a la funcion de getnameuser, sino me devolvia promesas con el return en conjunto al map
-    for (const doc of snapshot.docs) {
-      const post = {
-        id: doc.id,
-        text: doc.data().text,
-        city: doc.data().city,
-        username: await getNameUser(doc.data().userid),
-        userid: doc.data().userid,
-        date: doc.data().date,
-        comments:doc.data().comments
-      };
-      posts.push(post);
-    }
-    callback(posts);
-  });
+export async function readPostsById( id) {
+  const post= doc(db, "posts-public", id);
+  // const userRef = doc(db, 'users', id);
+  const postSnapshot = await getDoc(post);
+  const postFound = {
+    id: postSnapshot.id,
+    serie: postSnapshot.data().serie,
+    text: postSnapshot.data().text,
+    image: postSnapshot.data().image,
+    date:postSnapshot.data().date,
+    user: await getNameUser(postSnapshot.data().userid),
+    likes: postSnapshot.data().likes,
+    comments:postSnapshot.data().comments,
+  shares:postSnapshot.data().shares,
+
+  };
+  return postFound
+
 }
-export async function like(id, operador) {
+export async function like(id, operador,userid) {
   try {
 
     const postRef = doc(db, 'posts-public', id);
     const postSnapshot = await getDoc(postRef);
-    console.log(postSnapshot)
+
     if (postSnapshot) {
-      const currentLikes = postSnapshot.data().likes|| 0;
-      let result
-      if (operador == 'plus') {
+      const currentLikes = postSnapshot.data().likes||[];
+      // const currentComments = postSnapshot.data().comments || [];
+      const newComment = { [userid]: userid };
+      // Agregar el nuevo comentario al array
+      currentLikes.push(newComment);
 
-        result = Number(currentLikes) + 1
-      } else {
-        result = Number(currentLikes) - 1
-
-      }
       await updateDoc(postRef, {
-        likes: result
+        likes: currentLikes
       });
       console.log("Like añadido correctamente.");
     }
@@ -110,7 +106,6 @@ export async function comment(id, comment,iduser) {
 
     const postRef = doc(db, 'posts-public', id);
     const postSnapshot = await getDoc(postRef);
-    console.log(postSnapshot)
     if (postSnapshot) {
       const currentComments = postSnapshot.data().comments || [];
       const newComment = { [iduser]: comment };

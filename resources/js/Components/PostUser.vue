@@ -37,8 +37,6 @@ async function giveComment(id) {
         router.replace('/ingresar')
     }
 }
-
-
 async function share(id) {
     let shareData = {
         title: 'TvOn-Post  ',
@@ -77,14 +75,19 @@ async function seeComments(id) {
         areCommentsVisible.value = true; // Los marcamos como visibles
     }
 }
-
-
 function giveLike(e) {
     const heart = e.target
     if (heart.style.fill == 'white') {
         heart.style.fill = 'red'
         heart.style.stroke = 'red'
-        like(e.target.id, 'plus')
+        if (loginUser.value.id!==undefined) {
+            
+            like(e.target.id, 'plus',loginUser.value.id)
+            console.log(e.target.id)
+        } else {
+        router.replace('/ingresar')
+            
+        }
     } else {
         heart.style.fill = 'white'
         heart.style.stroke = 'black'
@@ -120,8 +123,8 @@ function giveLike(e) {
                 <div class="flex">
 
                     <span class="sr-only">Like</span>
-                    <p v-if="likes">
-                        <span>{{ likes }}</span>
+                    <p v-if="likes!==undefined">
+                        <span>{{ likes.length }}</span>
                     </p>
                     <div @click="giveLike" :id="id">
 

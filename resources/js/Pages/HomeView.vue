@@ -5,7 +5,7 @@ import { onMounted, ref } from 'vue';
 import { readPosts } from '../../services/posts';
 const posts = ref([])
 onMounted(async () => {
-  readPosts(newPosts => posts.value = newPosts)
+  await readPosts(newPosts => posts.value = newPosts)
 
 })
 

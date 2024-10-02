@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use URL;
 
 class AppController extends Controller
 {
@@ -27,6 +28,14 @@ class AppController extends Controller
     }
     public function profileEdit()
     {        return Inertia::render('EditProfileView');
+    }
+    public function singlePost(Request $request)
+
+    {     
+       
+        $postId = request('id');
+        // echo $postId;
+           return Inertia::render('SinglePostView', ['id'=>$postId]);
     }
     public function login()
     {        return Inertia::render('LoginView');

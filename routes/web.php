@@ -18,6 +18,8 @@ Route::get('/perfil', [AppController::class,"profile"])
 ->name('profile');
 Route::get('/perfil/edit', [AppController::class,"profileEdit"])
 ->name('profileEdit');
+Route::get('/post/{id}', [AppController::class,"singlePost"])
+->name('singlePost');
 
 Route::get('/ingresar', [AppController::class,"login"])
 ->name('login');
