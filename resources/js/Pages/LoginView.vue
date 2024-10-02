@@ -25,7 +25,7 @@ async function handleSubmit() {
 </script>
 <template>
     <nav class="flex justify-between items-center p-4 bg-slate-200 text-slate-800">
-        <Link href="/" class="text-xl">Red Social</Link>
+        <Link href="/" class="text-xl">Tv On</Link>
 
     </nav>
     <h1 class="text-center text-2xl mt-8 mb-8 font-medium">Inicio de Sesión</h1>

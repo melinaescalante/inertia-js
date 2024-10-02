@@ -1,9 +1,12 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, applyActionCode,onAuthStateChanged } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, applyActionCode,onAuthStateChanged, signOut,updateProfile } from "firebase/auth";
 import { auth } from "./firebase";
+import { updateUserProfile , getUsersProfileById} from "./users";
+
 let loginUser = {
   id: null,
   email: null,
   displayName: null,
+  bio: null,
   
 }
 let observers = []
@@ -12,26 +15,28 @@ onAuthStateChanged(auth, async user => {
     loginUser = {
       id: user.uid,
       email: user.email,
-      displayName: user.displayName
+      displayName: user.displayName,
+    
+
     }
    
-    // getUsersProfileById(user.uid, user.email)
-    //   .then(userProfile => {
-    //     console.log(user.uid, user.email)
-    //     loginUser = {
-    //       ...loginUser,
-    //       // bio: userProfile.bio,
+    getUsersProfileById(user.uid, user.email)
+      .then(userProfile => {
+        console.log(user.uid, user.email)
+        loginUser = {
+          ...loginUser,
+          bio: userProfile.bio,
     //       // carrer: userProfile.carrer,
     //       // fullyLoaded: true
-    //     }
+        }
         notifyAll();
-      // })
+      })
   } else {
     loginUser = {
       id: null,
       email: null,
       displayName: null,
-      // bio: null,
+      bio: null,
       // career: null,
       // fullyLoaded: false,
     }
@@ -39,6 +44,26 @@ onAuthStateChanged(auth, async user => {
   //Se cambiaron datos del login user
   notifyAll()
 })
+/**
+ * 
+ * @param {{displayName: string, bio: string}}DataProfile
+ * @returns {Promise<null>}
+ */
+export async function editProfile({ displayName, bio }) {
+  try {
+    await updateProfile(auth.currentUser, { displayName })
+    await updateUserProfile(loginUser.id, { displayName, bio })
+    loginUser = {
+      ...loginUser,
+      displayName,
+      bio,
+      
+    }
+    notifyAll()
+  } catch (error) {
+    console.log(error)
+  }
+}
 export async function login({ email, password }) {
   // 1.Instancia de Autenticacion
   // 2.Email

@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { like, comment, getComments } from '../../services/posts';
 import { ref, onMounted } from 'vue';
 import { suscribeToAuthChanged } from "../../services/auth";
@@ -8,12 +8,13 @@ const loginUser = ref({
     id: null,
     email: null,
     displayName: null,
+    bio: null
 })
 onMounted(() => {
     suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
 })
 defineProps({
-    userName:String,
+    userName: String,
     // pictureProfile:String,
     id: String,
     descriptionUser: String,
@@ -28,10 +29,41 @@ defineProps({
 const commentText = ref('')
 const commentsObtained = ref([])
 async function giveComment(id) {
-    comment(id, commentText.value, loginUser.value.id)
-    commentText.value = ''
+    if (loginUser.value.id !== undefined) {
+        comment(id, commentText.value, loginUser.value.id)
+        commentText.value = ''
+    }
+    else {
+        router.replace('/ingresar')
+    }
 }
 
+
+async function share(id) {
+    let shareData = {
+        title: 'TvOn-Post  ',
+        text: 'TvOn-Post',
+        url: '',
+    };
+    
+    if (!navigator.canShare) {
+        console.log('Web Share API not available');
+        return;
+    }
+    if (!navigator.canShare(shareData)) {
+        console.log('Share data unsupported, disallowed');
+        return;
+    }
+    navigator.share(shareData)
+        .then(() =>
+            console.log('MDN shared successfully')
+        )
+        .catch((e) =>
+            console.log(e)
+        )
+    
+console.log(id)
+}
 const areCommentsVisible = ref(false);
 async function seeComments(id) {
     if (areCommentsVisible.value) {
@@ -70,18 +102,18 @@ function giveLike(e) {
             </div>
             <div class="flex flex-col mx-2">
 
-                <a href="#" class="text-[1.04rem] font-medium  ">{{userName}}</a>
-                <a href="#" class="decoration-none text-blue-500   ">{{ serie }}</a>
+                <a href="#" class="text-[1.04rem] font-medium  ">{{ userName }}</a>
+                <a href="#" class="decoration-none text-blue-500">{{ serie }}</a>
             </div>
         </div>
-        <div class="my-3">
-            <p>{{ descriptionUser }}</p>
+        <div class="my-4">
+            <p class="ms-1">{{ descriptionUser }}</p>
 
 
             <div v-if="img">
                 <img :src="img" :alt="imgAlt" class="mx-auto mt-3 w-[30rem] border rounded-xl">
             </div>
-            <p class="text-slate-500 ">{{ date }}</p>
+            <p class="text-slate-500 ms-1 mt-2">{{ date }}</p>
         </div>
         <div class="flex justify-between my-5 mx-5">
             <div>
@@ -128,7 +160,7 @@ function giveLike(e) {
 
                 </div>
             </div>
-            <div>
+            <div @click="share(id)" :id="id">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 cursor-pointer" viewBox="-1 0 26 26"
                     version="1.1">
                     <title>Compartir</title>
@@ -147,11 +179,12 @@ function giveLike(e) {
 
             </div>
         </div>
-        <ul id="commentObtained" open="false" v-if="commentsObtained" >
+        <ul id="commentObtained" open="false" v-if="commentsObtained">
             <li v-for="comment in commentsObtained" class="border-b-2 ms-2 mt-3 mb-3">
                 <strong>{{ Object.keys(comment)[0] }}</strong>: {{ Object.values(comment)[0] }}
             </li>
         </ul>
+        <p v-else class="text-slate-400 ms-2">¡Se el primero en comentar!</p>
         <span class="sr-only">Deja tu comentario debajo:</span>
         <div class="relative">
             <form action="" @submit.prevent="giveComment(id)" :id="id">

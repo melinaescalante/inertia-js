@@ -6,13 +6,13 @@ import { readPosts } from '../../services/posts';
 const posts = ref([])
 onMounted(async () => {
   readPosts(newPosts => posts.value = newPosts)
-  {{ console.log(posts.value) }}
+
 })
 
 </script>
 <template>
   <NavBar></NavBar>
-  <h1 class="text-2xl m-4">Pagina de posteos</h1>
+  <!-- <h1 class="text-2xl m-4">Pagina de posteos</h1> -->
   <section class="posts px-3">
 
     <PostUser v-for="post in posts"

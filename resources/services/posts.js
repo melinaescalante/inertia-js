@@ -47,11 +47,36 @@ export async function readPosts(callback) {
         user: await getNameUser(doc.data().userid),
       };
       posts.push(post);
-      console.log(post)
+      // console.log(post)
     }
     callback(posts)
   })
   
+}
+/**
+*Traemos los posteos de un usuario específico, mediante su id.
+* @param {{callback:function, id: string}} data
+* @returns {{Promise}}
+*/
+export async function readPostsById(callback, id) {
+  const postQuery = query(collection(db, "posts-user"), where(uid, "==", id));
+  onSnapshot(postQuery, async (snapshot) => {
+    const posts = [];
+    //Utilizo este metodo para poder llamar a la funcion de getnameuser, sino me devolvia promesas con el return en conjunto al map
+    for (const doc of snapshot.docs) {
+      const post = {
+        id: doc.id,
+        text: doc.data().text,
+        city: doc.data().city,
+        username: await getNameUser(doc.data().userid),
+        userid: doc.data().userid,
+        date: doc.data().date,
+        comments:doc.data().comments
+      };
+      posts.push(post);
+    }
+    callback(posts);
+  });
 }
 export async function like(id, operador) {
   try {
@@ -60,7 +85,7 @@ export async function like(id, operador) {
     const postSnapshot = await getDoc(postRef);
     console.log(postSnapshot)
     if (postSnapshot) {
-      const currentLikes = postSnapshot.data().likes;
+      const currentLikes = postSnapshot.data().likes|| 0;
       let result
       if (operador == 'plus') {
 

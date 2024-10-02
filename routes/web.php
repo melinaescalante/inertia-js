@@ -11,9 +11,13 @@ Route::get('/', [AppController::class,"home"])
 
 Route::get('/chat', [AppController::class,"chat"])
 ->name('chat');
+Route::get('/configuraciones', [AppController::class,"configuraciones"])
+->name('config');
 
 Route::get('/perfil', [AppController::class,"profile"])
 ->name('profile');
+Route::get('/perfil/edit', [AppController::class,"profileEdit"])
+->name('profileEdit');
 
 Route::get('/ingresar', [AppController::class,"login"])
 ->name('login');
@@ -29,5 +33,6 @@ Route::get('/descubrir', [AppController::class,"discover"])
 
 
 Route::get('/buscador', [SerieController::class, 'buscador']);
+Route::get('/subirPublicacion', [AppController::class, 'uploadPost']);
 
-Route::get('/subirPublicacion', [AppController::class,"uploadPost"]);
+// Route::get('/subirPublicacion', [SerieController::class,"buscadorPost"]);

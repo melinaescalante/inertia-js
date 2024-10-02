@@ -25,6 +25,9 @@ class AppController extends Controller
     public function profile()
     {        return Inertia::render('ProfileView');
     }
+    public function profileEdit()
+    {        return Inertia::render('EditProfileView');
+    }
     public function login()
     {        return Inertia::render('LoginView');
     }
@@ -34,6 +37,10 @@ class AppController extends Controller
     public function mySeries()
     {
         return Inertia::render('SeriesView');
+    }
+    public function configuraciones()
+    {
+        return Inertia::render('ConfigView');
     }
     public function uploadPost()
     {

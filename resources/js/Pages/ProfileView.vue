@@ -3,31 +3,24 @@
 import NavBar from '../components/NavBar.vue'
 import { Link } from '@inertiajs/vue3'
 import { ref, onMounted } from 'vue'
-import { auth } from "../../services/firebase";
-import { onAuthStateChanged } from 'firebase/auth';
+
+import { suscribeToAuthChanged, logout } from "../../services/auth";
 
 defineProps({
   userName: String,
   followers: Number,
 })
 
-const loginUser = ref({ id: null, email: null })
-onMounted(() => {
+const loginUser = ref({
+    id: null,
+    email: null,
+    displayName: null,
+    bio:null
 
-  onAuthStateChanged(auth,user => {
-    if (user) {
-      loginUser.value = {
-        id: user.uid,
-        email: user.email
-      }
-    } else {
-      loginUser.value = {
-        id: null, 
-        email: null
-      }
-    }
+})
+onMounted(() => {
+    suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
     console.log(loginUser.value)
-  })
 })
 </script>
 <template>
@@ -44,11 +37,13 @@ onMounted(() => {
         <img src="/public/no-image.jpg" :alt="'Foto de perfil de '+ loginUser.email " class="w-20 h-20 rounded-full ">
         <div class="flex flex-col">
 
-          <p class="font-medium">{{ loginUser.email }}</p>
+          <p class="font-medium text-center">{{loginUser.displayName?loginUser.displayName: loginUser.email }}</p>
           <div class="flex justify-around">
-            <p>Series vistas</p>
+            <p class="me-2">Series vistas</p>
             <p>Amigos</p>
           </div>
+          <Link href="/perfil/edit" class="text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">Editar Perfil</Link>
+          <p class="border-b text-blue-500 text-center " v-if="loginUser.bio">{{ loginUser.bio }}</p>
         </div>
       </div>
         

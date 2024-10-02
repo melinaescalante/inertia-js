@@ -26,7 +26,7 @@ onMounted(() => {
 </script>
 <template>
     <nav class="flex justify-between items-center p-4 bg-slate-200 text-slate-800">
-        <Link href="/" class="text-xl">Red Social</Link>
+        <Link href="/" class="text-xl">Tv On</Link>
 
         <ul class="flex items-center">
 <template v-if="currentUrl !=='/perfil' && currentUrl !=='/chat'">

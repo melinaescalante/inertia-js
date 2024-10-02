@@ -11,9 +11,9 @@ defineProps({
 const imgDefault= '/noimage.png'
 </script>
 <template>
-    <div class="flex justify-start bg-white border-gray-200 m-4 border rounded-lg min-w-[95%]">
+    <div class="flex justify-center bg-white border-gray-200 m-4 border rounded-lg min-w-[92%]">
       <img 
-        class="h-[50%] lg:h-[100%] w-auto max-w-[15rem] rounded-l-lg object-cover" 
+        class="h-[40%] lg:h-[100%] w-auto max-w-[15rem] rounded-l-lg object-cover" 
         :src="cover?.medium || imgDefault" 
         :alt="text"
       >

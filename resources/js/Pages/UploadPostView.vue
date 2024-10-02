@@ -1,12 +1,15 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
+import SearchComponent from '../Components/SearchComponent.vue';
 import { uploadPost, uploadPhoto } from '../../services/posts'
 import { suscribeToAuthChanged } from "../../services/auth";
 import { ref, onMounted } from 'vue';
 onMounted(() => {
     suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
 })
-
+defineProps({
+    series: Array  
+})
 const imageInput = ref(null); // Ref para el input de tipo file
 const newPost = ref({
   userid:null,
@@ -19,6 +22,8 @@ const loginUser = ref({
     id: null,
     email: null,
     displayName: null,
+    bio:null
+
 })
 async function handlePost() {
   let imageURL
@@ -48,18 +53,20 @@ function handleImageChange(e) {
 
 </script>
 <template>
+  
   <nav class="flex justify-between items-center p-4 bg-slate-200 text-slate-800">
     <Link href="/" class="text-xl">Tv On</Link>
 
-    <ul class="flex items-center">
-    </ul>
   </nav>
-
+  
   <h1 class="text-xl m-2">Subir publicacion</h1>
   <form action="" enctype="multipart/form-data" @submit.prevent="handlePost">
     <div class="flex flex-col mb-3">
       <span class="sr-only">Escribe la serie con la que te quieres referir</span>
       <label class="m-2" for="serie">¿Sobre qué serie estas pensando?</label>
+      <!-- <SearchComponent :series="series">
+
+      </SearchComponent> -->
       <input type="search" class="p-2 m-2  border rounded-md" name="serie" id="serie" v-model="newPost.serie"
         required />
     </div>

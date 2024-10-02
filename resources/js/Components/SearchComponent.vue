@@ -1,5 +1,6 @@
 <script>
 import { router, Link } from '@inertiajs/vue3';
+import { useRoute } from 'vue-router'
 
 export default {
   props: {
@@ -20,17 +21,19 @@ export default {
       if (value.length % 2 == 0) {
         this.loading = true;
         this.answer = 'Buscando series...';
-
         try {
+          
           // Usamos el método "reload" del router para refrescar la ruta de la vista "/buscador".
           // https://inertiajs.com/manual-visits
           router.reload({
             // Le pasamos los datos que queremos que tenga en el query string.
-            data: { name: value },
+            data: { name: value},
             // Manejamos los resultados en caso de éxito. Faltaría manejar en caso de error.
             onSuccess: page => {
               if (this.series.length > 0) {
+                console.log(this.series)
                 this.answer = "Success";
+        
               } else {
                 this.answer = "No se encontraron series.";
               }
@@ -64,7 +67,8 @@ export default {
       <input type="search" id="default-search"
         class="block w-full p-4 ps-10 text-sm text-gray-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4"
         placeholder="Busca tu serie" required v-model="formInput" @input="getAnswer(formInput)" />
-      <button type="submit"
+      
+        <button type="submit"
         class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
         Buscar
       </button>
@@ -91,7 +95,7 @@ export default {
   <ul v-if="!loading && series.length">
 
     <li class="p-2 ps-6 border flex items-center" v-for="item in series">
-    <img class="h-[100%] w-12" :src="item.show.image.medium" :alt="item.show.name">  
+    <img class="h-[100%] w-12" :src="item.show.image ? item.show.image.medium : 'noimage.png'" :alt="item.show.name">  
     <div class="flex flex-col">
       
       <Link href="#" class="ms-3 font-medium block">  {{ item.show.name, console.log(item) }}</Link>
