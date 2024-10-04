@@ -3,7 +3,7 @@ import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, update
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { getNameUser } from './users';
 
-export async function uploadPost({ text, serie, image, date,userid }) {
+export async function uploadPost({ text, serie, image, date, userid }) {
   const postRef = collection(db, 'posts-public')
   await addDoc(postRef, {
     text,
@@ -14,6 +14,7 @@ export async function uploadPost({ text, serie, image, date,userid }) {
     created_at: serverTimestamp()
   });
 }
+
 export async function uploadPhoto(image) {
   // const fileInput = image
   try {
@@ -27,6 +28,11 @@ export async function uploadPhoto(image) {
     console.error('Error al subir la imagen:', error);
   }
 }
+/**
+*Traemos uTodas las publicaciones.
+* @param {callback:function} data
+* @returns {{Promise}}
+*/
 export async function readPosts(callback) {
   const postsRef = collection(db, 'posts-public')
   const postQuery = query(postsRef, orderBy("created_at", "desc"));
@@ -42,7 +48,7 @@ export async function readPosts(callback) {
         image: doc.data().image,
         date: doc.data().date,
         likes: doc.data().likes,
-        comments:doc.data().comments,
+        comments: doc.data().comments,
         shares: doc.data().shares,
         user: await getNameUser(doc.data().userid),
       };
@@ -51,15 +57,15 @@ export async function readPosts(callback) {
     }
     callback(posts)
   })
-  
+
 }
 /**
-*Traemos los posteos de un usuario específico, mediante su id.
+*Traemos una publicacion en especifico, mediante su id.
 * @param {{callback:function, id: string}} data
 * @returns {{Promise}}
 */
-export async function readPostsById( id) {
-  const post= doc(db, "posts-public", id);
+export async function readPostsById(id) {
+  const post = doc(db, "posts-public", id);
   // const userRef = doc(db, 'users', id);
   const postSnapshot = await getDoc(post);
   const postFound = {
@@ -67,33 +73,74 @@ export async function readPostsById( id) {
     serie: postSnapshot.data().serie,
     text: postSnapshot.data().text,
     image: postSnapshot.data().image,
-    date:postSnapshot.data().date,
+    date: postSnapshot.data().date,
     user: await getNameUser(postSnapshot.data().userid),
     likes: postSnapshot.data().likes,
-    comments:postSnapshot.data().comments,
-  shares:postSnapshot.data().shares,
+    comments: postSnapshot.data().comments,
+    shares: postSnapshot.data().shares,
 
   };
   return postFound
 
 }
-export async function like(id, operador,userid) {
+/**
+*Traemos los posteos de un usuario específico, mediante su id.
+* @param {{callback:function, userid: string}} data
+* @returns {{Promise}}
+*/
+export async function readPostsByUser(callback, userid) {
+  console.log(userid)
+  const postQuery = query(collection(db, "posts-public"), where("userid", "==", userid));
+  onSnapshot(postQuery, async (snapshot) => {
+    const posts = [];
+    //Utilizo este metodo para poder llamar a la funcion de getnameuser, sino me devolvia promesas con el return en conjunto al map
+    for (const doc of snapshot.docs) {
+      const post = {
+        id: doc.id,
+        serie: doc.data().serie,
+        text: doc.data().text,
+        image: doc.data().image,
+        date: doc.data().date,
+        user: await getNameUser(doc.data().userid),
+        likes: doc.data().likes,
+    comments: doc.data().comments,
+    shares: doc.data().shares,
+      };
+      posts.push(post);
+  
+    }
+    callback(await posts);
+  });
+}
+
+export async function isLike(id, userid) {
+  const postRef = doc(db, 'posts-public', id);
+  const postSnapshot = await getDoc(postRef);
+}
+export async function like(id, operador, userid) {
   try {
 
     const postRef = doc(db, 'posts-public', id);
     const postSnapshot = await getDoc(postRef);
 
     if (postSnapshot) {
-      const currentLikes = postSnapshot.data().likes||[];
-      // const currentComments = postSnapshot.data().comments || [];
-      const newComment = { [userid]: userid };
-      // Agregar el nuevo comentario al array
-      currentLikes.push(newComment);
+      const currentLikes = postSnapshot.data().likes || [];
+      const userFound = currentLikes.filter(user => Object.keys(user)[0] === userid)
+      if (userFound) {
+        return true
+      } else {
 
-      await updateDoc(postRef, {
-        likes: currentLikes
-      });
-      console.log("Like añadido correctamente.");
+        const newLike = { [userid]: userid };
+        currentLikes.push(newLike);
+        // // Agregar el nuevo comentario al array
+
+        await updateDoc(postRef, {
+          likes: currentLikes
+        });
+        console.log("Like añadido correctamente.");
+        return false
+      }
+      // // const currentComments = postSnapshot.data().comments || [];
     }
   } catch (error) {
     console.log("Documento no existente");
@@ -101,7 +148,7 @@ export async function like(id, operador,userid) {
   }
 
 }
-export async function comment(id, comment,iduser) {
+export async function comment(id, comment, iduser) {
   try {
 
     const postRef = doc(db, 'posts-public', id);
@@ -129,7 +176,7 @@ export async function getComments(id) {
   try {
     const postRef = doc(db, 'posts-public', id);
     const postSnapshot = await getDoc(postRef);
-    const commentsObtained= await postSnapshot.data().comments
+    const commentsObtained = await postSnapshot.data().comments
     const updatedComments = [];
 
     for (const comment of commentsObtained) {
@@ -141,7 +188,7 @@ export async function getComments(id) {
     //Asi traemos lo ultimo comentarios
     updatedComments.reverse()
     return updatedComments;
-    
+
   } catch (error) {
     console.log("Documento no existente");
 

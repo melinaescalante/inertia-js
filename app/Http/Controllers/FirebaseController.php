@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Firebase;
-// use Kreait\Laravel\Firebase\Facades\Firebase;
+//use Illuminate\Support\Facades\Firebase;
+use Kreait\Laravel\Firebase\Facades\Firebase;
 use Illuminate\Http\Request;
 
 class FirebaseController extends Controller
@@ -11,15 +11,15 @@ class FirebaseController extends Controller
      * Display a listing of the resource.
      */
     public function uniquePost(Request $request){
-        
+
     }
     public function index()
     {
         $database = Firebase::database();
         $reference = $database->getReference('users');
         $users = $reference->getValue();
-    
-        return view('users',  
+
+        return view('users',
     ['users' => $users]);
     }
 

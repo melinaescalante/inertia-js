@@ -5,14 +5,16 @@ import { onMounted, ref } from 'vue';
 import { readPosts } from '../../services/posts';
 const posts = ref([])
 onMounted(async () => {
-  await readPosts(newPosts => posts.value = newPosts)
+  await readPosts(newPosts =>{ posts.value = newPosts
+
+    
+  })
 
 })
 
 </script>
 <template>
   <NavBar></NavBar>
-  <!-- <h1 class="text-2xl m-4">Pagina de posteos</h1> -->
   <section class="posts px-3">
 
     <PostUser v-for="post in posts"

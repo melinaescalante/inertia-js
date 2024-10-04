@@ -12,6 +12,7 @@ const loginUser = ref({
 })
 onMounted(() => {
     suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
+    
 })
 defineProps({
     userName: String,
@@ -45,11 +46,11 @@ async function share(id) {
     };
     
     if (!navigator.canShare) {
-        console.log('Web Share API not available');
+        console.log('No se puede compartir');
         return;
     }
     if (!navigator.canShare(shareData)) {
-        console.log('Share data unsupported, disallowed');
+        console.log('Se soporta compartir en este navegador');
         return;
     }
     navigator.share(shareData)
@@ -75,15 +76,19 @@ async function seeComments(id) {
         areCommentsVisible.value = true; // Los marcamos como visibles
     }
 }
-function giveLike(e) {
+async function giveLike(e) {
     const heart = e.target
     if (heart.style.fill == 'white') {
-        heart.style.fill = 'red'
-        heart.style.stroke = 'red'
         if (loginUser.value.id!==undefined) {
-            
-            like(e.target.id, 'plus',loginUser.value.id)
-            console.log(e.target.id)
+            const result=await like(e.target.id, 'plus',loginUser.value.id)
+            if (result) {
+                heart.style.fill = 'red'
+                heart.style.stroke = 'red'
+                
+            }else{
+
+            }
+            console.log(result)
         } else {
         router.replace('/ingresar')
             

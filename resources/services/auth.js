@@ -80,8 +80,6 @@ export async function login({ email, password }) {
 export async function signUp({email,password}){
   try {
     const user= await createUserWithEmailAndPassword(auth, email, password);
- 
-    console.log(user)
   } catch (error) {
     throw error;
   }

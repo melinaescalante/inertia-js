@@ -4,6 +4,7 @@ use App\Http\Controllers\AppController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\SerieController;
+use App\Http\Controllers\FirebaseController;
 
 
 Route::get('/', [AppController::class,"home"])
@@ -37,4 +38,5 @@ Route::get('/descubrir', [AppController::class,"discover"])
 Route::get('/buscador', [SerieController::class, 'buscador']);
 Route::get('/subirPublicacion', [AppController::class, 'uploadPost']);
 
-// Route::get('/subirPublicacion', [SerieController::class,"buscadorPost"]);
+//Prueba firebase
+Route::get('/firebase', [FirebaseController::class,"index"]);

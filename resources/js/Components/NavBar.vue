@@ -64,10 +64,10 @@ onMounted(() => {
             <template v-if="loginUser.id !== null && currentUrl ==='/perfil'">
                 <li>
                     <Link data-tooltip-target="tooltip-config" href="/configuraciones"
-                        class="block px-3 rounded-s-full dark:hover:fill-gray-800 group m-auto">
+                        class="block px-3 rounded-s-full group m-auto">
 
 
-                    <svg class="w-7 h-6  text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+                    <svg class="w-7 h-6  text-gray-500 group-hover:text-blue-600 "
                         aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="800px"
                         height="800px" viewBox="0 0 28 28">
                         <path clip-rule="evenodd"
@@ -86,13 +86,13 @@ onMounted(() => {
         </ul>
     </nav>
     <div
-        class="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
+        class="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 ">
         <div class="grid h-full max-w-lg grid-cols-5 mx-auto">
             <Link title="Inicio" data-tooltip-target="tooltip-home" href="/"
-                class="inline-flex flex-col items-center justify-center px-5 rounded-s-full hover:bg-gray-50 dark:hover:bg-gray-800 group">
+                class="inline-flex flex-col items-center justify-center px-5 rounded-s-full hover:bg-gray-50  group">
 
 
-            <svg class="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+            <svg class="w-5 h-5 mb-1 text-gray-500 0 group-hover:text-blue-600 "
                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                 <title>Inicio</title>
                 <path
@@ -101,14 +101,14 @@ onMounted(() => {
             <span class="sr-only">Home</span>
             </Link>
             <div id="tooltip-home" role="tooltip"
-                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip ">
                 Home
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
             <Link title="Explorar" href="/descubrir" data-tooltip-target="tooltip-wallet"
-                class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
+                class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50  group">
 
-            <svg class="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+            <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-blue-600 "
                 fill="currentColor" xmlns="http://www.w3.org/2000/svg" version="1.1" id="Layer_1"
                 viewBox="0 0 511.995 511.995" xml:space="preserve">
                 <title>Explorar</title>
@@ -155,13 +155,13 @@ onMounted(() => {
             <span class="sr-only">Descubrir</span>
             </Link>
             <div id="tooltip-wallet" role="tooltip"
-                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip ">
                 Wallet
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
             <div class="flex items-center justify-center">
                 <Link title="Postear Publicación" href="/subirPublicacion" data-tooltip-target="tooltip-new"
-                    class="inline-flex items-center justify-center w-10 h-10 font-medium bg-blue-600 rounded-full hover:bg-blue-700 group focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
+                    class="inline-flex items-center justify-center w-10 h-10 font-medium bg-blue-600 rounded-full hover:bg-blue-700 group focus:ring-4 focus:ring-blue-300 focus:outline-none ">
                 <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 18 18">
                     <title>Postear</title>
@@ -173,13 +173,13 @@ onMounted(() => {
                 </Link>
             </div>
             <div id="tooltip-new" role="tooltip"
-                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip ">
                 Create new item
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
             <Link title="Mis Series" href="/misSeries" data-tooltip-target="tooltip-settings"
-                class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
-            <svg class="w-7 h-7 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+                class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50  group">
+            <svg class="w-7 h-7 mb-1 text-gray-500  group-hover:text-blue-600 "
                 aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>Mis Series</title>
 
@@ -191,13 +191,13 @@ onMounted(() => {
             <span class="sr-only">Mis Series</span>
             </Link>
             <div id="tooltip-settings" role="tooltip"
-                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip ">
                 Mis Series
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
             <Link title="Mi Perfil" href="/perfil" data-tooltip-target="tooltip-profile"
-                class="inline-flex flex-col items-center justify-center px-5 rounded-e-full hover:bg-gray-50 dark:hover:bg-gray-800 group">
-            <svg class="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+                class="inline-flex flex-col items-center justify-center px-5 rounded-e-full hover:bg-gray-50  group">
+            <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-blue-600 "
                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                 <title>Perfil</title>
 
@@ -207,7 +207,7 @@ onMounted(() => {
             <span class="sr-only">Perfil</span>
             </Link>
             <div id="tooltip-profile" role="tooltip"
-                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
                 Perfil
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
