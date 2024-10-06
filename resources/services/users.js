@@ -9,7 +9,6 @@ export async function getNameUser(id){
     try {
       const userRef = doc(db, 'users', id);
       const userSnapshot = await getDoc(userRef);
-      // const name=
       const name = await userSnapshot.data().displayName?userSnapshot.data().displayName:userSnapshot.data().email
       return name
 

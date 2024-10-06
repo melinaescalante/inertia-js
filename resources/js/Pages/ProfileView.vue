@@ -57,7 +57,11 @@ onMounted(async () => {
       </div>
       <div v-if="postsById!==undefined">
         <div v-for="post in postsById" class="mt-5">
-          <img :src="post.image" height="110" width="110" :alt="post.serie">
+          <Link :href="`/post/${post.id}`" :id="post.id">
+
+          <img :src="post.image" :alt="post.serie" class="w-[7rem] h-[7rem]  bg-cover w">
+        
+        </Link>
         </div>
       </div>
         

@@ -8,7 +8,7 @@ import { readPostsById } from '../../services/posts';
 import PostUser from '../Components/PostUser.vue';
 const page = usePage()
 const id = ref(page.props.id)
-console.log(id.value)
+
 const post = ref([])
 onMounted(async () => {
     post.value = await readPostsById(id.value)

@@ -1,6 +1,6 @@
 <?php 
 return [
     'credentials' => [
-        'path' => 'storage/firebase/tv-credentials.json',
+        'path' => '../storage/firebase/tv-credentials.json',
     ],
 ];

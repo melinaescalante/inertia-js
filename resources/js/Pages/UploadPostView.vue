@@ -27,11 +27,8 @@ const loginUser = ref({
 })
 async function handlePost() {
   let imageURL
-  if (imageInput !== null) {
-    imageURL = await uploadPhoto(newPost.value.image);
-  } else {
-    imageURL = null
-  }
+  imageInput!==null?await uploadPhoto(newPost.value.image): imageURL=null
+
   newPost.value.image=imageURL
   newPost.value.userid =loginUser.value.id
 

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-//use Illuminate\Support\Facades\Firebase;
+// use Illuminate\Support\Facades\Firebase;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 use Illuminate\Http\Request;
 

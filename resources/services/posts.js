@@ -2,9 +2,15 @@ import { db, storage } from './firebase'
 import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, updateDoc, doc, getDoc, where } from 'firebase/firestore'
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { getNameUser } from './users';
+import { login } from './auth';
 
 export async function uploadPost({ text, serie, image, date, userid }) {
   const postRef = collection(db, 'posts-public')
+
+  if (image == undefined) {
+    image = null
+  }
+
   await addDoc(postRef, {
     text,
     serie,
@@ -18,6 +24,7 @@ export async function uploadPost({ text, serie, image, date, userid }) {
 export async function uploadPhoto(image) {
   // const fileInput = image
   try {
+    console.log(image)
     const storageRefe = storageRef(storage, `posts/${image.name}`);
     await uploadBytes(storageRefe, image);
     // Obtén la URL de descarga
@@ -33,13 +40,15 @@ export async function uploadPhoto(image) {
 * @param {callback:function} data
 * @returns {{Promise}}
 */
-export async function readPosts(callback) {
+export async function readPosts(callback, userid) {
   const postsRef = collection(db, 'posts-public')
   const postQuery = query(postsRef, orderBy("created_at", "desc"));
-
+  console.log(userid, 'id')
   onSnapshot(postQuery, async (snapshot) => {
     const posts = [];
     for (const doc of snapshot.docs) {
+      const like = await isLike(doc.id, userid)
+      console.log(like)
       const post = {
         id: doc.id,
         // username:doc.data().username,
@@ -51,11 +60,13 @@ export async function readPosts(callback) {
         comments: doc.data().comments,
         shares: doc.data().shares,
         user: await getNameUser(doc.data().userid),
+        liked: like
       };
       posts.push(post);
       // console.log(post)
     }
     callback(posts)
+
   })
 
 }
@@ -95,6 +106,7 @@ export async function readPostsByUser(callback, userid) {
     const posts = [];
     //Utilizo este metodo para poder llamar a la funcion de getnameuser, sino me devolvia promesas con el return en conjunto al map
     for (const doc of snapshot.docs) {
+
       const post = {
         id: doc.id,
         serie: doc.data().serie,
@@ -103,44 +115,62 @@ export async function readPostsByUser(callback, userid) {
         date: doc.data().date,
         user: await getNameUser(doc.data().userid),
         likes: doc.data().likes,
-    comments: doc.data().comments,
-    shares: doc.data().shares,
+        comments: doc.data().comments,
+        shares: doc.data().shares,
       };
       posts.push(post);
-  
+
     }
-    callback(await posts);
+    callback(posts);
   });
 }
 
 export async function isLike(id, userid) {
   const postRef = doc(db, 'posts-public', id);
   const postSnapshot = await getDoc(postRef);
+  const currentLikes = postSnapshot.data().likes || [];
+  const userFound = currentLikes.find(user => {
+
+    return Object.keys(user)[0] === userid;
+  });
+
+
+  if (userFound) {
+    return true;
+  } else {
+    return false;
+  }
 }
+
 export async function like(id, operador, userid) {
   try {
 
     const postRef = doc(db, 'posts-public', id);
     const postSnapshot = await getDoc(postRef);
-
     if (postSnapshot) {
       const currentLikes = postSnapshot.data().likes || [];
-      const userFound = currentLikes.filter(user => Object.keys(user)[0] === userid)
-      if (userFound) {
-        return true
-      } else {
-
+      if (operador == 'plus') {
         const newLike = { [userid]: userid };
         currentLikes.push(newLike);
-        // // Agregar el nuevo comentario al array
-
+      
         await updateDoc(postRef, {
           likes: currentLikes
         });
         console.log("Like añadido correctamente.");
-        return false
+
+      } 
+      if(operador=='less') {
+        const newArray = currentLikes.filter(user => {
+          const userIdKey = Object.keys(user)[0]; // Obtener la clave del objeto
+          return userIdKey !== userid; // Comparar la clave con el ID a eliminar
+        });
+        // console.log(newArray);
+
+        await updateDoc(postRef, {
+          likes: newArray
+        });
+        console.log("Menos.", newArray);
       }
-      // // const currentComments = postSnapshot.data().comments || [];
     }
   } catch (error) {
     console.log("Documento no existente");

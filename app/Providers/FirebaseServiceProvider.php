@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Filesystem\FilesystemServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Kreait\Firebase\Factory;
-
 
 class FirebaseServiceProvider extends ServiceProvider
 {
@@ -14,12 +12,12 @@ class FirebaseServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('firebase',
+     
+        $this->app->singleton('firebase',  
 function ($app) {
-            return (new Factory)->withServiceAccount(config('firebase.credentials.path'))->create();
+            return (new Factory)->withServiceAccount('firebase.credentials.path');
         });
-    }
-
+}
 
 
     /**
