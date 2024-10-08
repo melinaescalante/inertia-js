@@ -7,7 +7,7 @@ let loginUser = {
   email: null,
   displayName: null,
   bio: null,
-  
+  genres:null
 }
 let observers = []
 onAuthStateChanged(auth, async user => {
@@ -16,16 +16,15 @@ onAuthStateChanged(auth, async user => {
       id: user.uid,
       email: user.email,
       displayName: user.displayName,
-    
-
     }
    
     getUsersProfileById(user.uid, user.email)
       .then(userProfile => {
-        console.log(user.uid, user.email)
+
         loginUser = {
           ...loginUser,
           bio: userProfile.bio,
+          genres:userProfile.genres
     //       // carrer: userProfile.carrer,
     //       // fullyLoaded: true
         }
@@ -37,6 +36,7 @@ onAuthStateChanged(auth, async user => {
       email: null,
       displayName: null,
       bio: null,
+      genres:null
       // career: null,
       // fullyLoaded: false,
     }
@@ -49,15 +49,16 @@ onAuthStateChanged(auth, async user => {
  * @param {{displayName: string, bio: string}}DataProfile
  * @returns {Promise<null>}
  */
-export async function editProfile({ displayName, bio }) {
+export async function editProfile({ displayName, bio, genres }) {
+
   try {
     await updateProfile(auth.currentUser, { displayName })
-    await updateUserProfile(loginUser.id, { displayName, bio })
+    await updateUserProfile(loginUser.id, { displayName,bio,genres })
     loginUser = {
       ...loginUser,
       displayName,
       bio,
-      
+      genres:genres
     }
     notifyAll()
   } catch (error) {

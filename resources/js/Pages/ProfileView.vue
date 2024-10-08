@@ -10,13 +10,15 @@ import { readPostsByUser } from '../../services/posts';
 defineProps({
   userName: String,
   followers: Number,
+  // genres: Array
 })
 
 const loginUser = ref({
     id: null,
     email: null,
     displayName: null,
-    bio:null
+    bio:null,
+    genres:null
 
 })
 const postsById=ref([])
@@ -24,10 +26,10 @@ onMounted(async () => {
     suscribeToAuthChanged(newUserData =>{
        loginUser.value = newUserData
       
-       
+       console.log(loginUser.value)
         if (loginUser.value.id!==null) {
            readPostsByUser((newPosts) => postsById.value = newPosts, loginUser.value.id)
-          console.log(loginUser.value.id)
+
         }
       })
 })
@@ -53,6 +55,10 @@ onMounted(async () => {
           </div>
           <Link href="/perfil/edit" class="text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">Editar Perfil</Link>
           <p class="border-b text-blue-500 text-center " v-if="loginUser.bio">{{ loginUser.bio }}</p>
+          <div class="flex">
+            <ul v-for="genre in loginUser.genres">
+            <li class="rounded-xl bg-opacity-70   bg-blue-950  text-sm  text-white font-medium p-2 m-1 text-center">{{ genre }}</li>
+          </ul></div>
         </div>
       </div>
       <div v-if="postsById!==undefined">

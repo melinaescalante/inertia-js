@@ -1,45 +1,74 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
 import DiscoverFeature from '../components/DiscoverFeature.vue'
-
-
+import { suscribeToAuthChanged } from "../../services/auth";
 
 import { onMounted, ref } from 'vue';
 let serie = ref([]);
+const loginUser = ref({
+    id: null,
+    email: null,
+    displayName: null,
+    bio: null,
+    genres: null
 
+})
 onMounted(async () => {
     try {
-        const response = await fetch('https://api.tvmaze.com/search/shows?q=alll');
-        const json = await response.json();
-        console.log(json);
-        serie.value = json 
+        await suscribeToAuthChanged(newUserData => {
+            loginUser.value = newUserData
+            console.log(loginUser.value)
+            let idShows = [];
+            loginUser.value.genres.forEach(async (genre) => {
+                let genreArray = []
+                const limit = 10
+                const response = await fetch('https://api.tvmaze.com/shows');
+                //  const response = await fetch('https://api.tvmaze.com/search/shows?q='+ genre);
+                const shows = await response.json();
+                shows.forEach(show => {
+                    if (genreArray.length < limit) {
+                        if (show.genres.includes(genre) && !(idShows[show.id])) {
+                            idShows.push(show.id);
+                            idShows[show.id]=show.id
+                            genreArray.push(show);
+                        }
+                    }
+                });
+
+                // });
+                //  const filteredShows = shows.filter(show => {
+                //     if(filteredShows.length==limit){
+                //         show.genres && show.genres.includes(genre)
+                //         return
+                //     }
+                // console.log(genreArray, 'shows')
+                //  genreArray = json 
+                serie.value.push(genreArray)
+                console.log(serie.value);
+            });
+        })
     } catch (error) {
         console.error('Error fetching posts:', error.message);
-        
+
     }
 })
-defineProps({genres:Array})
+defineProps({ genres: Array })
 </script>
 <template>
     <NavBar></NavBar>
     <SearchComponent></SearchComponent>
-    <section v-for="genre in [,,,]"  class="flex  flex-col ">
+    <section v-for="genero in serie" class="flex  flex-col ">
         <div>
 
             <p class="m-3 mt-4 ms-5 font-medium">Segun tus generos favoritos:</p>
         </div>
-        <div  class="flex overflow-x-auto scroll overflow-scroll ">
+        <div class="flex overflow-x-auto scroll overflow-scroll ">
 
-            <DiscoverFeature class="" v-for="series in serie"
-            :titleSerie="series.show.name"
-            :dateSerie="series.show.premiered"
-            :synopsis="series.show.summary"
-            :cover="series.show.image"
-            :text="series.show.schedule.time"
-            >
-            
-        </DiscoverFeature>
-    </div>
+            <DiscoverFeature class="" v-for="show in genero" :titleSerie="show.name" :dateSerie="show.premiered"
+                :synopsis="show.summary" :cover="show.image" :text="show.schedule.time">
+
+            </DiscoverFeature>
+        </div>
     </section>
 
 </template>

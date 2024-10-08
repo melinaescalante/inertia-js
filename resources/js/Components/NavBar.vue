@@ -20,7 +20,7 @@ onMounted(() => {
         email: null
       }
     }
-    console.log(loginUser.value)
+
   })
 })
 </script>

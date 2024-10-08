@@ -11,7 +11,6 @@ export async function getNameUser(id){
       const userSnapshot = await getDoc(userRef);
       const name = await userSnapshot.data().displayName?userSnapshot.data().displayName:userSnapshot.data().email
       return name
-
     } catch (error) {
       console.log("Documento no existente");
   
@@ -20,18 +19,19 @@ export async function getNameUser(id){
 
   /**
  *Actualizamos los datos del usuario.
- *Su nombre, biografía y carrera.
+ *Su nombre, biografía y géneros favoritos.
  * @param {{id:string}} Id
  * @param {{displayName:string, carrer:string}} DatosUsuario
  * @returns {}
  */
-export async function updateUserProfile(id, { displayName, bio }) {
-    
+export async function updateUserProfile(id, { displayName, bio, genres }) {
+
   const profileRef = doc(db, 'users', id);
 
   await updateDoc(profileRef, {
       displayName,
       bio,
+      genres: genres
 
   });
 }
@@ -51,6 +51,7 @@ export async function getUsersProfileById(id,email) {
               email: profileDocument.data().email,
               displayName: profileDocument.data().displayName,
               bio: profileDocument.data().bio,
+              genres:profileDocument.data().genres
           }
           
       } else  {
@@ -58,6 +59,7 @@ export async function getUsersProfileById(id,email) {
           await setDoc(doc(db, 'users', id), {
             email: email,
             bio:null,
+            genres:null
           
           });
           return { id, email, bio: null}; 
