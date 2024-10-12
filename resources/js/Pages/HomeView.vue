@@ -12,7 +12,8 @@ const loginUser = ref({
   id: null,
   email: null,
   displayName: null,
-  bio: null
+  bio: null,
+  genres: null
 
 })
 onMounted(() => {
@@ -34,9 +35,18 @@ onMounted(() => {
   <NavBar></NavBar>
   <section class="posts px-3">
 
-    <PostUser v-for="post in posts" :id="post.id" :descriptionUser="post.text" :img="post.image" :imgAlt="post.image"
-      :serie="post.serie" :date="post.date" :likes="post.likes" :comments="post.comments" :userName="post.user"
-      :liked="post.liked">
+    <PostUser v-for="post in posts" 
+    :id="post.id" 
+    :descriptionUser="post.text" 
+    :img="post.image" 
+    :imgAlt="post.image"
+    :serie="post.serie" 
+    :date="post.date" 
+    :likes="post.likes" 
+    :comments="post.comments" 
+    :userName="post.user"
+    :liked="post.liked" 
+    :userId="post.userid">
     </PostUser>
     <div class="flex justify-center mt-80" v-if="loading">
       <div role="status">

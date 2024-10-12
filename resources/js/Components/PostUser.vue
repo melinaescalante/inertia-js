@@ -1,6 +1,6 @@
 <script setup>
 import { router } from '@inertiajs/vue3';
-import { like, comment, getComments } from '../../services/posts';
+import { like, comment, getComments, isLike } from '../../services/posts';
 import { ref, onMounted } from 'vue';
 import { suscribeToAuthChanged } from "../../services/auth";
 
@@ -8,7 +8,9 @@ const loginUser = ref({
     id: null,
     email: null,
     displayName: null,
-    bio: null
+    bio: null,
+    genres: null
+
 })
 onMounted(() => {
     suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
@@ -16,7 +18,7 @@ onMounted(() => {
 })
 defineProps({
     userName: String,
-    // pictureProfile:String,
+    userId: String,
     id: String,
     descriptionUser: String,
     date: String,
@@ -24,7 +26,8 @@ defineProps({
     imgAlt: String,
     serie: String,
     likes: Number,
-    comments: Array, liked: Boolean
+    comments: Array,
+    liked: Boolean
 
 })
 const commentText = ref('')
@@ -78,19 +81,24 @@ async function seeComments(id) {
 }
 async function giveLike(e) {
     const heart = e.target
-    if (heart.style.fill == 'white') {
-        if (loginUser.value.id !== undefined) {
-            like(e.target.id, 'plus', loginUser.value.id)
-            heart.style.fill = 'red'
-            heart.style.stroke = 'red'
-        } else {
-            router.replace('/ingresar')
-        }
-    } else {
-        heart.style.fill = 'white'
-        heart.style.stroke = 'black'
-        like(e.target.id, 'less', loginUser.value.id)
+    if (loginUser.value.id === undefined) {
+        router.replace('/ingresar');
     }
+    try {
+        const alreadyLiked = await isLike(heart.id, loginUser.value.id);
+        if (!alreadyLiked) {
+            await like(e.target.id, 'plus', loginUser.value.id);
+            heart.style.fill = 'red';
+            heart.style.stroke = 'red';
+        } else {
+            await like(e.target.id, 'less', loginUser.value.id);
+            heart.style.fill = 'white';
+            heart.style.stroke = 'black';
+        }
+    } catch (error) {
+        console.error("Error en el proceso de like:", error);
+    }
+
 }
 </script>
 <template>
@@ -103,7 +111,7 @@ async function giveLike(e) {
             </div>
             <div class="flex flex-col mx-2">
 
-                <a href="#" class="text-[1.04rem] font-medium  ">{{ userName }}</a>
+                <a :href="`/perfil/${userId}`" class="text-[1.04rem] font-medium  ">{{ userName }}</a>
                 <a href="#" class="decoration-none text-blue-500">{{ serie }}</a>
             </div>
         </div>
@@ -121,14 +129,14 @@ async function giveLike(e) {
                 <div class="flex">
 
                     <span class="sr-only">Like</span>
-                    <p v-if="likes !== undefined && likes!=0" >
+                    <p v-if="likes !== undefined && likes != 0">
                         <span>{{ likes.length }}</span>
                     </p>
                     <div @click="giveLike" :id="id" :liked="liked">
 
                         <svg :id="id" class="h-6 w-6 cursor-pointer" xmlns="http://www.w3.org/2000/svg"
                             data-name="Layer 1" viewBox="0 0 122.88 113.41">
-                            <title>Like</title>
+                            <titlel>Like</titlel>
                             <path :id="id"
                                 :style="liked ? 'stroke: red; fill: red; stroke-width: 10px;' : 'stroke: black; fill: white; stroke-width: 10px;'"
                                 class="cls-1"

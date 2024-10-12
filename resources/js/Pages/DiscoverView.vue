@@ -17,13 +17,12 @@ onMounted(async () => {
     try {
         await suscribeToAuthChanged(newUserData => {
             loginUser.value = newUserData
-            console.log(loginUser.value)
             let idShows = [];
             loginUser.value.genres.forEach(async (genre) => {
                 let genreArray = []
                 const limit = 10
                 const response = await fetch('https://api.tvmaze.com/shows');
-                //  const response = await fetch('https://api.tvmaze.com/search/shows?q='+ genre);
+               
                 const shows = await response.json();
                 shows.forEach(show => {
                     if (genreArray.length < limit) {
@@ -34,15 +33,6 @@ onMounted(async () => {
                         }
                     }
                 });
-
-                // });
-                //  const filteredShows = shows.filter(show => {
-                //     if(filteredShows.length==limit){
-                //         show.genres && show.genres.includes(genre)
-                //         return
-                //     }
-                // console.log(genreArray, 'shows')
-                //  genreArray = json 
                 serie.value.push(genreArray)
                 console.log(serie.value);
             });

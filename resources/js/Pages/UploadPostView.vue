@@ -22,7 +22,9 @@ const loginUser = ref({
     id: null,
     email: null,
     displayName: null,
-    bio:null
+    bio:null,
+    genres:null
+
 
 })
 async function handlePost() {

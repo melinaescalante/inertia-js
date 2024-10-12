@@ -1,7 +1,5 @@
 <script>
-import { router, Link } from '@inertiajs/vue3';
-import { useRoute } from 'vue-router'
-
+import { router } from '@inertiajs/vue3';
 export default {
   props: {
     series: {
@@ -30,7 +28,6 @@ export default {
             // Manejamos los resultados en caso de éxito. Faltaría manejar en caso de error.
             onSuccess: page => {
               if (this.series.length > 0) {
-                console.log(this.series)
                 this.answer = "Success";
         
               } else {
@@ -97,7 +94,7 @@ export default {
     <img class="h-[100%] w-12" :src="item.show.image ? item.show.image.medium : 'noimage.png'" :alt="item.show.name">  
     <div class="flex flex-col">
       
-      <Link href="#" class="ms-3 font-medium block">  {{ item.show.name, console.log(item) }}</Link>
+      <a :href="`/show/${item.show.id}`" class="ms-3 font-medium block">  {{ item.show.name, console.log(item) }}</a>
       <p class="ms-3 text-blue-400 ">{{ item.show.type }}</p>
     </div>
     </li>

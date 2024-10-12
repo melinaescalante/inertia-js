@@ -22,9 +22,7 @@ export async function uploadPost({ text, serie, image, date, userid }) {
 }
 
 export async function uploadPhoto(image) {
-  // const fileInput = image
   try {
-    console.log(image)
     const storageRefe = storageRef(storage, `posts/${image.name}`);
     await uploadBytes(storageRefe, image);
     // Obtén la URL de descarga
@@ -48,7 +46,6 @@ export async function readPosts(callback, userid) {
     const posts = [];
     for (const doc of snapshot.docs) {
       const like = await isLike(doc.id, userid)
-      console.log(like)
       const post = {
         id: doc.id,
         // username:doc.data().username,
@@ -60,10 +57,11 @@ export async function readPosts(callback, userid) {
         comments: doc.data().comments,
         shares: doc.data().shares,
         user: await getNameUser(doc.data().userid),
+        userid:doc.data().userid,
         liked: like
       };
       posts.push(post);
-      // console.log(post)
+      console.log(post)
     }
     callback(posts)
 
@@ -75,24 +73,50 @@ export async function readPosts(callback, userid) {
 * @param {{callback:function, id: string}} data
 * @returns {{Promise}}
 */
-export async function readPostsById(id) {
-  const post = doc(db, "posts-public", id);
-  // const userRef = doc(db, 'users', id);
-  const postSnapshot = await getDoc(post);
-  const postFound = {
-    id: postSnapshot.id,
-    serie: postSnapshot.data().serie,
-    text: postSnapshot.data().text,
-    image: postSnapshot.data().image,
-    date: postSnapshot.data().date,
-    user: await getNameUser(postSnapshot.data().userid),
-    likes: postSnapshot.data().likes,
-    comments: postSnapshot.data().comments,
-    shares: postSnapshot.data().shares,
+// export async function readPostsById(id,userid) {
+//   const post = doc(db, "posts-public", id);
+//   const postSnapshot = await getDoc(post);
+//   const like = await isLike(postSnapshot.id, userid)
 
-  };
-  return postFound
+//   const postFound = {
+//     id: postSnapshot.id,
+//     serie: postSnapshot.data().serie,
+//     text: postSnapshot.data().text,
+//     image: postSnapshot.data().image,
+//     date: postSnapshot.data().date,
+//     user: await getNameUser(postSnapshot.data().userid),
+//     likes: postSnapshot.data().likes,
+//     comments: postSnapshot.data().comments,
+//     shares: postSnapshot.data().shares,
+//     userid:postSnapshot.data().userid,
+//     liked: like
+//   };
+//   return postFound
 
+// }
+export async function readPostsById(callback,id, userid, ) {
+  const postRef = doc(db, "posts-public", id);
+
+  onSnapshot(postRef, async (postSnapshot) => {
+    if (postSnapshot.exists()) {
+      const like = await isLike(postSnapshot.id, userid);
+      const postFound = {
+        id: postSnapshot.id,
+        serie: postSnapshot.data().serie,
+        text: postSnapshot.data().text,
+        image: postSnapshot.data().image,
+        date: postSnapshot.data().date,
+        user: await getNameUser(postSnapshot.data().userid),
+        likes: postSnapshot.data().likes,
+        comments: postSnapshot.data().comments,
+        shares: postSnapshot.data().shares,
+        userid: postSnapshot.data().userid,
+        liked: like
+      };
+
+      callback(postFound); 
+    }
+  });
 }
 /**
 *Traemos los posteos de un usuario específico, mediante su id.
@@ -100,13 +124,12 @@ export async function readPostsById(id) {
 * @returns {{Promise}}
 */
 export async function readPostsByUser(callback, userid) {
-  console.log(userid)
   const postQuery = query(collection(db, "posts-public"), where("userid", "==", userid));
   onSnapshot(postQuery, async (snapshot) => {
     const posts = [];
     //Utilizo este metodo para poder llamar a la funcion de getnameuser, sino me devolvia promesas con el return en conjunto al map
     for (const doc of snapshot.docs) {
-
+      const like = await isLike(doc.id, userid)
       const post = {
         id: doc.id,
         serie: doc.data().serie,
@@ -115,12 +138,17 @@ export async function readPostsByUser(callback, userid) {
         date: doc.data().date,
         user: await getNameUser(doc.data().userid),
         likes: doc.data().likes,
+        userid:doc.data().userid,
+
         comments: doc.data().comments,
         shares: doc.data().shares,
+    liked: like
+
       };
       posts.push(post);
-
+      
     }
+
     callback(posts);
   });
 }
@@ -130,18 +158,14 @@ export async function isLike(id, userid) {
   const postSnapshot = await getDoc(postRef);
   const currentLikes = postSnapshot.data().likes || [];
   const userFound = currentLikes.find(user => {
-
     return Object.keys(user)[0] === userid;
   });
-
-
   if (userFound) {
     return true;
   } else {
     return false;
   }
 }
-
 export async function like(id, operador, userid) {
   try {
 
@@ -149,22 +173,20 @@ export async function like(id, operador, userid) {
     const postSnapshot = await getDoc(postRef);
     if (postSnapshot) {
       const currentLikes = postSnapshot.data().likes || [];
-      if (operador == 'plus') {
+      if (operador === 'plus') {
         const newLike = { [userid]: userid };
         currentLikes.push(newLike);
       
         await updateDoc(postRef, {
           likes: currentLikes
         });
-        console.log("Like añadido correctamente.");
 
       } 
-      if(operador=='less') {
+      else if(operador==='less') {
         const newArray = currentLikes.filter(user => {
-          const userIdKey = Object.keys(user)[0]; // Obtener la clave del objeto
-          return userIdKey !== userid; // Comparar la clave con el ID a eliminar
+          const userIdKey = Object.keys(user)[0]; 
+          return userIdKey !== userid; 
         });
-        // console.log(newArray);
 
         await updateDoc(postRef, {
           likes: newArray
@@ -186,7 +208,6 @@ export async function comment(id, comment, iduser) {
     if (postSnapshot) {
       const currentComments = postSnapshot.data().comments || [];
       const newComment = { [iduser]: comment };
-      // Agregar el nuevo comentario al array
       currentComments.push(newComment);
 
       await updateDoc(postRef, {

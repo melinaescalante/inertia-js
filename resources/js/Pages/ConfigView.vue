@@ -17,8 +17,7 @@ onMounted(() => {
 const handleLogout=()=>{
 logout()
 router.replace('/ingresar')
-// router.push('/login')
-// router.
+
 }
 </script>
 <template>
