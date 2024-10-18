@@ -4,7 +4,6 @@ use App\Http\Controllers\AppController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\SerieController;
-use Google\Cloud\Firestore\FirestoreClient;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 
 //Rutas de vistas basicas
@@ -18,13 +17,15 @@ Route::get('/configuraciones', [AppController::class,"configuraciones"])
 ->name('config');
 
 Route::get('/perfil/{id}', [AppController::class,"profile"])
-->name('profile');
+->name('profile')
+->whereAlphaNumeric('id');
 
-Route::get('/perfil/edit', [AppController::class,"profileEdit"])
+Route::get('/perfilinfo/edit', [AppController::class,"profileEdit"])
 ->name('profileEdit');
 
 Route::get('/post/{id}', [AppController::class,"singlePost"])
-->name('singlePost');
+->name('singlePost')
+->whereNumber('id');
 
 Route::get('/misSeries', [AppController::class,"mySeries"])
 ->name('mySeries');
@@ -34,13 +35,22 @@ Route::get('/descubrir', [AppController::class,"discover"])
 
 Route::get('/buscador', [SerieController::class, 'buscador']);
 //Rutas especificas de series con respecto a peticiones a la api
-Route::get('/show/{id}', [SerieController::class, 'getSerieById']);
+Route::get('/show/{id}', [SerieController::class, 'getSerieById'])
+->whereNumber('id');
 
-Route::get('/show/{id}/elenco/{name}', [SerieController::class, 'getCastBySerie']);
+Route::get('/show/{id}/elenco/{name}', [SerieController::class, 'getCastBySerie'])
+;
 
-Route::get('/show/{id}/temporadas/{name}', [SerieController::class, 'getSeasonsBySerie']);
+Route::get('/show/{id}/temporadas/{name}', [SerieController::class, 'getSeasonsBySerie'])
+->whereNumber('id');
 
-Route::get('/show/temporadas/episodios/{name}/{id}', [SerieController::class, 'getEpisodesBySeason']);
+Route::get('/show/temporadas/episodios/{name}/{season}/{id}', [SerieController::class, 'getEpisodesBySeason'])
+->whereNumber('id');
+
+Route::get('show/{name}/episodios/{id}', [SerieController::class, 'getAllEpisodes'])
+->whereNumber('id');
+Route::get('show/{name}/galeria/{id}', [SerieController::class, 'getAllImagesBySerie'])
+->whereNumber('id');
 
 Route::get('/subirPublicacion', [AppController::class, 'uploadPost']);
 

@@ -18,11 +18,12 @@ class SerieController extends Controller
         }
         return Inertia::render('CastSerieView', [
             'cast' => $cast,
-            'name'=>$name
-            
+            'name' => $name
+
         ]);
     }
-    public function getSeasonsBySerie($id, $name){
+    public function getSeasonsBySerie($id, $name)
+    {
         $seasons = [];
 
         $response = Http::get("https://api.tvmaze.com/shows/" . $id . '/seasons');
@@ -31,22 +32,67 @@ class SerieController extends Controller
         }
         return Inertia::render('SeasonSerieView', [
             'seasons' => $seasons,
-            'name'=>$name
-            
+            'name' => $name
+
         ]);
     }
-    public function getEpisodesBySeason($id, $name)
+    public function getAllEpisodes( $name,$id)
+    {
+        $episodes = [];
+// echo $id;
+        $response = Http::get("https://api.tvmaze.com/shows/" . $id . '/episodes');
+        if ($response->successful()) {
+            $episodes = $response->json();
+            // var_dump($episodes);
+        }
+        return Inertia::render('AllEpisodesBySerieView', [
+            'episodes' => $episodes,
+            'name' => $name
+
+        ]);
+    }
+    public function getAllImagesBySerie( $name,$id)
+    {
+        $images = [];
+        $posters = [];
+        $banners = [];
+        $backgrounds = [];
+        $response = Http::get("https://api.tvmaze.com/shows/" . $id . '/images');
+        if ($response->successful()) {
+            $images = $response->json();
+            $json = json_decode($response); 
+            foreach ($json as $image) {
+                if ($image->type=='poster') {
+                    array_push($posters,$image);
+                }
+                if ($image->type=='banner') {
+                    array_push($banners,$image);
+                }
+                if ($image->type=='background') {
+                    array_push($backgrounds,$image);
+                }
+            }
+        }
+        return Inertia::render('GalleryBySerieView', [
+            'posters' => $posters,
+            'backgrounds' => $backgrounds,
+            'banners' => $banners,
+            'name' => $name
+
+        ]);
+    }
+    public function getEpisodesBySeason($name,$season, $id)
     {
         $episodes = [];
         $response = Http::get("https://api.tvmaze.com/seasons/". $id .'/episodes');
         if ($response->successful()) {
             $episodes = $response->json();
-            var_dump($episodes);
         }
         return Inertia::render('EpisodesBySeasonView', [
             'episodesBySeason' => $episodes,
-            'name'=>$name
-            
+            'name' => $name,
+            'season'=>$season
+
         ]);
     }
     public function getSerieById($id)

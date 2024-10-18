@@ -61,8 +61,5 @@ class AppController extends Controller
     {
         return Inertia::render('UploadPostView');
     }
-    public function uploadPostProcess(Request $request)
-    {
-        
-    }
+
 }

@@ -100,7 +100,7 @@ onMounted(async () => {
             <p class="me-2">Series vistas</p>
             <p>Amigos</p>
           </div>
-          <Link href="/perfil/edit"
+          <Link href="/perfilinfo/edit"
             class="text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
           Editar Perfil</Link>
           <p class="border-b text-blue-500 text-center " v-if="userData.bio">{{ userData.bio }}</p>

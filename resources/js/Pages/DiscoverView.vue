@@ -1,7 +1,7 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
 import DiscoverFeature from '../components/DiscoverFeature.vue'
-import { suscribeToAuthChanged } from "../../services/auth";
+import { login, suscribeToAuthChanged } from "../../services/auth";
 
 import { onMounted, ref } from 'vue';
 let serie = ref([]);
@@ -17,25 +17,55 @@ onMounted(async () => {
     try {
         await suscribeToAuthChanged(newUserData => {
             loginUser.value = newUserData
+            console.log(newUserData)
             let idShows = [];
-            loginUser.value.genres.forEach(async (genre) => {
-                let genreArray = []
-                const limit = 10
-                const response = await fetch('https://api.tvmaze.com/shows');
-               
-                const shows = await response.json();
-                shows.forEach(show => {
-                    if (genreArray.length < limit) {
-                        if (show.genres.includes(genre) && !(idShows[show.id])) {
-                            idShows.push(show.id);
-                            idShows[show.id]=show.id
-                            genreArray.push(show);
+            let genresStatic= new Map
+            genresStatic.set("Comedia", "Comedy");
+            genresStatic.set("Romance", "Romance");
+            genresStatic.set("Drama", "Drama");
+            //  let genresStatic = [Comedia="Comedy",Romance="Romance", Drama="Drama"]
+      
+            console.log(genresStatic)
+            if (loginUser.value.genres!==undefined) {
+                
+                loginUser.value.genres.forEach(async (genre) => {
+                    let genreArray = []
+                    const limit = 10
+                    const response = await fetch('https://api.tvmaze.com/shows');
+                   
+                    const shows = await response.json();
+                    shows.forEach(show => {
+                        if (genreArray.length < limit) {
+                            if (show.genres.includes(genre) && !(idShows[show.id])) {
+                                idShows.push(show.id);
+                                idShows[show.id]=show.id
+                                genreArray.push(show);
+                            }
                         }
-                    }
+                    });
+                    serie.value.push(genreArray)
+                    console.log(serie.value);
                 });
-                serie.value.push(genreArray)
-                console.log(serie.value);
-            });
+            }else{
+                genresStatic.forEach(async (genre) => {
+                    let genreArray = []
+                    const limit = 10
+                    const response = await fetch('https://api.tvmaze.com/shows');
+                   
+                    const shows = await response.json();
+                    shows.forEach(show => {
+                        if (genreArray.length < limit) {
+                            if (show.genres.includes(genre) && !(idShows[show.id])) {
+                                idShows.push(show.id);
+                                idShows[show.id]=show.id
+                                genreArray.push(show);
+                            }
+                        }
+                    });
+                    serie.value.push(genreArray)
+                    console.log(serie.value);
+                });
+            }
         })
     } catch (error) {
         console.error('Error fetching posts:', error.message);
@@ -53,8 +83,10 @@ defineProps({ genres: Array })
             <p class="m-3 mt-4 ms-5 font-medium">Segun tus generos favoritos:</p>
         </div>
         <div class="flex overflow-x-auto scroll overflow-scroll ">
-
-            <DiscoverFeature class="" v-for="show in genero" :titleSerie="show.name" :dateSerie="show.premiered"
+<!-- :genre=show.namee -->
+            <DiscoverFeature  v-for="show in genero" 
+            :genres="show.genres"
+            :titleSerie="show.name" :dateSerie="show.premiered"
                 :synopsis="show.summary" :cover="show.image" :text="show.schedule.time">
 
             </DiscoverFeature>
