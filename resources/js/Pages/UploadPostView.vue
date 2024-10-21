@@ -10,6 +10,7 @@ onMounted(() => {
 defineProps({
     series: Array  
 })
+const loading= ref(false)
 const imageInput = ref(null); // Ref para el input de tipo file
 const newPost = ref({
   userid:null,
@@ -27,7 +28,12 @@ const loginUser = ref({
 
 
 })
+console.log(loading.value)
 async function handlePost() {
+  if(loading.value) return;
+  loading.value=true
+console.log(loading.value)
+
   let imageURL
   imageInput!==null?await uploadPhoto(newPost.value.image): imageURL=null
 
@@ -37,13 +43,22 @@ async function handlePost() {
   newPost.value.date = new Date().toLocaleString('es-AR', {
     timeZone: 'America/Argentina/Buenos_Aires'
   })
+try {
   uploadPost({ ...newPost.value })
+  
+} catch (error) {
+  console.log(error)
+}
+
   newPost.value.text = '';
   newPost.value.serie = '';
   newPost.value.image = null;
   if (imageInput.value) {
     imageInput.value.value = '';
   }
+  loading.value=false
+  console.log(loading.value)
+
 }
 function handleImageChange(e) {
   const file = e.target.files[0];
@@ -66,13 +81,13 @@ function handleImageChange(e) {
       <!-- <SearchComponent :series="series">
 
       </SearchComponent> -->
-      <input type="search" class="p-2 m-2  border rounded-md" name="serie" id="serie" v-model="newPost.serie"
+      <input type="search" class="p-2 m-2  border rounded-md"  :readonly="loading" name="serie" id="serie" v-model="newPost.serie"
         required />
     </div>
     <div class="flex flex-col mb-3">
       <span class="sr-only">Escribe lo que quieras</span>
       <label for="description"></label>
-      <textarea class=" p-2 m-2 border rounded-md" name="description" id="description"
+      <textarea  :readonly="loading" class=" p-2 m-2 border rounded-md" name="description" id="description"
         placeholder="Escribe lo que quieras" v-model="newPost.text"></textarea>
     </div>
     <div class="m-2 mb-4 mt-3 ">
@@ -88,8 +103,8 @@ function handleImageChange(e) {
       </label>
     </div>
 
-    <input type="submit" class="m-2 border rounded-lg py-2 px-4 bg-blue-700 text-white hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-900
-      transition-colors" value="Publicar">
+    <button type="submit" class="m-2 border rounded-lg py-2 px-4 bg-blue-700 text-white hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-900
+      transition-colors">{{ !loading?'Publicar':'Publicando..' }}</button>
 
   </form>
 </template>

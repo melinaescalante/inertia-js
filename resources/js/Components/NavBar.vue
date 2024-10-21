@@ -3,6 +3,7 @@ import { Link, router, usePage } from '@inertiajs/vue3'
 import { ref, onMounted } from 'vue';
 import { auth } from "../../services/firebase";
 import { onAuthStateChanged } from 'firebase/auth';
+import NavItem from './NavItem.vue' 
 import { suscribeToAuthChanged } from "../../services/auth";
 
 const loginUser = ref({
@@ -22,6 +23,7 @@ onMounted(() => {
 })
 </script>
 <template>
+
     <nav class="flex justify-between items-center p-4 bg-slate-200 text-slate-800">
         <Link href="/" class="text-xl">TVON</Link>
 

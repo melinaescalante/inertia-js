@@ -2,7 +2,7 @@
 import NavBar from '../components/NavBar.vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import { ref, onMounted } from 'vue'
-
+import ButtonGoBack from '../components/ButtonGoBack.vue'
 import { suscribeToAuthChanged } from "../../services/auth";
 import { readPostsByUser } from '../../services/posts';
 import { getEmailUser, getUsersProfileById } from '../../services/users';
@@ -13,7 +13,7 @@ defineProps({
   // genres: Array
 })
 const page = usePage()
-const id = ref(null) // Esto te da el ID directamente
+const id = ref(null) 
 const loading = ref(true)
 const loginUser = ref({
   id: null,
@@ -91,7 +91,11 @@ onMounted(async () => {
       </div>
     </template>
     <template v-else>
-      <div class="flex items-center mt-4 justify-around mb-3">
+      <div class="mt-1" v-if="loginUser.id!==userData.id">
+<ButtonGoBack></ButtonGoBack>
+        
+      </div>
+      <div class="flex items-center mt-3 justify-around mb-3">
         <img src="/public/no-image.jpg" :alt="'Foto de perfil de ' + loginUser.email" class="w-20 h-20 rounded-full ">
         <div class="flex flex-col">
 
@@ -100,7 +104,7 @@ onMounted(async () => {
             <p class="me-2">Series vistas</p>
             <p>Amigos</p>
           </div>
-          <Link href="/perfilinfo/edit"
+          <Link v-if="loginUser.id===userData.id" href="/perfilinfo/edit"
             class="text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
           Editar Perfil</Link>
           <p class="border-b text-blue-500 text-center " v-if="userData.bio">{{ userData.bio }}</p>
@@ -112,10 +116,10 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <div v-if="postsById !== undefined">
-        <div v-for="post in postsById" class="mt-5">
+      <div class="flex flex-wrap justify-around" v-if="postsById !== undefined">
+        <div v-for="post in postsById" class="mt-5 ">
           <Link :href="`/post/${post.id}`" :id="post.id">
-          <img :src="post.image" :alt="post.serie" class="w-[7rem] h-[7rem]  bg-cover w">
+          <img :src="post.image?post.image: '/text.jpg'" :alt="post.serie" class="w-[7rem] h-[7rem]  bg-cover w">
 
           </Link>
         </div>

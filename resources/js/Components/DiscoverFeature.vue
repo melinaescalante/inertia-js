@@ -1,6 +1,8 @@
 <script setup>
+import { Link } from '@inertiajs/vue3';
 defineProps({
   genres: Array,
+  id:Number,
   titleSerie: String,
   dateSerie: String,
   synopsis: String,
@@ -15,7 +17,7 @@ const imgDefault = '/noimage.png'
   <div class="flex flex-col justify-center bg-white border-gray-200 m-4 mt-0 border rounded-lg min-w-[92%]">
     <div class="flex">
 
-
+      <Link :href="`/show/${id}`" >
       <img class="h-[40%] lg:h-[100%] w-auto max-w-[15rem] rounded-l-lg object-cover" :src="cover?.medium || imgDefault"
         :alt="text">
       <div class="flex flex-wrap ms-4 mt-4 me-4">
@@ -23,9 +25,10 @@ const imgDefault = '/noimage.png'
         <p v-html="synopsis.length > 150 ? `${synopsis.slice(0, 200)}...` : synopsis">
         </p>
         <p class="mb-3">{{ dateSerie }}</p>
-        <!-- <div> -->
-        <!-- </div> -->
+
+
       </div>
+      </Link>
     </div>
     <div class="flex
     ">

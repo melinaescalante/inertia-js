@@ -2,12 +2,15 @@
 import NavBar from '../components/NavBar.vue'
 import ButtonBase from '../components/ButtonBase.vue'
 import { Link } from '@inertiajs/vue3';
+import ButtonGoBack from '../components/ButtonGoBack.vue'
 defineProps({
     serie: Array
 })
 </script>
 <template>
     <NavBar></NavBar>
+    <ButtonGoBack></ButtonGoBack>
+
     <p>{{ console.log(serie) }}</p>
     <h1 class="text-2xl font-medium ms-2 mt-3 mb-3">{{ serie.name }}</h1>
     <div class="flex gap-3 m-2">
@@ -33,8 +36,8 @@ defineProps({
         param="episodios"
         >Episodios</ButtonBase>
         <ButtonBase
-        :href="serie.id"
-        :name="serie.name"
+        :href="serie.name"
+        :name="serie.id"
         param="temporadas"
         >Temporadas</ButtonBase>
         <ButtonBase
@@ -42,8 +45,8 @@ defineProps({
         :name="serie.name"
         param="galeria">Galeria</ButtonBase>
         <ButtonBase
-        :href="serie.id"
-        :name="serie.name"
+        :href="serie.name"
+        :name="serie.id"
         param="elenco"
         >Elenco</ButtonBase>
 

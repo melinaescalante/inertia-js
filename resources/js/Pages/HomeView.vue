@@ -5,6 +5,7 @@ import { onMounted, ref, onUnmounted } from 'vue';
 import { suscribeToAuthChanged } from "../../services/auth";
 
 import { readPosts } from '../../services/posts';
+let unSubscribeFromAuth = () => {};
 const loading=ref(true)
 
 const posts = ref([])
@@ -17,8 +18,7 @@ const loginUser = ref({
 
 })
 onMounted(() => {
-  // Suscribimos a los cambios de autenticación
-  suscribeToAuthChanged(newUserData => {
+  unSubscribeFromAuth=suscribeToAuthChanged(newUserData => {
     if (newUserData) {
       loginUser.value = newUserData;
       readPosts(newPosts => {
@@ -30,6 +30,12 @@ onMounted(() => {
     }
   });
 });
+onUnmounted(()=>{
+  if (typeof unSubscribeFromAuth === 'function') {
+    unSubscribeFromAuth();
+  }
+
+})
 </script>
 <template>
   <NavBar></NavBar>

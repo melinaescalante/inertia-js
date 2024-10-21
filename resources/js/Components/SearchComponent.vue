@@ -43,12 +43,15 @@ export default {
         }
 
       }
+    },
+    handleSubmit() {
+      this.getAnswer(this.formInput); 
     }
   }
 }
 </script>
 <template>
-  <form class="max-w-2xl m-4 mb-5 mt-5" action="#" method="get">
+  <form @submit.prevent="handleSubmit" class="max-w-2xl m-4 mb-5 mt-5" method="get">
     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
       Busca tu serie
     </label>
@@ -62,10 +65,10 @@ export default {
       </div>
       <input type="search" id="default-search"
         class="block w-full p-4 ps-10 text-sm text-gray-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4"
-        placeholder="Busca tu serie" required v-model="formInput" @input="getAnswer(formInput)" />
+        placeholder="Busca tu serie"  required v-model="formInput" @input="getAnswer(formInput)" />
       
         <button type="submit"
-        class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
+        class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2" >
         Buscar
       </button>
     </div>

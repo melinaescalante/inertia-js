@@ -1,7 +1,54 @@
+<script setup>
+import { ref, onMounted } from 'vue';
+import NavBar from '../components/NavBar.vue';
+import { editProfile, suscribeToAuthChanged } from '../../services/auth';
+import ButtonGoBack from '../components/ButtonGoBack.vue'
+
+const editData = ref({
+    displayName: '',
+    bio: '',
+});
+const genres = ref([]);
+const loading = ref(false);
+
+onMounted(() => {
+    suscribeToAuthChanged((newUserData) => {
+        editData.value.displayName = newUserData.displayName;
+        editData.value.bio = newUserData.bio;
+        genres.value = newUserData.genres || [];
+    });
+});
+
+function toggleGenre(genre) {
+    const index = genres.value.indexOf(genre);
+    if (index > -1) {
+        genres.value.splice(index, 1);  // Eliminar si ya está seleccionado
+    } else {
+        genres.value.push(genre);  // Agregar si no está seleccionado
+    }
+}
+
+async function handleSubmit() {
+    loading.value = true;
+    try {
+        console.log(genres.value);
+        await editProfile({ ...editData.value, genres: genres.value });
+    } catch (error) {
+        console.log('No se ha podido editar correctamente el perfil.');
+    } finally {
+        loading.value = false;
+    }
+}
+</script>
 <template>
+
     <NavBar></NavBar>
-    <h1 class="text-start text-2xl mt-8 mb-8 font-medium">Edita tu perfil</h1>
-    <form action="#" @submit.prevent="handleSubmit" class="border p-6 max-w-lg rounded-lg mx-auto">
+    <div class="mt-2">
+
+        <ButtonGoBack></ButtonGoBack>
+    </div>
+    <h1 class="text-start text-2xl mt-2 mb-8  ms-2 font-medium">Edita tu perfil</h1>
+    <form action="#" @submit.prevent="handleSubmit" class="border  p-6 max-w-lg rounded-lg  m-2">
         <div class="flex flex-col mb-3">
             <label for="bio" class="ms-2 m-2">Biografía</label>
             <textarea name="bio" id="bio" class="p-2 m-2 border rounded-md resize-none" v-model="editData.bio"></textarea>
@@ -45,44 +92,3 @@
     </form>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import NavBar from '../components/NavBar.vue';
-import { editProfile, suscribeToAuthChanged } from '../../services/auth';
-
-const editData = ref({
-    displayName: '',
-    bio: '',
-});
-const genres = ref([]);
-const loading = ref(false);
-
-onMounted(() => {
-    suscribeToAuthChanged((newUserData) => {
-        editData.value.displayName = newUserData.displayName;
-        editData.value.bio = newUserData.bio;
-        genres.value = newUserData.genres || [];
-    });
-});
-
-function toggleGenre(genre) {
-    const index = genres.value.indexOf(genre);
-    if (index > -1) {
-        genres.value.splice(index, 1);  // Eliminar si ya está seleccionado
-    } else {
-        genres.value.push(genre);  // Agregar si no está seleccionado
-    }
-}
-
-async function handleSubmit() {
-    loading.value = true;
-    try {
-        console.log(genres.value);
-        await editProfile({ ...editData.value, genres: genres.value });
-    } catch (error) {
-        console.log('No se ha podido editar correctamente el perfil.');
-    } finally {
-        loading.value = false;
-    }
-}
-</script>

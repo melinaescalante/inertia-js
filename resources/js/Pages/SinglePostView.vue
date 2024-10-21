@@ -5,6 +5,8 @@ import { usePage } from '@inertiajs/vue3'
 import { suscribeToAuthChanged } from "../../services/auth";
 import { readPostsById } from '../../services/posts';
 import PostUser from '../Components/PostUser.vue';
+import ButtonGoBack from '../components/ButtonGoBack.vue'
+
 const page = usePage()
 const id = ref(page.props.id)
 const loading = ref(true)
@@ -57,6 +59,10 @@ onMounted(async () => {
         </div>
     </template>
     <template v-else>
+        <div class="ms-2 mt-1">
+
+            <ButtonGoBack></ButtonGoBack>
+        </div>
 
         <PostUser :id="post.id" :descriptionUser="post.text" :img="post.image" :imgAlt="post.image" :serie="post.serie"
             :date="post.date" :likes="post.likes" :comments="post.comments" :userName="post.user" :liked="post.liked"

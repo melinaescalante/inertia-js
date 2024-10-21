@@ -36,40 +36,47 @@ class SerieController extends Controller
 
         ]);
     }
-    public function getAllEpisodes( $name,$id)
+    public function getAllEpisodes($name, $id)
     {
         $episodes = [];
-// echo $id;
+        $cant_seasons =0;
         $response = Http::get("https://api.tvmaze.com/shows/" . $id . '/episodes');
+        $response_seasons = Http::get("https://api.tvmaze.com/shows/" . $id . '/seasons');
         if ($response->successful()) {
             $episodes = $response->json();
             // var_dump($episodes);
         }
+        if ($response_seasons->successful()) {
+            $seasons = $response_seasons  ->json();
+            foreach ($seasons as $season) {
+                $cant_seasons++;
+            }
+        echo $cant_seasons;        }
         return Inertia::render('AllEpisodesBySerieView', [
             'episodes' => $episodes,
             'name' => $name
 
         ]);
     }
-    public function getAllImagesBySerie( $name,$id)
+    public function getAllImagesBySerie($name, $id)
     {
-        $images = [];
+        // $images = [];
         $posters = [];
         $banners = [];
         $backgrounds = [];
         $response = Http::get("https://api.tvmaze.com/shows/" . $id . '/images');
         if ($response->successful()) {
             $images = $response->json();
-            $json = json_decode($response); 
+            $json = json_decode($response);
             foreach ($json as $image) {
-                if ($image->type=='poster') {
-                    array_push($posters,$image);
+                if ($image->type == 'poster') {
+                    array_push($posters, $image);
                 }
-                if ($image->type=='banner') {
-                    array_push($banners,$image);
+                if ($image->type == 'banner') {
+                    array_push($banners, $image);
                 }
-                if ($image->type=='background') {
-                    array_push($backgrounds,$image);
+                if ($image->type == 'background') {
+                    array_push($backgrounds, $image);
                 }
             }
         }
@@ -77,21 +84,53 @@ class SerieController extends Controller
             'posters' => $posters,
             'backgrounds' => $backgrounds,
             'banners' => $banners,
-            'name' => $name
+            'name' => $name,
+            'id' => $id
 
         ]);
     }
-    public function getEpisodesBySeason($name,$season, $id)
+    public function getImageById(Request $request)
+    {
+        $id = $request->id;
+        $idimage = $request->idimage;
+        $name = $request->name;
+$foundImage=null;
+
+        $imageUrl = request()->query('imageUrl');
+        $response = Http::get("https://api.tvmaze.com/shows/" . $id . '/images');
+        if ($response->successful()) {
+            $images = $response->json();
+            
+            array_filter($images,function($image)use ($idimage,&$foundImage){
+                // var_dump($image['id']==$idimage);
+                if ( $image['id']==$idimage) {
+              
+                    $foundImage=$image;
+                    return true;
+                }
+                return false;
+            });
+            // var_dump($foundImage);
+        }
+        return Inertia::render('SingleImageGalleryView', [
+            'imageUrl' => $imageUrl,
+            'name' => $name,
+            'foundImage' => $foundImage,
+            'idimage'=>$idimage
+        ]);
+    }
+
+    public function getEpisodesBySeason($name, $season, $id)
     {
         $episodes = [];
-        $response = Http::get("https://api.tvmaze.com/seasons/". $id .'/episodes');
+        $response = Http::get("https://api.tvmaze.com/seasons/" . $id . '/episodes');
         if ($response->successful()) {
             $episodes = $response->json();
         }
         return Inertia::render('EpisodesBySeasonView', [
             'episodesBySeason' => $episodes,
             'name' => $name,
-            'season'=>$season
+            'season' => $season
 
         ]);
     }

@@ -81,8 +81,9 @@ async function seeComments(id) {
 }
 async function giveLike(e) {
     const heart = e.target
-    if (loginUser.value.id === undefined) {
+    if (loginUser.value.id === undefined ||  loginUser.value.id === null) {
         router.replace('/ingresar');
+        return
     }
     try {
         const alreadyLiked = await isLike(heart.id, loginUser.value.id);
@@ -104,15 +105,21 @@ async function giveLike(e) {
 <template>
 
     <div class="m-4 border rounded-2xl p-4 mb-[2rem]">
-        <div class="flex flex-row  items-center">
+        <div class="flex flex-row justify-between  items-center">
             <div>
-                <img src="/public/noimage.png" class="border rounded-md mx-2 w-10 h-10 " alt="">
+                <img src="/public/noimage.png" class="border rounded-md  w-10 h-10 " alt="">
 
             </div>
             <div class="flex flex-col mx-2">
 
-                <a :href="`/perfil/${userId}`" class="text-[1.04rem] font-medium  ">{{ userName }}</a>
-                <a href="#" class="decoration-none text-blue-500">{{ serie }}</a>
+                <a :href="`/perfil/${userId}`" class="text-[1.04rem] font-medium text-center  ">{{ userName }}</a>
+                <a href="#" class=" text-center decoration-none text-blue-500">{{ serie }}</a>
+            </div>
+            <div class="">
+                <svg class="w-6 h-6 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M6 4v10m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v2m6-16v2m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v10m6-16v10m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v2"/>
+</svg>
+
             </div>
         </div>
         <div class="my-4">

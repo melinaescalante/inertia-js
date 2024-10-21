@@ -1,48 +1,46 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, applyActionCode,onAuthStateChanged, signOut,updateProfile } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, applyActionCode, onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
 import { auth } from "./firebase";
-import { updateUserProfile , getUsersProfileById} from "./users";
+import { updateUserProfile, getUsersProfileById } from "./users";
 
 let loginUser = {
   id: null,
   email: null,
   displayName: null,
   bio: null,
-  genres:null
+  genres: null
 }
 let observers = []
-onAuthStateChanged(auth, async user => {
+if (localStorage.getItem('user')) {
+  loginUser = JSON.parse(localStorage.getItem('user'))
+}
+onAuthStateChanged(auth, user => {
   if (user) {
-    loginUser = {
+    updateLoginUser({
       id: user.uid,
       email: user.email,
       displayName: user.displayName,
-    }
-   
+    })
+
     getUsersProfileById(user.uid, user.email)
       .then(userProfile => {
-
-        loginUser = {
+        updateLoginUser({
           ...loginUser,
           bio: userProfile.bio,
-          genres:userProfile.genres
-    //       // carrer: userProfile.carrer,
-    //       // fullyLoaded: true
-        }
-        notifyAll();
+          genres: userProfile.genres
+        })
       })
   } else {
-    loginUser = {
+    updateLoginUser({
       id: null,
       email: null,
       displayName: null,
       bio: null,
-      genres:null
-      // career: null,
-      // fullyLoaded: false,
-    }
+      genres: null
+    })
   }
   //Se cambiaron datos del login user
-  notifyAll()
+  localStorage.removeItem("user")
+
 })
 /**
  * 
@@ -53,14 +51,13 @@ export async function editProfile({ displayName, bio, genres }) {
 
   try {
     await updateProfile(auth.currentUser, { displayName })
-    await updateUserProfile(loginUser.id, { displayName,bio,genres })
-    loginUser = {
+    await updateUserProfile(loginUser.id, { displayName, bio, genres })
+    updateLoginUser({
       ...loginUser,
       displayName,
       bio,
-      genres:genres
-    }
-    notifyAll()
+      genres: genres
+    })
   } catch (error) {
     console.log(error)
   }
@@ -70,17 +67,17 @@ export async function login({ email, password }) {
   // 2.Email
   // 3.Password
   try {
-    const user= await signInWithEmailAndPassword(auth, email, password);
- 
+    const user = await signInWithEmailAndPassword(auth, email, password);
+
     console.log(user)
   } catch (error) {
     throw error;
   }
 }
 
-export async function signUp({email,password}){
+export async function signUp({ email, password }) {
   try {
-    const user= await createUserWithEmailAndPassword(auth, email, password);
+    const user = await createUserWithEmailAndPassword(auth, email, password);
   } catch (error) {
     throw error;
   }
@@ -98,8 +95,13 @@ export async function logout() {
  * @param {Function} callback 
  */
 export async function suscribeToAuthChanged(callback) {
+
+
   observers.push(callback)
   notify(callback)
+  return () => {
+    observers = observers.filter(obs => obs !== callback);
+  }
 }
 /**
  * Ejecuta el callback pasándole una copia de los datos del usuario
@@ -114,5 +116,11 @@ export async function notifyAll() {
   observers.forEach(callback => notify(callback))
 }
 
-
-
+export async function updateLoginUser(newData) {
+  loginUser = {
+    ...loginUser,
+    ...newData
+  }
+  localStorage.setItem('user', JSON.stringify(loginUser))
+  notifyAll()
+}

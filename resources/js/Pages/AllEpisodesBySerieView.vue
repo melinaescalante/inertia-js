@@ -2,15 +2,19 @@
 
 import { Link } from '@inertiajs/vue3';
 import NavBar from '../components/NavBar.vue'
+import ButtonGoBack from '../components/ButtonGoBack.vue'
+
 defineProps({
     episodes: Array,
     name:String
-})</script>
+})
+</script>
 <template>
     <NavBar></NavBar>
 <h1 class="font-medium text-2xl m-2 mt-3 mb-3">{{ name }} episodios</h1>
+<ButtonGoBack></ButtonGoBack>
     <div v-for="episode in episodes">
-{{ console.log(episode) }}
+
 <Link  class=" m-2 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
 
         <img class="object-cover w-full rounded-t-lg h-52  md:w-44  md:rounded-none md:rounded-s-lg" :src="episode.image.medium?episode.image.medium:'noimage.png'" alt="">

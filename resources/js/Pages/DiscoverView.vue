@@ -2,8 +2,9 @@
 import NavBar from '../components/NavBar.vue'
 import DiscoverFeature from '../components/DiscoverFeature.vue'
 import { login, suscribeToAuthChanged } from "../../services/auth";
+let unSubscribeFromAuth = () => {};
 
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted,ref } from 'vue';
 let serie = ref([]);
 const loginUser = ref({
     id: null,
@@ -13,19 +14,20 @@ const loginUser = ref({
     genres: null
 
 })
+
 onMounted(async () => {
     try {
-        await suscribeToAuthChanged(newUserData => {
+    serie.value=[];
+
+        unSubscribeFromAuth=await suscribeToAuthChanged(newUserData => {
             loginUser.value = newUserData
-            console.log(newUserData)
+
             let idShows = [];
             let genresStatic= new Map
             genresStatic.set("Comedia", "Comedy");
             genresStatic.set("Romance", "Romance");
             genresStatic.set("Drama", "Drama");
-            //  let genresStatic = [Comedia="Comedy",Romance="Romance", Drama="Drama"]
       
-            console.log(genresStatic)
             if (loginUser.value.genres!==undefined) {
                 
                 loginUser.value.genres.forEach(async (genre) => {
@@ -63,7 +65,7 @@ onMounted(async () => {
                         }
                     });
                     serie.value.push(genreArray)
-                    console.log(serie.value);
+      
                 });
             }
         })
@@ -71,6 +73,9 @@ onMounted(async () => {
         console.error('Error fetching posts:', error.message);
 
     }
+})
+onUnmounted(()=>{
+     unSubscribeFromAuth();
 })
 defineProps({ genres: Array })
 </script>
@@ -84,7 +89,8 @@ defineProps({ genres: Array })
         </div>
         <div class="flex overflow-x-auto scroll overflow-scroll ">
 <!-- :genre=show.namee -->
-            <DiscoverFeature  v-for="show in genero" 
+            <DiscoverFeature  v-for="show in genero"
+            :id="show.id"
             :genres="show.genres"
             :titleSerie="show.name" :dateSerie="show.premiered"
                 :synopsis="show.summary" :cover="show.image" :text="show.schedule.time">
