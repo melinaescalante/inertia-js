@@ -21,13 +21,14 @@ onMounted(async () => {
 
         unSubscribeFromAuth=await suscribeToAuthChanged(newUserData => {
             loginUser.value = newUserData
+            console.log(loginUser.value.genres, 'generos')
             let idShows = [];
             let genresStatic= new Map
             genresStatic.set("Comedia", "Comedy");
             genresStatic.set("Romance", "Romance");
             genresStatic.set("Drama", "Drama");
       
-            if (loginUser.value.genres!==undefined) {
+            if (loginUser.value.genres!==undefined && loginUser.value.genres!==null) {
                 
                 loginUser.value.genres.forEach(async (genre) => {
                     let genreArray = []

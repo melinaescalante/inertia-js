@@ -73,28 +73,8 @@ export async function readPosts(callback, userid) {
 * @param {{callback:function, id: string}} data
 * @returns {{Promise}}
 */
-// export async function readPostsById(id,userid) {
-//   const post = doc(db, "posts-public", id);
-//   const postSnapshot = await getDoc(post);
-//   const like = await isLike(postSnapshot.id, userid)
 
-//   const postFound = {
-//     id: postSnapshot.id,
-//     serie: postSnapshot.data().serie,
-//     text: postSnapshot.data().text,
-//     image: postSnapshot.data().image,
-//     date: postSnapshot.data().date,
-//     user: await getNameUser(postSnapshot.data().userid),
-//     likes: postSnapshot.data().likes,
-//     comments: postSnapshot.data().comments,
-//     shares: postSnapshot.data().shares,
-//     userid:postSnapshot.data().userid,
-//     liked: like
-//   };
-//   return postFound
-
-// }
-export async function readPostsById(callback,id, userid, ) {
+export async function readPostsById(callback,id, userid ) {
   const postRef = doc(db, "posts-public", id);
 
   onSnapshot(postRef, async (postSnapshot) => {

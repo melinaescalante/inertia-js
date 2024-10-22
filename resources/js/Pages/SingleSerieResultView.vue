@@ -29,9 +29,8 @@ onUnmounted( ()=>{
   unSubscribeFromAuth();
 
 })
-async function addSerie(idUser,idSerie){
-    console.log(idSerie,idUser)
-await addSerieToWatch(idUser,idSerie)
+async function addSerie(idUser,idSerie,nameSerie){
+await addSerieToWatch(idUser,idSerie,nameSerie)
 }
 </script>
 <template>
@@ -80,7 +79,7 @@ await addSerieToWatch(idUser,idSerie)
 
     <div class="flex justify-between m-2">
 
-        <Link   @click="addSerie(loginUser.id, serie.id)"  type="button"
+        <Link   @click="addSerie(loginUser.id, serie.id, serie.name)"  type="button"
             class="border-gray-200 text-blue-700 hover:text-blue-600 border bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center ">
             <svg class="w-6 h-6 me-1 text-blue-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                 height="24" fill="none" viewBox="0 0 24 24">
