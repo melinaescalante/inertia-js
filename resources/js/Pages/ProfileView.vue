@@ -1,11 +1,12 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
 import { Link, usePage } from '@inertiajs/vue3'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import ButtonGoBack from '../components/ButtonGoBack.vue'
 import { suscribeToAuthChanged } from "../../services/auth";
 import { readPostsByUser } from '../../services/posts';
 import { getEmailUser, getUsersProfileById } from '../../services/users';
+let unSubscribeFromAuth = () => {};
 
 defineProps({
   userName: String,
@@ -27,10 +28,10 @@ const postsById = ref([])
 const userData = ref([])
 const emailUser = ref('')
 id.value = page.props.id
-console.log(id.value)
+
 onMounted(async () => {
   // Suscribir a cambios de autenticación
-  suscribeToAuthChanged(async (newUserData) => {
+  unSubscribeFromAuth= suscribeToAuthChanged(async (newUserData) => {
     loginUser.value = newUserData
 
     if (loginUser.value.id !== null && id.value !== null) {
@@ -56,6 +57,10 @@ onMounted(async () => {
 
   })
   // Asegúrate de que los posts se han cargado antes de acceder a ellos
+})
+onUnmounted( ()=>{
+  unSubscribeFromAuth();
+
 })
 </script>
 <template>

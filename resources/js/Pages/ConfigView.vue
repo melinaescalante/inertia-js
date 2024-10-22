@@ -1,8 +1,10 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import NavBar from '../components/NavBar.vue'
 import { router } from "@inertiajs/vue3";
 import { suscribeToAuthChanged, logout } from "../../services/auth";
+let unSubscribeFromAuth = () => {};
+
 const loginUser = ref({
     id: null,
     email: null,
@@ -11,7 +13,7 @@ const loginUser = ref({
 
 })
 onMounted(() => {
-    suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
+    unSubscribeFromAuth=suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
 })
 
 const handleLogout=()=>{
@@ -19,6 +21,10 @@ logout()
 router.replace('/ingresar')
 
 }
+onUnmounted( ()=>{
+  unSubscribeFromAuth();
+
+})
 </script>
 <template>
     <NavBar></NavBar>

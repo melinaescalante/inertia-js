@@ -1,10 +1,9 @@
 <script setup>
 import { Link, router, usePage } from '@inertiajs/vue3'
-import { ref, onMounted } from 'vue';
-import { auth } from "../../services/firebase";
-import { onAuthStateChanged } from 'firebase/auth';
-import NavItem from './NavItem.vue' 
+import { ref, onMounted , onUnmounted} from 'vue';
+
 import { suscribeToAuthChanged } from "../../services/auth";
+let unSubscribeFromAuth = () => {};
 
 const loginUser = ref({
     id: null,
@@ -17,8 +16,13 @@ const page = usePage()
 const currentPage = page.component
 const currentUrl = router.page.url
 console.log(currentPage)
-onMounted(() => {
-    suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
+onMounted(async() => {
+    unSubscribeFromAuth=suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
+
+    
+})
+onUnmounted( ()=>{
+  unSubscribeFromAuth();
 
 })
 </script>

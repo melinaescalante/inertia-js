@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import NavBar from '../components/NavBar.vue';
 import { editProfile, suscribeToAuthChanged } from '../../services/auth';
 import ButtonGoBack from '../components/ButtonGoBack.vue'
+let unSubscribeFromAuth = () => {};
 
 const editData = ref({
     displayName: '',
@@ -11,8 +12,8 @@ const editData = ref({
 const genres = ref([]);
 const loading = ref(false);
 
-onMounted(() => {
-    suscribeToAuthChanged((newUserData) => {
+onMounted(async() => {
+    unSubscribeFromAuth= suscribeToAuthChanged((newUserData) => {
         editData.value.displayName = newUserData.displayName;
         editData.value.bio = newUserData.bio;
         genres.value = newUserData.genres || [];
@@ -39,6 +40,10 @@ async function handleSubmit() {
         loading.value = false;
     }
 }
+onUnmounted( ()=>{
+  unSubscribeFromAuth();
+
+})
 </script>
 <template>
 

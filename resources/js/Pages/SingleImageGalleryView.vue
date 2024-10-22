@@ -13,8 +13,7 @@ defineProps({
 </script>
 <template>
     <NavBar></NavBar>
-   {{  console.log(foundImage) }}
-    {{console.log(imageUrl)}}
+
     <ButtonGoBack></ButtonGoBack>
 
     <div class="m-2">

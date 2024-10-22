@@ -232,8 +232,8 @@ export async function getComments(id) {
 
     for (const comment of commentsObtained) {
       const iduser = Object.keys(comment)[0];
-      const email = await getNameUser(iduser);
-      const newComment = { [email]: comment[iduser] };
+      // const email = await getNameUser(iduser);
+      const newComment = { [iduser]: comment[iduser] };
       updatedComments.push(newComment);
     }
     //Asi traemos lo ultimo comentarios

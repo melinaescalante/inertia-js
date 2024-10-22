@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 class SerieController extends Controller
 {
-
+    // public function getSugerencesByGenres()
+    // {
+    // }
     public function getCastBySerie($id, $name)
     {
         $cast = [];
@@ -39,21 +41,23 @@ class SerieController extends Controller
     public function getAllEpisodes($name, $id)
     {
         $episodes = [];
-        $cant_seasons =0;
         $response = Http::get("https://api.tvmaze.com/shows/" . $id . '/episodes');
-        $response_seasons = Http::get("https://api.tvmaze.com/shows/" . $id . '/seasons');
         if ($response->successful()) {
             $episodes = $response->json();
-            // var_dump($episodes);
-        }
-        if ($response_seasons->successful()) {
-            $seasons = $response_seasons  ->json();
-            foreach ($seasons as $season) {
-                $cant_seasons++;
+            foreach ($episodes as $episode) {
+                $seasonId = $episode['season'];
+
+                if (!isset($seasons[$seasonId])) {
+                    $seasons[$seasonId] = [];
+                }
+                $seasons[$seasonId][] = $episode;
+
+
             }
-        echo $cant_seasons;        }
+        }
+
         return Inertia::render('AllEpisodesBySerieView', [
-            'episodes' => $episodes,
+            'seasons' => $seasons,
             'name' => $name
 
         ]);
@@ -94,18 +98,18 @@ class SerieController extends Controller
         $id = $request->id;
         $idimage = $request->idimage;
         $name = $request->name;
-$foundImage=null;
+        $foundImage = null;
 
         $imageUrl = request()->query('imageUrl');
         $response = Http::get("https://api.tvmaze.com/shows/" . $id . '/images');
         if ($response->successful()) {
             $images = $response->json();
-            
-            array_filter($images,function($image)use ($idimage,&$foundImage){
+
+            array_filter($images, function ($image) use ($idimage, &$foundImage) {
                 // var_dump($image['id']==$idimage);
-                if ( $image['id']==$idimage) {
-              
-                    $foundImage=$image;
+                if ($image['id'] == $idimage) {
+
+                    $foundImage = $image;
                     return true;
                 }
                 return false;
@@ -116,7 +120,7 @@ $foundImage=null;
             'imageUrl' => $imageUrl,
             'name' => $name,
             'foundImage' => $foundImage,
-            'idimage'=>$idimage
+            'idimage' => $idimage
         ]);
     }
 

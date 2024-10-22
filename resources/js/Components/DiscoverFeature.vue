@@ -15,9 +15,9 @@ const imgDefault = '/noimage.png'
 </script>
 <template>
   <div class="flex flex-col justify-center bg-white border-gray-200 m-4 mt-0 border rounded-lg min-w-[92%]">
-    <div class="flex">
+    <div >
 
-      <Link :href="`/show/${id}`" >
+      <Link class="flex" :href="`/show/${id}`" >
       <img class="h-[40%] lg:h-[100%] w-auto max-w-[15rem] rounded-l-lg object-cover" :src="cover?.medium || imgDefault"
         :alt="text">
       <div class="flex flex-wrap ms-4 mt-4 me-4">

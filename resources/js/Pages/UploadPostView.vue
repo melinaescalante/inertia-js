@@ -3,12 +3,18 @@ import { Link } from '@inertiajs/vue3';
 import SearchComponent from '../Components/SearchComponent.vue';
 import { uploadPost, uploadPhoto } from '../../services/posts'
 import { suscribeToAuthChanged } from "../../services/auth";
-import { ref, onMounted } from 'vue';
-onMounted(() => {
-    suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
+import { ref, onMounted, onUnmounted } from 'vue';
+let unSubscribeFromAuth = () => {};
+
+onMounted(async () => {
+  unSubscribeFromAuth=suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
 })
 defineProps({
     series: Array  
+})
+onUnmounted( ()=>{
+  unSubscribeFromAuth();
+
 })
 const loading= ref(false)
 const imageInput = ref(null); // Ref para el input de tipo file

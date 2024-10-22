@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, collection } from "firebase/firestore";
 /**
  * Funcion que en base al id de un usuario nos permite tarer el display name actualizado de cada usuario.
  * @param {id:string} dataUser
@@ -57,8 +57,15 @@ export async function getUsersProfileById(id, email) {
     try {
 
       const profileRef = doc(db, `/users/${id}`)
+      
       const profileDocument = await getDoc(profileRef)
       if (profileDocument.exists()) {
+        const profileSubcollection = collection(profileRef, 'series');
+  
+        // Crear un nuevo documento en la subcolección con un ID automático
+        const newProfileRef = doc(profileSubcollection);
+        await setDoc(newProfileRef,{});
+
         return {
           id: profileDocument.id,
           email: profileDocument.data().email,
@@ -66,7 +73,7 @@ export async function getUsersProfileById(id, email) {
           bio: profileDocument.data().bio,
           genres: profileDocument.data().genres
         }
-
+        
       } else {
 
         await setDoc(doc(db, 'users', id), {

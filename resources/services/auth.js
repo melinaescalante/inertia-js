@@ -20,7 +20,6 @@ onAuthStateChanged(auth, user => {
       email: user.email,
       displayName: user.displayName,
     })
-
     getUsersProfileById(user.uid, user.email)
       .then(userProfile => {
         updateLoginUser({
@@ -37,9 +36,9 @@ onAuthStateChanged(auth, user => {
       bio: null,
       genres: null
     })
+    localStorage.removeItem("user")
   }
   //Se cambiaron datos del login user
-  localStorage.removeItem("user")
 
 })
 /**
@@ -94,9 +93,7 @@ export async function logout() {
  * 
  * @param {Function} callback 
  */
-export async function suscribeToAuthChanged(callback) {
-
-
+export function suscribeToAuthChanged(callback) {
   observers.push(callback)
   notify(callback)
   return () => {
@@ -115,7 +112,6 @@ export async function notify(callback) {
 export async function notifyAll() {
   observers.forEach(callback => notify(callback))
 }
-
 export async function updateLoginUser(newData) {
   loginUser = {
     ...loginUser,

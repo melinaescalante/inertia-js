@@ -1,11 +1,12 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import { suscribeToAuthChanged } from "../../services/auth";
 import { readPostsById } from '../../services/posts';
 import PostUser from '../Components/PostUser.vue';
 import ButtonGoBack from '../components/ButtonGoBack.vue'
+let unSubscribeFromAuth = () => {};
 
 const page = usePage()
 const id = ref(page.props.id)
@@ -20,7 +21,7 @@ const loginUser = ref({
 })
 const post = ref([])
 onMounted(async () => {
-    suscribeToAuthChanged(async (newUserData) => {
+    unSubscribeFromAuth=suscribeToAuthChanged(async (newUserData) => {
         loginUser.value = newUserData
         if (loginUser.value.id) {
             try {
@@ -37,7 +38,10 @@ onMounted(async () => {
     })
 
 })
+onUnmounted( ()=>{
+  unSubscribeFromAuth();
 
+})
 </script>
 <template>
     <NavBar></NavBar>

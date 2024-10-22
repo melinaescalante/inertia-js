@@ -1,8 +1,7 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
 import DiscoverFeature from '../components/DiscoverFeature.vue'
-import { login, suscribeToAuthChanged } from "../../services/auth";
-let unSubscribeFromAuth = () => {};
+import {  suscribeToAuthChanged } from "../../services/auth";
 
 import { onMounted, onUnmounted,ref } from 'vue';
 let serie = ref([]);
@@ -12,16 +11,16 @@ const loginUser = ref({
     displayName: null,
     bio: null,
     genres: null
-
+    
 })
 
+let unSubscribeFromAuth = () => {};
 onMounted(async () => {
     try {
     serie.value=[];
 
         unSubscribeFromAuth=await suscribeToAuthChanged(newUserData => {
             loginUser.value = newUserData
-
             let idShows = [];
             let genresStatic= new Map
             genresStatic.set("Comedia", "Comedy");
@@ -46,14 +45,12 @@ onMounted(async () => {
                         }
                     });
                     serie.value.push(genreArray)
-                    console.log(serie.value);
                 });
             }else{
                 genresStatic.forEach(async (genre) => {
                     let genreArray = []
                     const limit = 10
                     const response = await fetch('https://api.tvmaze.com/shows');
-                   
                     const shows = await response.json();
                     shows.forEach(show => {
                         if (genreArray.length < limit) {

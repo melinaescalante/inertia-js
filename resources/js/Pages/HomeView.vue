@@ -17,7 +17,7 @@ const loginUser = ref({
   genres: null
 
 })
-onMounted(() => {
+onMounted( async () => {
   unSubscribeFromAuth=suscribeToAuthChanged(newUserData => {
     if (newUserData) {
       loginUser.value = newUserData;
@@ -30,10 +30,8 @@ onMounted(() => {
     }
   });
 });
-onUnmounted(()=>{
-  if (typeof unSubscribeFromAuth === 'function') {
-    unSubscribeFromAuth();
-  }
+onUnmounted( ()=>{
+  unSubscribeFromAuth();
 
 })
 </script>
