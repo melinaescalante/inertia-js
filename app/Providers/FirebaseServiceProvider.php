@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Kreait\Firebase\Factory;
+use Google\Cloud\Firestore\FirestoreClient;
 
 class FirebaseServiceProvider extends ServiceProvider
 {
@@ -12,10 +13,13 @@ class FirebaseServiceProvider extends ServiceProvider
      */
     public function register()
     {
-     
-        $this->app->singleton('firebase',  
-function ($app) {
-            return (new Factory)->withServiceAccount('firebase.credentials.path');
+        $this->app->singleton(FirestoreClient::class, function ($app) {
+            // Opcionalmente, puedes obtener el `projectId` desde el archivo de configuración .env
+            $projectId = config('services.firestore.project_id');
+            
+            return new FirestoreClient([
+                'projectId' => $projectId,
+            ]);
         });
 }
 

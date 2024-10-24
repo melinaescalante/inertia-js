@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\FirebaseController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\SerieController;
@@ -32,7 +33,9 @@ Route::get('/post/{id}', [AppController::class,"singlePost"])
 
 Route::get('/misSeries', [AppController::class,"mySeries"])
 ->name('mySeries');
-
+//SubViews de las series del usuario
+Route::get('/wishlist', [AppController::class,"myWishlist"]);
+Route::post('/wishlist', [AppController::class, 'myWishlist']);
 Route::get('/descubrir', [AppController::class,"discover"])
 ->name('discover');
 
@@ -67,6 +70,7 @@ Route::get('/ingresar', [AppController::class,"login"])
 
 Route::get('/registrarme', [AppController::class,"signUp"])
 ->name('signUp');
+Route::get('/users', [FirebaseController::class,"getUsers"]);
 
 //Prueba firebase
 

@@ -44,5 +44,8 @@ return [
     'appId'=> "1:233458040213:web:b7b5b2cc4a71e030904a9c",
     'measurementId'=> "G-SSVE9QJHRY"
  ],
+'firestore' => [
+    'project_id' => env('FIRESTORE_PROJECT_ID', 'default-project-id'),
+],
 
 ];

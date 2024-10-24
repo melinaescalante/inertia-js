@@ -53,6 +53,20 @@ class AppController extends Controller
     {
         return Inertia::render('SeriesView');
     }
+    public function myWishlist(Request $request)
+{
+  
+    $seriesToWatch = $request->input('seriesToWatch', []);
+
+    // Renderiza la vista con Inertia
+    return Inertia::render('WishlistView', [
+        'seriesToWatch' => $seriesToWatch
+    ]);
+}
+    public function misSeries()
+    {
+        return Inertia::render('SeriesView');
+    }
     public function configuraciones()
     {
         return Inertia::render('ConfigView');
