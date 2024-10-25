@@ -61,7 +61,7 @@ Route::get('show/{name}/galeria/{id}', [SerieController::class, 'getAllImagesByS
 
 Route::get('show/{name}/{id}/{idimage}/imagen', [SerieController::class, 'getImageById']);
 
-Route::get('/subirPublicacion', [AppController::class, 'uploadPost']);
+Route::get('/subirPublicacion', [SerieController::class, 'buscadorPost']);
 
 
 //Rutas para registro y autenticacion

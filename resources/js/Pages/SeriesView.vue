@@ -73,7 +73,7 @@ function visit() {
         <button
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">Empezar
             nueva serie</button>
-            {{ console.log(seriesToWatch.value) }}
+
         <div v-if="seriesToWatch === undefined">
             <button
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">Agregar
@@ -85,7 +85,6 @@ function visit() {
 
                 class=" m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
 
-            {{ console.log(seriesToWatch) }}
             <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1"
                 :src="lastSerie.image ? lastSerie.image.medium : '/public/noimage.png'"
                 :alt="`Portada de la última serie en la wishlist ${lastSerie.name}`">

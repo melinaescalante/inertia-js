@@ -71,7 +71,7 @@ class AppController extends Controller
     {
         return Inertia::render('ConfigView');
     }
-    public function uploadPost()
+    public function uploadPost( Request $request)
     {
         return Inertia::render('UploadPostView');
     }

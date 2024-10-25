@@ -179,16 +179,16 @@ class SerieController extends Controller
             return [];
         }
     }
-
+    
     public function buscador(Request $request)
     {
         $seriesArray = [];
         // ; // Obtener la URL actual
-
+        
         if ($request->has('name')) {
-
+            
             $seriesArray = $this->getSeriesByName($request->input('name'));
-
+            
         }
         return Inertia::render('SearchView', [
             'series' => $seriesArray
@@ -199,10 +199,11 @@ class SerieController extends Controller
         $seriesArray = [];
         if ($request->has('name')) {
             $seriesArray = $this->getSeriesByName($request->input('name'));
-
+            
         }
         $seriesArrayLimit = array_slice($seriesArray, 0, 4);
-
+        
+        // var_dump($seriesArray);
         return Inertia::render('UploadPostView', [
             'series' => $seriesArrayLimit
         ]);
