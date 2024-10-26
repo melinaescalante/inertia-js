@@ -20,6 +20,7 @@ onMounted(() => {
             if (response) {
                 const json = await response.json();
                 arrayFetch.value.push(json)
+                arrayFetch.value.reverse()
                 loading.value = false;
             }
 
@@ -37,7 +38,7 @@ onMounted(() => {
     <ul v-if="arrayFetch.length>=1">
         <li v-for="serie in arrayFetch">
             {{ console.log(serie) }}
-            <Link
+            <Link :href="`/show/${serie.id}`"
                 class=" m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
 
             <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1"

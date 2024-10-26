@@ -97,12 +97,11 @@ onUnmounted( ()=>{
     </template>
     <template v-else>
       <div class="mt-1" v-if="loginUser.id!==userData.id">
-<ButtonGoBack></ButtonGoBack>
         
       </div>
-      <div class="flex items-center mt-3 justify-around mb-3">
-        <img src="/public/no-image.jpg" :alt="'Foto de perfil de ' + loginUser.email" class="w-20 h-20 rounded-full ">
-        <div class="flex flex-col">
+      <div class="grid grid-cols-3 items-center mt-3 justify-around mb-3">
+        <img src="/public/no-image.jpg" :alt="'Foto de perfil de ' + loginUser.email" class="col-span-1 ms-2 w-20 h-20 rounded-full ">
+        <div class="flex flex-col col-span-2">
 
           <p class="font-medium text-center">{{ userData.displayName ? userData.displayName : userData.email }}</p>
           <div class="flex justify-around">
@@ -113,7 +112,7 @@ onUnmounted( ()=>{
             class="text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
           Editar Perfil</Link>
           <p class="border-b text-blue-500 text-center " v-if="userData.bio">{{ userData.bio }}</p>
-          <div class="flex">
+          <div class="flex flex-wrap">
             <ul v-for="genre in userData.genres">
               <li class="rounded-xl bg-opacity-70   bg-blue-950  text-sm  text-white font-medium p-2 m-1 text-center">{{
                 genre }}</li>

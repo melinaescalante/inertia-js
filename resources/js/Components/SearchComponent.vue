@@ -97,8 +97,11 @@ export default {
     <img class="h-[100%] w-12" :src="item.show.image ? item.show.image.medium : 'noimage.png'" :alt="item.show.name">  
     <div class="flex flex-col">
       
-      <a :href="`/show/${item.show.id}`" class="ms-3 font-medium block">  {{ item.show.name, console.log(item) }}</a>
-      <p class="ms-3 text-blue-400 ">{{ item.show.type }}</p>
+      <a :href="`/show/${item.show.id}`" class="ms-3 font-medium block">  {{ item.show.name }}</a>
+      <div class="flex">
+
+        <p v-for="genre in item.show.genres" class="ms-3 text-blue-400 ">{{ genre }}</p>
+      </div>
     </div>
     </li>
 

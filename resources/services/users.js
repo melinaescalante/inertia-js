@@ -62,7 +62,7 @@ export async function getUsersProfileById(id, email) {
       if (profileDocument.exists()) {
        
         const profileSubcollection = collection(db, `users/${id}/series`);
-        addDoc(profileSubcollection, {})
+        // addDoc(profileSubcollection, {})
         return {
           id: profileDocument.id,
           email: profileDocument.data().email,

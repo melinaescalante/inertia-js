@@ -15,10 +15,10 @@ defineProps({
 </script>
 <template>
     <NavBar></NavBar>
+    {{ console.log(banners,backgrounds,posters) }}
     <h1 class="font-medium text-2xl m-2 mt-3 mb-3">Galeria {{ name }}</h1>
-<ButtonGoBack></ButtonGoBack>
 
-    <h2 class="m-2 font-medium text-lg">Posters</h2>
+    <h2 class="m-2 font-medium text-lg" v-if="posters.length>=1">Posters</h2>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 m-2">
     <div v-for="image in posters" >
         {{ console.log(image) }}
@@ -30,7 +30,7 @@ defineProps({
     </div>
 </div>
 
-    <h2 class="m-2 font-medium text-lg">Banners</h2>
+    <h2 class="m-2 font-medium text-lg"  v-if="banners.length>=1">Banners</h2>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 m-2">
 
     <div v-for="image in banners" >
@@ -39,7 +39,7 @@ defineProps({
     </div>
 </div>
 
-    <h2 class="m-2 font-medium text-lg">Fondos</h2>
+    <h2 class="m-2 font-medium text-lg" v-if="backgrounds.length>=1">Fondos</h2>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 m-2">
 
     <div v-for="image in backgrounds" >

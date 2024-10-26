@@ -1,76 +1,78 @@
-<script >
-import { router } from '@inertiajs/vue3';
+<script>
+import { router } from "@inertiajs/vue3";
 export default {
-  props: {
-    series: {
-      type: Array,
-      default: () => []
-    },
-  },
-  data() {
-    return {
-      formInput: '',
-      answer: '',
-      loading: false,
-      localSeries: [] 
-    };
-  },
-  watch: {
-    series: {
-      immediate: true,
-      handler(newVal) {
-        // Cada vez que la prop "series" cambie, actualizamos la copia local
-        this.localSeries = [...newVal];
-      }
-    }
-  },
-  methods: {
-    async getAnswer(value) {
-      if (value.length % 2 == 0) {
-        this.loading = true;
-        this.answer = 'Buscando series...';
-        try {
-          // Usamos el método "reload" del router para refrescar la ruta de la vista "/buscador".
-          // https://inertiajs.com/manual-visits
-          router.reload({
-            // Le pasamos los datos que queremos que tenga en el query string.
-            data: { name: value},
-            // Manejamos los resultados en caso de éxito. Faltaría manejar en caso de error.
-            onSuccess: page => {
-              if (this.series.length > 0) {
-                this.answer = "Success";
-        
-              } else {
-                this.answer = "No se encontraron series.";
-              }
-              this.loading = false;
-            },
-
-          });
-        } catch (error) {
-          this.answer = 'Error al buscar series.';
-          this.loading = false;
+    props: {
+        series: {
+            type: Array,
+            default: () => [],
+        },
+        refreshCount: {
+            type: Number,
         }
-
-      }
     },
-    selectResult(item) {
-      // Al seleccionar una serie, actualizamos el campo de búsqueda
-      this.formInput = item.show.name;
-      // Limpiamos la lista de resultados
-      this.localSeries = [];
-      this.$emit('serie-seleccionada', item.show.name);
-      // this.formInput = '';
-
+    data() {
+        return {
+            formInput: "",
+            answer: "",
+            loading: false,
+            localSeries: [],
+        };
     },
-  }
-}
-  </script>
-    <template>
-  <div class=" m-2 ">
-    <!-- <div class="relative"> -->
+    watch: {
+        series: {
+            handler(newVal) {
+                this.localSeries = [...newVal];
+            },
+        },
+        refreshCount: {
+            handler(newVal) {
+                this.formInput = '';
+            }
+        }
+    },
+    methods: {
+        async getAnswer(value) {
+            if (value.length % 2 == 0) {
+                this.loading = true;
+                this.answer = "Buscando series...";
+                try {
+                    // Usamos el método "reload" del router para refrescar la ruta de la vista "/buscador".
+                    // https://inertiajs.com/manual-visits
+                    router.reload({
+                        // Le pasamos los datos que queremos que tenga en el query string.
+                        data: { name: value },
+                        // Manejamos los resultados en caso de éxito. Faltaría manejar en caso de error.
+                        onSuccess: (page) => {
+                            if (this.series.length > 0) {
+                                this.answer = "Success";
+                            } else {
+                                this.answer = "No se encontraron series.";
+                            }
+                            this.loading = false;
+                        },
+                    });
+                } catch (error) {
+                    this.answer = "Error al buscar series.";
+                    this.loading = false;
+                }
+            }
+        },
+        selectResult(item) {
+            // Al seleccionar una serie, actualizamos el campo de búsqueda
+            this.formInput = item.show.name;
+            // Limpiamos la lista de resultados
+            this.localSeries = [];
+            this.$emit("serie-seleccionada", item.show.name);
+            // this.formInput = '';
+        },
+    },
+};
+</script>
+<template>
+    <div class="m-2">
+        <!-- <div class="relative"> -->
 
-      <!-- <div v-if="!loading" class="absolute inset-y-0 start-0 flex items-center ps-3 pt-4 pointer-events-none">
+        <!-- <div v-if="!loading" class="absolute inset-y-0 start-0 flex items-center ps-3 pt-4 pointer-events-none">
         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
           fill="none" viewBox="0 0 20 20">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -89,29 +91,24 @@ export default {
       </svg>
       <span class="sr-only">Buscando series</span>
     </div> -->
-    <input
-    class="block w-full p-2 ps-10 text-sm text-gray-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4"
-      type="text"
-      v-model="formInput"
-      @input="getAnswer(formInput)"
-      placeholder="Buscar..."
-    />
-    <ul v-if="!loading && localSeries.length">
-      <div class=" relative ">
-
+        <input
+            class="block w-full p-2 ps-10 text-sm text-gray-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4"
+            type="text"
+            v-model="formInput"
+            @input="getAnswer(formInput)"
+            placeholder="Buscar..."
+        />
+        <ul v-if="!loading && localSeries.length">
+            <div class="relative">
+                <li
+                    class="p-2 ps-6 border flex items-center"
+                    v-for="item in localSeries"
+                    @click="selectResult(item)"
+                >
+                    <p class="ms-3 text-blue-400">{{ item.show.name }}</p>
+                </li>
         
-        <li  class="p-2 ps-6 border flex items-center" v-for="item in localSeries" @click="selectResult(item)">
-          <p class="ms-3 text-blue-400 ">{{ item.show.name }}</p>
-        </li>
-        <!-- <li
-        v-for="(result, index) in series"
-        :key="index"
-        
-        > -->
-        <!-- {{ result }}
-      </li> -->
+            </div>
+        </ul>
     </div>
-    </ul>
-  </div>
 </template>
-

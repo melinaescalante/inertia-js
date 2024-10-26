@@ -13,7 +13,6 @@ defineProps({
 <template>
     <NavBar></NavBar>
     <h1 class="font-medium text-2xl m-2 mt-3 mb-3">Episodios de  {{name  }} temporada {{ season }}</h1>
-<ButtonGoBack></ButtonGoBack>
 
     <div v-for="episodes in episodesBySeason">
 

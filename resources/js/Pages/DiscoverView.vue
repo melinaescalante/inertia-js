@@ -21,30 +21,32 @@ onMounted(async () => {
 
         unSubscribeFromAuth=await suscribeToAuthChanged(newUserData => {
             loginUser.value = newUserData
-            console.log(loginUser.value.genres, 'generos')
             let idShows = [];
             let genresStatic= new Map
             genresStatic.set("Comedia", "Comedy");
             genresStatic.set("Romance", "Romance");
             genresStatic.set("Drama", "Drama");
-      
+            
+            console.log(loginUser.value.genres, 'generos')
             if (loginUser.value.genres!==undefined && loginUser.value.genres!==null) {
                 
                 loginUser.value.genres.forEach(async (genre) => {
                     let genreArray = []
                     const limit = 10
                     const response = await fetch('https://api.tvmaze.com/shows');
-                   
-                    const shows = await response.json();
+                    const shows = await response.json()
                     shows.forEach(show => {
+                        console.log(show.genres.includes(genre))
                         if (genreArray.length < limit) {
                             if (show.genres.includes(genre) && !(idShows[show.id])) {
+                                console.log(show)
                                 idShows.push(show.id);
                                 idShows[show.id]=show.id
                                 genreArray.push(show);
                             }
                         }
                     });
+
                     serie.value.push(genreArray)
                 });
             }else{
