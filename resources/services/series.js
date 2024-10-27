@@ -79,54 +79,79 @@ export async function allSeriesWatching(idUser) {
         const watchedSnapshot = await getDoc(seriesWatchingRef);
         if (watchedSnapshot.exists()) {
             let seriesWatching = watchedSnapshot.data()
-            seriesWatching=[seriesWatching]
+            seriesWatching = [seriesWatching]
             console.log(seriesWatching)
             return seriesWatching
 
 
-        }else {
+        } else {
             return false
         }
-        } catch (error) {
-            console.error(error)
-        }
+    } catch (error) {
+        console.error(error)
     }
+}
 
 export async function startSerie(idUser, idSerie, nameSerie) {
-        const userDocRef = doc(db, "users", idUser);
-        const toWatchDocRef = doc(userDocRef, `series/watching`);
-        const toWatchSnapshot = await getDoc(toWatchDocRef);
-        // const newSerie = { ['currentltWatching']: 1 };
+    const userDocRef = doc(db, "users", idUser);
+    const toWatchDocRef = doc(userDocRef, `series/watching`);
+    const toWatchSnapshot = await getDoc(toWatchDocRef);
+    // const newSerie = { ['currentltWatching']: 1 };
+
+    if (toWatchSnapshot.exists()) {
+        const currentsWatching = toWatchSnapshot.data();
+        const newAddSerie = { ['current']: 1 };
+
+        // const exists = currentsWatching.hasOwnProperty(idSerie);
+        // if (exists) return;
+        // console.log(exists)
+
+        await updateDoc(toWatchDocRef, {
+            [idSerie]: newAddSerie,
+            // currentsWatching
+        });
+        return
+        let currentsToWatchFilter = currentsToWatch.filter(serie => {
+            return Object.keys(serie)[0] !== idSerie.toString();
+        });
+        await updateDoc(toWatchDocRef, {
+            seriesData: currentsToWatchFilter
+        });
+        // }
+        const newSerie = { [idSerie]: nameSerie };
+        currentsToWatch.push(newSerie);
+
+    }
+    else {
         const newSerie = { ['current']: 1 };
         await setDoc(toWatchDocRef, {
             [idSerie]: newSerie
         });
 
-        // if (toWatchSnapshot.exists()) {
-        //     const currentsToWatch = toWatchSnapshot.data().seriesData || [];
-        //     const exists = currentsToWatch.some(serie => {
-        //         return Object.keys(serie)[0] === idSerie.toString();
-        //     });
-        //     console.log(exists)
+    }
+}
+export async function nextEpisode(idUser, idSerie) {
+    const userDocRef = doc(db, "users", idUser);
+    const toWatchDocRef = doc(userDocRef, `series/watching`);
+    const toWatchSnapshot = await getDoc(toWatchDocRef);
+    if (toWatchSnapshot.exists()) {
+        const data = toWatchSnapshot.data();
+        // const newAddSerie = { ['current']: 1 };
+        if (data[idSerie]) {
+            let watching = Object.values(data[idSerie])[0]
+            watching++
+   
+            await updateDoc(toWatchDocRef, {
+                [idSerie]: { ['current']: watching }
+            });
+            console.log(watching)
 
-        //     if (exists) {
-        //         let currentsToWatchFilter = currentsToWatch.filter(serie => {
-        //             return Object.keys(serie)[0] !== idSerie.toString();
-        //         });
-        //         await updateDoc(toWatchDocRef, {
-        //             seriesData: currentsToWatchFilter
-        //         });
-        //         return
-        //     }
-        //     const newSerie = { [idSerie]: nameSerie };
-        //     currentsToWatch.push(newSerie);
-        //     await updateDoc(toWatchDocRef, {
-        //         seriesData: currentsToWatch
-        //     });
-
-        // } 
-        // else {
-        // const newSerie = { [idSerie]: nameSerie };
+        } else {
+            return false
+        }
 
     }
-// }
+    else {
+
+    }
+}

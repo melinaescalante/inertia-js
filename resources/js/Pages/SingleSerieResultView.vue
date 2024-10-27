@@ -67,8 +67,7 @@ async function addSerie(idUser, idSerie, nameSerie) {
 }
 async function start(idUser, idSerie, nameSerie) {
     await startSerie(idUser, idSerie, nameSerie)
-    // const newserie = { [idSerie]: nameSerie }
-    // localseries.value.push(newserie)
+    
 }
 </script>
 <template>

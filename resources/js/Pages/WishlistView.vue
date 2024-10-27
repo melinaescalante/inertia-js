@@ -3,13 +3,11 @@ import NavBar from '../components/NavBar.vue';
 import { onMounted, ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
-// Utilizamos defineProps dentro del script setup
 const props = defineProps({
     seriesToWatch: Array
 });
 const loading = ref(true)
 
-// console.log(props.seriesToWatch); // Ahora se accede desde props
 const arrayFetch = ref([])
 onMounted(() => {
     props.seriesToWatch.forEach(async serie => {
@@ -37,7 +35,7 @@ onMounted(() => {
     <h1 class="text-xl m-2">Tus series a ver</h1>
     <ul v-if="arrayFetch.length>=1">
         <li v-for="serie in arrayFetch">
-            {{ console.log(serie) }}
+
             <Link :href="`/show/${serie.id}`"
                 class=" m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
 
@@ -49,11 +47,9 @@ onMounted(() => {
                 <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ serie.name }}
                 </h2>
                 <div class="flex flex-wrap gap-4">
-
                     <p v-for="genre in serie.genres">{{genre}}</p>
                 </div>
-                <!-- <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"
-    v-html="serie.summary.length > 200 ? `${serie.summary.slice(0, 200)}...` : episodes.summary"></p> -->
+              
             </div>
             </Link>
         </li>
