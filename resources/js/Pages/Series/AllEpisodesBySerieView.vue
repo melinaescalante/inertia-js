@@ -1,10 +1,7 @@
 <script setup>
-
 import { Link } from '@inertiajs/vue3';
-import NavBar from '../components/NavBar.vue'
-import ButtonGoBack from '../components/ButtonGoBack.vue'
-const regionNamesInEnglish = new Intl.DisplayNames(['es'], { type: 'region' });
-console.log(regionNamesInEnglish.of('US'))
+import NavBar from '../../components/NavBar.vue'
+
 defineProps({
     seasons: Array,
     name:String

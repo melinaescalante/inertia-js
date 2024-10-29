@@ -1,6 +1,5 @@
 <script setup>
-import NavBar from '../components/NavBar.vue'
-import ButtonGoBack from '../components/ButtonGoBack.vue'
+import NavBar from '../../components/NavBar.vue'
 import { Link } from '@inertiajs/vue3';
 defineProps({
     episodesBySeason: Array,

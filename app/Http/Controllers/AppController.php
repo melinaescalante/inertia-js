@@ -27,12 +27,16 @@ class AppController extends Controller
     {
         $postId = request('id');
        
-        return Inertia::render('ProfileView', ['id' => $postId]);
+        return Inertia::render('Profile/ProfileView', ['id' => $postId]);
      
     }
     public function profileEdit()
     {
         return Inertia::render('EditProfileView');
+    }
+    public function editPhotoProfile(){
+        return Inertia::render('Profile/EditPhotoProfileView');
+
     }
     public function singlePost(Request $request)
     {

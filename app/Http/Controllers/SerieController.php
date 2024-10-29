@@ -20,7 +20,7 @@ class SerieController extends Controller
         if ($response->successful()) {
             $cast = $response->json();
         }
-        return Inertia::render('CastSerieView', [
+        return Inertia::render('Serie/CastSerieView', [
             'cast' => $cast,
             'name' => $name
 
@@ -58,7 +58,7 @@ class SerieController extends Controller
             }
         }
 
-        return Inertia::render('AllEpisodesBySerieView', [
+        return Inertia::render('Serie/AllEpisodesBySerieView', [
             'seasons' => $seasons,
             'name' => $name
 
@@ -86,7 +86,7 @@ class SerieController extends Controller
                 }
             }
         }
-        return Inertia::render('GalleryBySerieView', [
+        return Inertia::render('<Serie>GalleryBySerieView', [
             'posters' => $posters,
             'backgrounds' => $backgrounds,
             'banners' => $banners,
@@ -133,7 +133,7 @@ class SerieController extends Controller
         if ($response->successful()) {
             $episodes = $response->json();
         }
-        return Inertia::render('EpisodesBySeasonView', [
+        return Inertia::render('Serie/EpisodesBySeasonView', [
             'episodesBySeason' => $episodes,
             'name' => $name,
             'season' => $season

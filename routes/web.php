@@ -27,6 +27,9 @@ Route::get('/perfil/{id}', [AppController::class,"profile"])
 Route::get('/perfilinfo/edit', [AppController::class,"profileEdit"])
 ->name('profileEdit');
 
+Route::get('/editFotoPerfil', [AppController::class,"editPhotoProfile"])
+;
+
 Route::get('/post/{id}', [AppController::class,"singlePost"])
 ->name('singlePost')
 ->whereAlphaNumeric('id');
