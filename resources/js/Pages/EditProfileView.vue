@@ -27,7 +27,7 @@ const genresTypes=[
 {"Medical":"Medicos"},
 {"Music":"Musica"},
 {"Romance":"Romance"},
-{"Science-fiction":"Ciencia ficción"},
+{"Science-Fiction":"Ciencia ficción"},
 {"Sports":"Deportes"},
 {"Supernatural":"Supernatural"},
 {"Thriller":"Thriller"},

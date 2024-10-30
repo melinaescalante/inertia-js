@@ -1,9 +1,9 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
 import DiscoverFeature from '../components/DiscoverFeature.vue'
-import {  suscribeToAuthChanged } from "../../services/auth";
-
-import { onMounted, onUnmounted,ref } from 'vue';
+import { suscribeToAuthChanged } from "../../services/auth";
+import Spinner from '../Components/Spinner.vue'
+import { onMounted, onUnmounted, ref } from 'vue';
 let serie = ref([]);
 const loginUser = ref({
     id: null,
@@ -11,25 +11,26 @@ const loginUser = ref({
     displayName: null,
     bio: null,
     genres: null
-    
-})
 
-let unSubscribeFromAuth = () => {};
+})
+const loading = ref(false);
+
+let unSubscribeFromAuth = () => { };
 onMounted(async () => {
     try {
-    serie.value=[];
-
-        unSubscribeFromAuth=await suscribeToAuthChanged(newUserData => {
+        
+        unSubscribeFromAuth = await suscribeToAuthChanged(newUserData => {
             loginUser.value = newUserData
             let idShows = [];
-            let genresStatic= new Map
+            let genresStatic = new Map
             genresStatic.set("Comedia", "Comedy");
             genresStatic.set("Romance", "Romance");
             genresStatic.set("Drama", "Drama");
             
-            console.log(loginUser.value.genres, 'generos')
-            if (loginUser.value.genres!==undefined && loginUser.value.genres!==null) {
-                
+            console.log(loginUser.value.genres, genresStatic, 'generos')
+            serie.value = [];
+            if (loginUser.value.genres !== undefined && loginUser.value.genres !== null) {
+
                 loginUser.value.genres.forEach(async (genre) => {
                     let genreArray = []
                     const limit = 10
@@ -41,7 +42,7 @@ onMounted(async () => {
                             if (show.genres.includes(genre) && !(idShows[show.id])) {
                                 console.log(show)
                                 idShows.push(show.id);
-                                idShows[show.id]=show.id
+                                idShows[show.id] = show.id
                                 genreArray.push(show);
                             }
                         }
@@ -49,7 +50,9 @@ onMounted(async () => {
 
                     serie.value.push(genreArray)
                 });
-            }else{
+                loading.value = true
+            }
+            if (loginUser.value.genres.length === 0) {
                 genresStatic.forEach(async (genre) => {
                     let genreArray = []
                     const limit = 10
@@ -59,14 +62,16 @@ onMounted(async () => {
                         if (genreArray.length < limit) {
                             if (show.genres.includes(genre) && !(idShows[show.id])) {
                                 idShows.push(show.id);
-                                idShows[show.id]=show.id
+                                idShows[show.id] = show.id
                                 genreArray.push(show);
                             }
                         }
                     });
                     serie.value.push(genreArray)
-      
+
                 });
+                loading.value = true
+
             }
         })
     } catch (error) {
@@ -74,29 +79,29 @@ onMounted(async () => {
 
     }
 })
-onUnmounted(()=>{
-     unSubscribeFromAuth();
+onUnmounted(() => {
+    unSubscribeFromAuth();
 })
 defineProps({ genres: Array })
 </script>
 <template>
     <NavBar></NavBar>
-    <SearchComponent></SearchComponent>
-    <section v-for="genero in serie" class="flex  flex-col ">
-        <div>
+    {{console.log(loading.value)}}
+    <section v-if="loading">
 
-            <p class="m-3 mt-4 ms-5 font-medium">Segun tus generos favoritos:</p>
-        </div>
-        <div class="flex overflow-x-auto scroll overflow-scroll ">
-<!-- :genre=show.namee -->
-            <DiscoverFeature  v-for="show in genero"
-            :id="show.id"
-            :genres="show.genres"
-            :titleSerie="show.name" :dateSerie="show.premiered"
-                :synopsis="show.summary" :cover="show.image" :text="show.schedule.time">
+        <div v-for="genero in serie" class="flex  flex-col ">
+            <div>
 
-            </DiscoverFeature>
+                <p class="m-3 mt-4 ms-5 font-medium">Segun tus generos favoritos:</p>
+            </div>
+            <div class="flex overflow-x-auto scroll overflow-scroll ">
+
+                <DiscoverFeature v-for="show in genero" :id="show.id" :genres="show.genres" :titleSerie="show.name"
+                    :dateSerie="show.premiered" :synopsis="show.summary" :cover="show.image" :text="show.schedule.time">
+
+                </DiscoverFeature>
+            </div>
         </div>
     </section>
-
+    <Spinner v-else></Spinner>
 </template>

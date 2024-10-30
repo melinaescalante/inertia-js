@@ -46,7 +46,7 @@ onUnmounted(() => {
 </script>
 <template>
 
-    <nav class="flex justify-between items-center p-4 bg-slate-200 text-slate-800">
+    <nav class="flex justify-between items-center p-4 bg-blue-200 text-slate-800">
         <div v-if="!loading" class="flex items-center gap-6">
 
             <ButtonGoBack v-if="!excludedPages.includes(currentPage)">
@@ -55,7 +55,7 @@ onUnmounted(() => {
         </div>
 
         <ul class="flex items-center">
-            <template v-if="currentPage != 'ProfileView' && currentPage !== 'ChatView'">
+            <template v-if="currentPage != 'Profile/ProfileView' && currentPage !== 'ChatView'">
                 <li>
                     <Link data-tooltip-target="tooltip-search" href="/buscador"
                         class="block px-4 rounded-s-full dark:hover:fill-gray-800 group m-auto">
@@ -88,7 +88,7 @@ onUnmounted(() => {
                 </li>
                 <!-- </ul> -->
             </template>
-            <template v-if="loginUser.id !== null && currentPage === 'ProfileView'">
+            <template v-if="loginUser.id !== null && currentPage === 'Profile/ProfileView'">
                 <li>
                     <Link data-tooltip-target="tooltip-config" href="/configuraciones"
                         class="block px-3 rounded-s-full group m-auto">
@@ -114,7 +114,7 @@ onUnmounted(() => {
     </nav>
     <div
         class="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 ">
-        <div class="grid h-full max-w-lg grid-cols-5 mx-auto">
+        <div class="grid h-full max-w-lg grid-cols-[repeat(auto-fit,_minmax(60px,_1fr))] mx-auto">
             <NavItem titleLink="Inicio" route="/" roundedClass="rounded-s-full hover:bg-gray-50">
                 <svg class="w-5 h-5 mb-1 text-gray-500 0 group-hover:text-blue-600 " aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -172,9 +172,9 @@ onUnmounted(() => {
 
             </NavItem>
 
-            <div class="flex items-center justify-center">
+            <div v-if="loginUser.id!==null" class="flex items-center justify-center">
 
-                <NavItem titleLink="Nuevo Posteo" route="/subirPublicacion"
+                <NavItem    titleLink="Nuevo Posteo" route="/subirPublicacion"
                     roundedClass=" w-10 h-10 font-medium bg-blue-600 rounded-full hover:bg-blue-700 group focus:ring-4 focus:ring-blue-300 focus:outline-none ">
                     <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 18 18">
@@ -186,7 +186,7 @@ onUnmounted(() => {
 
                 </NavItem>
             </div>
-            <NavItem titleLink="Mis Series" route="/misSeries" roundedClass=" hover:bg-gray-50">
+            <NavItem v-if="loginUser.id!==null"  titleLink="Mis Series" route="/misSeries" roundedClass=" hover:bg-gray-50">
                 <svg class="w-7 h-7 mb-1 text-gray-500  group-hover:text-blue-600 " aria-hidden="true"
                     fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <title>Mis Series</title>

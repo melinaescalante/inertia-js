@@ -76,7 +76,7 @@ function handleImageChange(e) {
 </script>
 <template>
     <nav
-        class="flex justify-between items-center p-4 bg-slate-200 text-slate-800"
+        class="flex justify-between items-center p-4 bg-blue-200 text-slate-800"
     >
         <Link href="/" class="text-xl">Tv On</Link>
     </nav>

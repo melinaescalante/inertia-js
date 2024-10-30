@@ -1,15 +1,15 @@
 <script setup>
-import NavBar from '../components/NavBar.vue'
-import ButtonBase from '../components/ButtonBase.vue'
+import NavBar from '../../components/NavBar.vue'
+import ButtonBase from '../../components/ButtonBase.vue'
 import { Link } from '@inertiajs/vue3';
-import { addSerieToWatch } from '../../services/series';
-import { allSeriesToWatch } from '../../services/series';
+import { addSerieToWatch } from '../../../services/series';
+import { allSeriesToWatch } from '../../../services/series';
 import { ref, onMounted, onUnmounted } from 'vue';
-import { suscribeToAuthChanged } from "../../services/auth";
-import { startSerie, isStarted } from '../../services/series';
+import { suscribeToAuthChanged } from "../../../services/auth";
+import { startSerie, isStarted } from '../../../services/series';
 
 let unSubscribeFromAuth = () => { };
-const props =defineProps({
+const props = defineProps({
     serie: Array
 })
 const loginUser = ref({
@@ -18,7 +18,7 @@ const loginUser = ref({
     displayName: null,
     bio: null,
     genres: null
-    
+
 })
 const seriesToWatch = ref([])
 const localseries = ref([])
@@ -34,7 +34,7 @@ onMounted(async () => {
         seriesToWatch.value = await allSeriesToWatch(loginUser.value.id)
         localseries.value = seriesToWatch.value || []
         await isInWishlist(props.serie.id)
-  
+
         loading.value = false
 
     }
@@ -43,7 +43,7 @@ onMounted(async () => {
 })
 async function isInWishlist(id) {
     try {
-        watching.value= await isStarted(loginUser.value.id,id)
+        watching.value = await isStarted(loginUser.value.id, id)
 
         if (localseries.value.some(watchedSerie => Object.keys(watchedSerie).includes(String(id)))) {
             ini.value = true
@@ -65,9 +65,13 @@ async function addSerie(idUser, idSerie, nameSerie) {
     const newserie = { [idSerie]: nameSerie }
     localseries.value.push(newserie)
 }
-async function start(idUser, idSerie, nameSerie) {
-    await startSerie(idUser, idSerie, nameSerie)
-    
+async function start(idUser, idSerie) {
+    let seasons
+    const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
+    if (response.status == 200) {
+        seasons = await response.json();
+    }
+    await startSerie(idUser, idSerie, seasons[0].id)
 }
 </script>
 <template>
@@ -100,7 +104,7 @@ async function start(idUser, idSerie, nameSerie) {
     <div v-if="!loading" class="flex justify-between m-2">
 
 
-        <Link  @click="addSerie(loginUser.id, serie.id, serie.name)" type="button"
+        <Link @click="addSerie(loginUser.id, serie.id, serie.name)" type="button"
             class="border-gray-200 text-blue-700 hover:text-blue-600 border bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center ">
         <svg class="w-6 h-6 me-1 text-blue-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
             height="24" fill="none" viewBox="0 0 24 24">
@@ -114,18 +118,20 @@ async function start(idUser, idSerie, nameSerie) {
 
         {{ ini ? 'Agregada a mi lista' : 'Agregar a mi lista' }}
         </Link>
-        <Link @click="start(loginUser.id,serie.id,serie.name)" type="button"
+        <Link @click="start(loginUser.id, serie.id, serie.name)" type="button"
             class="h-20 py-2.5 px-5 text-sm font-medium text-white focus:outline-none bg-blue-700 rounded-lg  hover:bg-blue-500 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 text-center inline-flex items-center ">
         <svg class="w-6 h-6 me-1 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
             width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-            <path v-if="!watching"fill-rule="evenodd" d="M8.6 5.2A1 1 0 0 0 7 6v12a1 1 0 0 0 1.6.8l8-6a1 1 0 0 0 0-1.6l-8-6Z"
+            <path v-if="!watching" fill-rule="evenodd"
+                d="M8.6 5.2A1 1 0 0 0 7 6v12a1 1 0 0 0 1.6.8l8-6a1 1 0 0 0 0-1.6l-8-6Z" clip-rule="evenodd" />
+            <path v-else fill-rule="evenodd"
+                d="M19.003 3A2 2 0 0 1 21 5v2h-2V5.414L17.414 7h-2.828l2-2h-2.172l-2 2H9.586l2-2H9.414l-2 2H3V5a2 2 0 0 1 2-2h14.003ZM3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9H3Zm2-2.414L6.586 5H5v1.586Zm4.553 4.52a1 1 0 0 1 1.047.094l4 3a1 1 0 0 1 0 1.6l-4 3A1 1 0 0 1 9 18v-6a1 1 0 0 1 .553-.894Z"
                 clip-rule="evenodd" />
-  <path v-else fill-rule="evenodd" d="M19.003 3A2 2 0 0 1 21 5v2h-2V5.414L17.414 7h-2.828l2-2h-2.172l-2 2H9.586l2-2H9.414l-2 2H3V5a2 2 0 0 1 2-2h14.003ZM3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9H3Zm2-2.414L6.586 5H5v1.586Zm4.553 4.52a1 1 0 0 1 1.047.094l4 3a1 1 0 0 1 0 1.6l-4 3A1 1 0 0 1 9 18v-6a1 1 0 0 1 .553-.894Z" clip-rule="evenodd"/>
 
 
         </svg>
 
-       {{watching?'La estas viendo' : 'Comenzar a ver'}}
+        {{ watching ? 'La estas viendo' : 'Comenzar a ver' }}
         </Link>
     </div>
 </template>

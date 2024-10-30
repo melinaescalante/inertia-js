@@ -6,7 +6,7 @@ import Spinner from '../../components/Spinner.vue'
 import { suscribeToAuthChanged } from "../../../services/auth";
 import { readPostsByUser } from '../../../services/posts';
 import { getEmailUser, getUsersProfileById } from '../../../services/users';
-let unSubscribeFromAuth = () => {};
+let unSubscribeFromAuth = () => { };
 
 defineProps({
   userName: String,
@@ -14,7 +14,7 @@ defineProps({
 
 })
 const page = usePage()
-const id = ref(null) 
+const id = ref(null)
 const loading = ref(true)
 const loginUser = ref({
   id: null,
@@ -31,7 +31,7 @@ id.value = page.props.id
 
 onMounted(async () => {
   // Suscribir a cambios de autenticación
-  unSubscribeFromAuth= suscribeToAuthChanged(async (newUserData) => {
+  unSubscribeFromAuth = suscribeToAuthChanged(async (newUserData) => {
     loginUser.value = newUserData
 
     if (loginUser.value.id !== null && id.value !== null) {
@@ -58,7 +58,7 @@ onMounted(async () => {
   })
   // Asegúrate de que los posts se han cargado antes de acceder a ellos
 })
-onUnmounted( ()=>{
+onUnmounted(() => {
   unSubscribeFromAuth();
 
 })
@@ -85,13 +85,14 @@ onUnmounted( ()=>{
       </div>
     </template>
     <template v-else>
-      <div class="mt-1" v-if="loginUser.id!==userData.id">
-        
+      <div class="mt-1" v-if="loginUser.id !== userData.id">
+
       </div>
       <div class="grid grid-cols-3 items-center mt-3 justify-around mb-3">
-        <Link href="/editFotoPerfil" >
+        <Link href="/editFotoPerfil">
 
-          <img src="/public/no-image.jpg" :alt="'Foto de perfil de ' + loginUser.email" class="col-span-1 ms-2 w-20 h-20 rounded-full ">
+        <img src="/public/no-image.jpg" :alt="'Foto de perfil de ' + loginUser.email"
+          class="col-span-1 ms-2 w-20 h-20 rounded-full ">
         </Link>
         <div class="flex flex-col col-span-2">
 
@@ -100,9 +101,15 @@ onUnmounted( ()=>{
             <p class="me-2">Series vistas</p>
             <p>Amigos</p>
           </div>
-          <Link v-if="loginUser.id===userData.id" href="/perfilinfo/edit"
-            class="text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
-          Editar Perfil</Link>
+          <div class="mt-2 flex flex-wrap justify-around">
+
+            <Link v-if="loginUser.id === userData.id" href="/perfilinfo/edit"
+              class="text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
+            Editar Perfil</Link>
+            <Link v-else href="#"
+              class="text-center text-blue-800 border border-blue-700 hover:bg-gray-200 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
+            Chatear</Link>
+          </div>
           <p class="border-b text-blue-500 text-center " v-if="userData.bio">{{ userData.bio }}</p>
           <div class="flex flex-wrap">
             <ul v-for="genre in userData.genres">
@@ -112,15 +119,17 @@ onUnmounted( ()=>{
           </div>
         </div>
       </div>
-      <div class="flex flex-wrap justify-around" v-if="postsById !== undefined">
+      <div class="border-t p-2 flex flex-wrap justify-around" v-if="postsById !== undefined">
         <div v-for="post in postsById" class="mt-5 ">
           <Link :href="`/post/${post.id}`" :id="post.id">
-          <img :src="post.image?post.image: '/text.jpg'" :alt="post.serie" class="w-[7rem] h-[7rem]  bg-cover w">
+          <img :src="post.image ? post.image : '/text.jpg'" :alt="post.serie" class="w-[7rem] h-[7rem]  bg-cover w">
 
           </Link>
         </div>
       </div>
-
+      <div class="text-center" v-if="postsById.length===0">
+        <p>No tienes ni una publicación hecha</p>
+      </div>
     </template>
   </template>
 </template>

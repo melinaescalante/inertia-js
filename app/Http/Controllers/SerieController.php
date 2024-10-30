@@ -20,7 +20,7 @@ class SerieController extends Controller
         if ($response->successful()) {
             $cast = $response->json();
         }
-        return Inertia::render('Serie/CastSerieView', [
+        return Inertia::render('Series/CastSerieView', [
             'cast' => $cast,
             'name' => $name
 
@@ -34,7 +34,7 @@ class SerieController extends Controller
         if ($response->successful()) {
             $seasons = $response->json();
         }
-        return Inertia::render('SeasonSerieView', [
+        return Inertia::render('Series/SeasonSerieView', [
             'seasons' => $seasons,
             'name' => $name
 
@@ -58,7 +58,7 @@ class SerieController extends Controller
             }
         }
 
-        return Inertia::render('Serie/AllEpisodesBySerieView', [
+        return Inertia::render('Series/AllEpisodesBySerieView', [
             'seasons' => $seasons,
             'name' => $name
 
@@ -86,7 +86,7 @@ class SerieController extends Controller
                 }
             }
         }
-        return Inertia::render('<Serie>GalleryBySerieView', [
+        return Inertia::render('Series/GalleryBySerieView', [
             'posters' => $posters,
             'backgrounds' => $backgrounds,
             'banners' => $banners,
@@ -118,7 +118,7 @@ class SerieController extends Controller
             });
             // var_dump($foundImage);
         }
-        return Inertia::render('SingleImageGalleryView', [
+        return Inertia::render('Series/SingleImageGalleryView', [
             'imageUrl' => $imageUrl,
             'name' => $name,
             'foundImage' => $foundImage,
@@ -133,7 +133,7 @@ class SerieController extends Controller
         if ($response->successful()) {
             $episodes = $response->json();
         }
-        return Inertia::render('Serie/EpisodesBySeasonView', [
+        return Inertia::render('Series/EpisodesBySeasonView', [
             'episodesBySeason' => $episodes,
             'name' => $name,
             'season' => $season
@@ -147,7 +147,7 @@ class SerieController extends Controller
         if ($response->successful()) {
             $serie = $response->json();
         }
-        return Inertia::render('SingleSerieResultView', [
+        return Inertia::render('Series/SingleSerieResultView', [
             'serie' => $serie
         ]);
     }

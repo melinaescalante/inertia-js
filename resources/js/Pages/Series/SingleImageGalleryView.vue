@@ -1,8 +1,8 @@
 <script setup>
 
 import { Link } from '@inertiajs/vue3';
-import NavBar from '../components/NavBar.vue'
-import ButtonGoBack from '../components/ButtonGoBack.vue'
+import NavBar from '../../components/NavBar.vue'
+import ButtonGoBack from '../../components/ButtonGoBack.vue'
 
 defineProps({
     imageUrl: String,

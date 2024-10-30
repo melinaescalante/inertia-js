@@ -1,5 +1,6 @@
+import { error } from "laravel-mix/src/Log";
 import { db } from "./firebase";
-import { doc, getDoc, updateDoc, setDoc, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
 
 export async function addSerieToWatch(idUser, idSerie, nameSerie) {
     try {
@@ -80,10 +81,7 @@ export async function allSeriesWatching(idUser) {
         if (watchedSnapshot.exists()) {
             let seriesWatching = watchedSnapshot.data()
             seriesWatching = [seriesWatching]
-            console.log(seriesWatching)
             return seriesWatching
-
-
         } else {
             return false
         }
@@ -92,66 +90,133 @@ export async function allSeriesWatching(idUser) {
     }
 }
 
-export async function startSerie(idUser, idSerie, nameSerie) {
+export async function startSerie(idUser, idSerie, idSeason) {
     const userDocRef = doc(db, "users", idUser);
     const toWatchDocRef = doc(userDocRef, `series/watching`);
     const toWatchSnapshot = await getDoc(toWatchDocRef);
-    // const newSerie = { ['currentltWatching']: 1 };
 
+    const newAddSerie = {
+        ['current']: 1,
+        ['currentSeason']: 1,
+        ['currentIdSeason']: idSeason
+
+    };
     if (toWatchSnapshot.exists()) {
         const currentsWatching = toWatchSnapshot.data();
-        const newAddSerie = { ['current']: 1 };
-
-        // const exists = currentsWatching.hasOwnProperty(idSerie);
-        // if (exists) return;
-        // console.log(exists)
-
         await updateDoc(toWatchDocRef, {
-            [idSerie]: newAddSerie,
-            // currentsWatching
+            [idSerie]: {
+                ...newAddSerie,
+            }
         });
         return
-        let currentsToWatchFilter = currentsToWatch.filter(serie => {
-            return Object.keys(serie)[0] !== idSerie.toString();
-        });
-        await updateDoc(toWatchDocRef, {
-            seriesData: currentsToWatchFilter
-        });
-        // }
-        const newSerie = { [idSerie]: nameSerie };
-        currentsToWatch.push(newSerie);
-
     }
     else {
-        const newSerie = { ['current']: 1 };
         await setDoc(toWatchDocRef, {
-            [idSerie]: newSerie
+            [idSerie]: {
+                ...newAddSerie,
+            }
         });
 
     }
 }
-export async function nextEpisode(idUser, idSerie) {
+async function verifyChapter(idSeason, temporada, capitulo) {
+    try {
+        const response = await fetch(`https://api.tvmaze.com/seasons/${idSeason}/episodes`);
+        const episodes = await response.json();
+        const episodeExists = episodes.find(episode => {
+            return episode.season === temporada && episode.number === capitulo + 1;
+        });
+        if (response.status !== 200) {
+            throw new Error("Error al obtener los episodios");
+        }
+        console.log(await episodeExists)
+        return episodeExists;
+    } catch (error) {
+        console.error("Error verificando el capítulo:", error);
+        return false;
+    }
+}
+
+async function verifySeason(idSerie, temporada) {
+    // Lógica para verificar si existe una temporada usando la API
+    const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
+    const seasons = await response.json();
+    const seasonExists = seasons.find(season => {
+        return season.number === temporada + 1
+    });
+    if (response.status !== 200) {
+        throw new Error("Error al obtener los episodios");
+    }
+    return seasonExists;
+
+}
+export async function currentInformation(idUser, idSerie) {
+    const userDocRef = doc(db, "users", idUser);
+    const currentEpisodeRef = doc(userDocRef, `series/watching`);
+    const currentEpisodeSnapshot = await getDoc(currentEpisodeRef);
+    if (currentEpisodeSnapshot.exists()) {
+        const data = currentEpisodeSnapshot.data();
+        const seriesData = data[idSerie];
+
+        if (seriesData) {
+            const currentEpisode = seriesData.current
+            const currentSeason = seriesData.currentSeason
+            const currentIdSeason = seriesData.currentIdSeason
+            console.log(currentEpisode, currentSeason)
+            return { currentEpisode, currentSeason, currentIdSeason }
+        }
+    } else {
+        console.log("No se encontró la información del episodio actual.");
+    }
+
+
+}
+export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo) {
     const userDocRef = doc(db, "users", idUser);
     const toWatchDocRef = doc(userDocRef, `series/watching`);
     const toWatchSnapshot = await getDoc(toWatchDocRef);
-    if (toWatchSnapshot.exists()) {
-        const data = toWatchSnapshot.data();
-        // const newAddSerie = { ['current']: 1 };
-        if (data[idSerie]) {
-            let watching = Object.values(data[idSerie])[0]
-            watching++
-   
-            await updateDoc(toWatchDocRef, {
-                [idSerie]: { ['current']: watching }
-            });
-            console.log(watching)
+    const prueba = await verifyChapter(idSeason, temporada, capitulo)
+    console.log(await prueba)
+    // return
+    if (prueba !== false && prueba !== undefined) {
 
-        } else {
-            return false
+        if (toWatchSnapshot.exists()) {
+            const data = toWatchSnapshot.data();
+            if (data[idSerie]?.current !== undefined) {
+
+                let watching = data[idSerie].current + 1;
+                await updateDoc(toWatchDocRef, {
+                    [`${idSerie}.current`]: watching
+                });
+            } else {
+                return false
+            }
+            return 'episode'
         }
+        else {
+            console.log('no se puede pasar de capitulo', error)
+        }
+    } else {
+        const season = await verifySeason(idSerie, temporada)
+        if (season) {
+            if (toWatchSnapshot.exists()) {
+                const data = toWatchSnapshot.data();
+                if (data[idSerie]?.currentSeason !== undefined) {
+                    let watchingSeason = data[idSerie].currentSeason + 1;
+                    let watchingIdSeason = data[idSerie].currentIdSeason + 1;
+                    await updateDoc(toWatchDocRef, {
+                        [idSerie]: {
+                            current: 1,
+                            currentSeason: watchingSeason,
+                            currentIdSeason: watchingIdSeason,
+                        }
+                    });
+                } else {
+                    return false
+                }
+                return 'season'
+            }
 
-    }
-    else {
-
+        }
     }
 }
