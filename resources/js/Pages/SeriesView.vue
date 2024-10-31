@@ -94,17 +94,11 @@ async function loadSeriesWatching() {
 }
 async function next(id, idSerie) {
     let seasons
-    let episodes
     try {
         const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
         if (response.status == 200) {
             seasons = await response.json();
             console.log(seasons)
-            const response2 = await fetch(`https://api.tvmaze.com/seasons/${seasons[0].id}/episodes`);
-            if (response2.status == 200) {
-                episodes = await response2.json();
-
-            }
         }
         const { currentEpisode: episode, currentSeason: season ,currentIdSeason:idSeason} = await currentInformation(loginUser.value.id, idSerie)
         // console.log(id, idSerie, seasons[0].id, season, episode)
@@ -127,6 +121,7 @@ async function next(id, idSerie) {
 
 
         } else if (value === 'season') {
+            console.log('soy season')
             const updatedSeries = localSeriesWatching.value.map(serie => {
                 if (serie[idSerie]) {
                     return {

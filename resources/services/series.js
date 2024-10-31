@@ -142,12 +142,15 @@ async function verifySeason(idSerie, temporada) {
     const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
     const seasons = await response.json();
     const seasonExists = seasons.find(season => {
+        console.log(season.id)
         return season.number === temporada + 1
     });
+    console.log(await seasonExists.id)
     if (response.status !== 200) {
         throw new Error("Error al obtener los episodios");
     }
-    return seasonExists;
+    const nextSeasonId=seasonExists.id
+    return {seasonExists,nextSeasonId};
 
 }
 export async function currentInformation(idUser, idSerie) {
@@ -197,18 +200,25 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
             console.log('no se puede pasar de capitulo', error)
         }
     } else {
-        const season = await verifySeason(idSerie, temporada)
+        let seasons
+        const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
+        if (response.status == 200) {
+            seasons = await response.json();
+            console.log(seasons)
+        }
+        const {seasonExists:season,nextSeasonId:idCurrentSeason} = await verifySeason(idSerie, temporada)
+        console.log(season,idCurrentSeason)
         if (season) {
             if (toWatchSnapshot.exists()) {
                 const data = toWatchSnapshot.data();
                 if (data[idSerie]?.currentSeason !== undefined) {
                     let watchingSeason = data[idSerie].currentSeason + 1;
-                    let watchingIdSeason = data[idSerie].currentIdSeason + 1;
+                    
                     await updateDoc(toWatchDocRef, {
                         [idSerie]: {
                             current: 1,
                             currentSeason: watchingSeason,
-                            currentIdSeason: watchingIdSeason,
+                            currentIdSeason: idCurrentSeason,
                         }
                     });
                 } else {
