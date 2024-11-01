@@ -4,15 +4,18 @@ import NavBar from '../../components/NavBar.vue'
 
 defineProps({
     seasons: Array,
-    name:String
+    name:String,
+    ids:Array
 })
 </script>
 <template>
     <NavBar></NavBar>
 <h1 class="font-medium text-2xl m-2 mt-3 mb-3">{{ name }} episodios</h1>
     <div v-for="(season, index) in seasons">
+{{ console.log(seasons[index][index]) }}
+
         <h1 class="font-medium p-2 text-xl text-blue-800 border-b-2 border-t-2 border-orange-200  ">
-            Temporada {{ index }} 
+             {{(seasons[index][index].number)?'Temporada '+seasons[index][index].season: 'No tiene numero de temporada'  }} 
         </h1>
         <div v-for="episode in season">
             <Link  class=" m-2 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
@@ -26,6 +29,5 @@ defineProps({
                     </div>
                 </Link>
         </div>
-{{ console.log(season) }}
     </div>
 </template>

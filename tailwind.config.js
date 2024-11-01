@@ -10,7 +10,19 @@ export default {
     "./resources/**/*.{vue,js,jsx,ts,tsx,php}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        orange: {
+          0: '#ffcc99',
+          1000: '#ff9933',
+        },
+        blue: {
+          0: '#99ccff',
+          1000: '#333399',
+        },
+      },
+    },
+
   },
   plugins: [],
 }

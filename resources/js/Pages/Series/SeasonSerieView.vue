@@ -1,7 +1,5 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import ButtonGoBack from '../../components/ButtonGoBack.vue'
-
 import NavBar from '../../components/NavBar.vue'
 defineProps({
     seasons: Array,

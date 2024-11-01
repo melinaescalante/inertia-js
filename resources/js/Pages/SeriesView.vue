@@ -136,10 +136,26 @@ async function next(id, idSerie) {
                 return serie;
             });
             localSeriesWatching.value = updatedSeries;
+        }else if(value==='endSeason'){
+            const updatedSeries = localSeriesWatching.value.map(serie => {
+                if (serie[idSerie]) {
+                    return {
+                        ...serie,
+                        [idSerie]: {
+                            current: episode,
+                            currentSeason: season,
+                            currentIdSeason: idSeason ,
+                            state:'end'
+                        }
+                    };
+                }
+                return serie;
+            });
+            localSeriesWatching.value = updatedSeries;
         }
         console.log("Updated seriesWatching:", localSeriesWatching.value);
     } catch (error) {
-        console.error("Error ", error);
+        console.error( error);
     }
 }
 
@@ -177,14 +193,17 @@ function visit() {
                 :alt="`Portada de la última serie en la wishlist ${serie.name}`">
             <div class="flex flex-col p-4 ">
                 <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ serie.name }}</h2>
-                <p class="mb-3 font-medium text-gray-700 dark:text-gray-400">
+                <p v-if="localSeriesWatching.find(series =>
+                    series[serie.id])?.[serie.id].state!=='end'" class="mb-3 font-medium text-gray-700 dark:text-gray-400">
                     Estas viendo de la temporada {{ localSeriesWatching.find(series =>
                         series[serie.id])?.[serie.id].currentSeason }} capítulo {{ localSeriesWatching.find(series =>
                         series[serie.id])?.[serie.id].current }}
                 </p>
+                <p>Has terminado la serie</p>
             </div>
             </Link>
-            <button @click.stop="next(loginUser.id, serie.id)" type="button"
+            <button v-if="localSeriesWatching.find(series =>
+                        series[serie.id])?.[serie.id].state!=='end'" @click.stop="next(loginUser.id, serie.id)" type="button"
                 class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 self-end ">Lo
                 terminé</button>
         </div>

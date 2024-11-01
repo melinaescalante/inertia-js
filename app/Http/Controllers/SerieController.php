@@ -43,14 +43,18 @@ class SerieController extends Controller
     public function getAllEpisodes($name, $id)
     {
         $episodes = [];
+        $cantSeason=[];
         $response = Http::get("https://api.tvmaze.com/shows/" . $id . '/episodes');
         if ($response->successful()) {
             $episodes = $response->json();
             foreach ($episodes as $episode) {
                 $seasonId = $episode['season'];
-
+                $seasonNum = $episode['season'];
+                // dd($seasonNum);
+                
                 if (!isset($seasons[$seasonId])) {
                     $seasons[$seasonId] = [];
+                    array_push($cantSeason,$seasonId);
                 }
                 $seasons[$seasonId][] = $episode;
 
@@ -60,7 +64,8 @@ class SerieController extends Controller
 
         return Inertia::render('Series/AllEpisodesBySerieView', [
             'seasons' => $seasons,
-            'name' => $name
+            'name' => $name,
+            'ids'=>array_reverse($cantSeason)
 
         ]);
     }

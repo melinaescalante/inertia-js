@@ -67,6 +67,16 @@ class AppController extends Controller
         'seriesToWatch' => $seriesToWatch
     ]);
 }
+    public function endedSeries(Request $request)
+{
+  
+    // $seriesToWatch = $request->input('seriesToWatch', []);
+
+    // Renderiza la vista con Inertia
+    return Inertia::render('EndedSeriesView', [
+        // 'seriesToWatch' => $seriesToWatch
+    ]);
+}
     public function misSeries()
     {
         return Inertia::render('SeriesView');

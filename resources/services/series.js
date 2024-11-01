@@ -1,6 +1,6 @@
 import { error } from "laravel-mix/src/Log";
 import { db } from "./firebase";
-import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, addDoc } from "firebase/firestore";
 
 export async function addSerieToWatch(idUser, idSerie, nameSerie) {
     try {
@@ -142,15 +142,20 @@ async function verifySeason(idSerie, temporada) {
     const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
     const seasons = await response.json();
     const seasonExists = seasons.find(season => {
-        console.log(season.id)
+        console.log(season)
         return season.number === temporada + 1
     });
-    console.log(await seasonExists.id)
+    console.log(await seasonExists)
     if (response.status !== 200) {
         throw new Error("Error al obtener los episodios");
     }
-    const nextSeasonId=seasonExists.id
-    return {seasonExists,nextSeasonId};
+    if (seasonExists) {
+        
+        const nextSeasonId=seasonExists.id
+        return {seasonExists,nextSeasonId};
+    }else{
+        false
+    }
 
 }
 export async function currentInformation(idUser, idSerie) {
@@ -192,6 +197,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                     [`${idSerie}.current`]: watching
                 });
             } else {
+                
                 return false
             }
             return 'episode'
@@ -200,14 +206,42 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
             console.log('no se puede pasar de capitulo', error)
         }
     } else {
+        // debugger;
+        let season, idCurrentSeason;
+        try {
+            const result = await verifySeason(idSerie, temporada);
+            if (result) {
+                
+                season = result.seasonExists;
+                idCurrentSeason = result.nextSeasonId;
+            } else {
+                const data = toWatchSnapshot.data();
+                console.log(data,'data')
+                    if (data[idSerie] !== undefined) {
+                        await updateDoc(toWatchDocRef, {
+                            [idSerie]: {
+                                ...data[idSerie], 
+                                state: 'end' // Establece 'state' a false
+                            }
+                        });
+                        return 'endSeason';
+                    } else {
+                        return false; 
+                    }
+                
+            }
+        } catch (error) {
+            console.error('Error en verifySeason:', error);
+            return false;
+        }
+        
         let seasons
         const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
         if (response.status == 200) {
             seasons = await response.json();
-            console.log(seasons)
+         
         }
-        const {seasonExists:season,nextSeasonId:idCurrentSeason} = await verifySeason(idSerie, temporada)
-        console.log(season,idCurrentSeason)
+
         if (season) {
             if (toWatchSnapshot.exists()) {
                 const data = toWatchSnapshot.data();
@@ -226,7 +260,36 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                 }
                 return 'season'
             }
+        } 
+    }        
+}
 
-        }
+export async function addSerieEnded(idUser,{current, currentSeason, currentIdSeason, state}){
+    const userDocRef = doc(db, "users", idUser);
+    const watchedDocRef = doc(userDocRef, `series/watched`);
+    const watchedSnapshot = await getDoc(watchedDocRef);
+
+    const newAddSerie = {
+        ['current']: 1,
+        ['currentSeason']: 1,
+        ['currentIdSeason']: idSeason
+
+    };
+    if (watchedSnapshot.exists()) {
+        const watched = watchedSnapshot.data();
+        await addDoc(watchedSnapshot, {
+            [idSerie]: {
+                ...newAddSerie,
+            }
+        });
+        return
+    }
+    else {
+        await setDoc(watchedSnapshot, {
+            [idSerie]: {
+                ...newAddSerie,
+            }
+        });
+
     }
 }

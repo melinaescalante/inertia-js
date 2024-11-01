@@ -3,12 +3,8 @@
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\FirebaseController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use App\Http\Controllers\SerieController;
-use Kreait\Laravel\Firebase\Facades\Firebase;
-use Kreait\Firebase\Contract\Auth;
-use Kreait\Firebase\Contract\Firestore;
-use Google\Cloud\Firestore\V1\ListDocumentsRequest;
+
 
 //Rutas de vistas basicas
 
@@ -36,9 +32,12 @@ Route::get('/post/{id}', [AppController::class,"singlePost"])
 
 Route::get('/misSeries', [AppController::class,"mySeries"])
 ->name('mySeries');
+
 //SubViews de las series del usuario
 Route::get('/wishlist', [AppController::class,"myWishlist"]);
-Route::post('/wishlist', [AppController::class, 'myWishlist']);
+Route::get('/seriesVistas', [AppController::class,"endedSeries"]);
+// Route::post('/wishlist', [AppController::class, 'myWishlist']);
+
 Route::get('/descubrir', [AppController::class,"discover"])
 ->name('discover');
 
