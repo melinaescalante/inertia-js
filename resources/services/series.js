@@ -43,7 +43,7 @@ export async function addSerieToWatch(idUser, idSerie, nameSerie) {
 }
 
 export async function allSeriesToWatch(idUser) {
-    try {
+   try {
         const seriesToWatchRef = doc(db, `users/${idUser}/series/toWatch`);
         const seriesToWatchSnapshot = await getDoc(seriesToWatchRef);
         const seriesToWatchObtained = await seriesToWatchSnapshot.data().seriesData || []
@@ -51,15 +51,15 @@ export async function allSeriesToWatch(idUser) {
         return seriesToWatchObtained;
     } catch (error) {
         console.error(error)
-    }
+    } 
 }
 export async function isStarted(idUser, idSerie) {
 
     try {
         const seriesWatchingRef = doc(db, `users/${idUser}/series/watching`);
-        const watchedSnapshot = await getDoc(seriesWatchingRef);
-        if (watchedSnapshot.exists()) {
-            const data = watchedSnapshot.data()
+        const watchingSnapshot = await getDoc(seriesWatchingRef);
+        if (watchingSnapshot.exists()) {
+            const data = watchingSnapshot.data()
             if (data[idSerie]) {
                 console.log(data[idSerie])
                 return true
@@ -78,6 +78,7 @@ export async function allSeriesWatching(idUser) {
     try {
         const seriesWatchingRef = doc(db, `users/${idUser}/series/watching`);
         const watchedSnapshot = await getDoc(seriesWatchingRef);
+        // const querySeriesWatching=
         if (watchedSnapshot.exists()) {
             let seriesWatching = watchedSnapshot.data()
             seriesWatching = [seriesWatching]
@@ -150,10 +151,10 @@ async function verifySeason(idSerie, temporada) {
         throw new Error("Error al obtener los episodios");
     }
     if (seasonExists) {
-        
-        const nextSeasonId=seasonExists.id
-        return {seasonExists,nextSeasonId};
-    }else{
+
+        const nextSeasonId = seasonExists.id
+        return { seasonExists, nextSeasonId };
+    } else {
         false
     }
 
@@ -179,7 +180,7 @@ export async function currentInformation(idUser, idSerie) {
 
 
 }
-export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo) {
+export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo,nameSerie) {
     const userDocRef = doc(db, "users", idUser);
     const toWatchDocRef = doc(userDocRef, `series/watching`);
     const toWatchSnapshot = await getDoc(toWatchDocRef);
@@ -197,7 +198,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                     [`${idSerie}.current`]: watching
                 });
             } else {
-                
+
                 return false
             }
             return 'episode'
@@ -211,35 +212,37 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
         try {
             const result = await verifySeason(idSerie, temporada);
             if (result) {
-                
+
                 season = result.seasonExists;
                 idCurrentSeason = result.nextSeasonId;
             } else {
                 const data = toWatchSnapshot.data();
-                console.log(data,'data')
-                    if (data[idSerie] !== undefined) {
-                        await updateDoc(toWatchDocRef, {
-                            [idSerie]: {
-                                ...data[idSerie], 
-                                state: 'end' // Establece 'state' a false
-                            }
-                        });
-                        return 'endSeason';
-                    } else {
-                        return false; 
-                    }
-                
+                console.log(data, 'data')
+                if (data[idSerie] !== undefined) {
+                    await updateDoc(toWatchDocRef, {
+                        [idSerie]: {
+                            ...data[idSerie],
+                            state: 'end' // Establece 'state' a false
+                        }
+                    });
+                    await addSerieEnded(idUser,idSerie,nameSerie)
+                    
+                    return 'endSeason';
+                } else {
+                    return false;
+                }
+
             }
         } catch (error) {
             console.error('Error en verifySeason:', error);
             return false;
         }
-        
+
         let seasons
         const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
         if (response.status == 200) {
             seasons = await response.json();
-         
+
         }
 
         if (season) {
@@ -247,7 +250,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                 const data = toWatchSnapshot.data();
                 if (data[idSerie]?.currentSeason !== undefined) {
                     let watchingSeason = data[idSerie].currentSeason + 1;
-                    
+
                     await updateDoc(toWatchDocRef, {
                         [idSerie]: {
                             current: 1,
@@ -260,36 +263,49 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                 }
                 return 'season'
             }
-        } 
-    }        
+        }
+    }
 }
 
-export async function addSerieEnded(idUser,{current, currentSeason, currentIdSeason, state}){
+export async function addSerieEnded(idUser, idSerie, nameSerie) {
     const userDocRef = doc(db, "users", idUser);
     const watchedDocRef = doc(userDocRef, `series/watched`);
     const watchedSnapshot = await getDoc(watchedDocRef);
 
-    const newAddSerie = {
-        ['current']: 1,
-        ['currentSeason']: 1,
-        ['currentIdSeason']: idSeason
-
-    };
+    const newWatchedSerie = {[nameSerie]: idSerie};
     if (watchedSnapshot.exists()) {
-        const watched = watchedSnapshot.data();
-        await addDoc(watchedSnapshot, {
-            [idSerie]: {
-                ...newAddSerie,
-            }
-        });
-        return
-    }
-    else {
-        await setDoc(watchedSnapshot, {
-            [idSerie]: {
-                ...newAddSerie,
-            }
-        });
+        const alreadyWatched = watchedSnapshot.data().watched || [];
+        alreadyWatched.push(newWatchedSerie);
 
+        await updateDoc(watchedDocRef, {
+            watched:alreadyWatched
+        });
+   
+    }else{
+        
+        await setDoc(watchedDocRef, { watched: [newWatchedSerie]});
     }
+
+}
+async function deleteFromWatching(){
+
+}
+/**
+ * 
+ * @param {*} idUser 
+ * @returns 
+ */
+export async function allSeriesWatched(idUser) {
+    try {
+        const seriesWatchedRef = doc(db, `users/${idUser}/series/watched`);
+        const seriesWatchedSnapshot = await getDoc(seriesWatchedRef);
+        let seriesWatchedObtained = seriesWatchedSnapshot.data().watched || [];
+        console.log(seriesWatchedObtained)
+        // Reversamos directamente
+        seriesWatchedObtained = seriesWatchedObtained.reverse();
+        
+        return seriesWatchedObtained;
+    } catch (error) {
+        console.error(error);
+    } 
 }
