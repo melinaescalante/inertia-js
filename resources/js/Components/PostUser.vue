@@ -40,6 +40,7 @@ defineProps({
 })
 const commentText = ref('')
 const commentsObtained = ref([])
+console.log(loginUser.value.id)
 async function giveComment(id) {
     if (loginUser.value.id !== undefined) {
         comment(id, commentText.value, loginUser.value.id)
@@ -78,25 +79,26 @@ const areCommentsVisible = ref(false);
 async function seeComments(id) {
 
     if (areCommentsVisible.value) {
-    // Si los comentarios están visibles, los ocultamos
+    
     areCommentsVisible.value = false;
     commentsObtained.value = [];
 } else {
     // Si no están visibles, los cargamos
     const comments = await getComments(id);
 
-    // Crear un array de promesas que se resuelvan con el nombre de usuario
+   
     const commentsWithUserNames = await Promise.all(
         comments.map(async comment => {
             const userId = Object.keys(comment)[0];
-            const userName = await getNameUser(userId); // Llamada para obtener el nombre del usuario
-            return { ...comment, userName }; // Agregar el nombre del usuario al comentario
+            console.log(userId)
+            const userName = await getNameUser(userId);
+            console.log(userName) 
+            return { ...comment, userName }; 
         })
     );
-console.log(commentsWithUserNames)
-    // Una vez que todas las promesas se resuelvan, actualizar los comentarios obtenidos
+
     commentsObtained.value = commentsWithUserNames;
-    areCommentsVisible.value = true; // Los marcamos como visibles
+    areCommentsVisible.value = true; 
 }
 
 }
@@ -220,12 +222,10 @@ async function giveLike(e) {
         </div>
         <ul id="commentObtained" open="false" v-if="commentsObtained">
             <li v-for="comment in commentsObtained" class="border-b-2 ms-2 mt-3 mb-3">
-                <strong><Link :href="`perfil/${Object.keys(comment)[0]}`">{{userName }}</Link></strong>: {{ Object.values(comment)[0] }}
+                <strong><Link :href="`perfil/${Object.keys(comment)[0]}`">{{comment.userName }}</Link></strong>: {{ Object.values(comment)[0] }}
             </li>
         </ul>
-        <!-- <p v-else>
-            Cargando comentarios
-        </p> -->
+      
         <p v-else class="text-slate-400 ms-2">¡Se el primero en comentar!</p>
         <span class="sr-only">Deja tu comentario debajo:</span>
         <div class="relative">

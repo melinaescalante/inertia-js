@@ -106,7 +106,7 @@ onUnmounted(() => {
             <Link v-if="loginUser.id === userData.id" href="/perfilinfo/edit"
               class="text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
             Editar Perfil</Link>
-            <Link v-else href="#"
+            <Link v-else :href="`/chatPrivado/${userData.id}/${userData.email}`"
               class="text-center text-blue-800 border border-blue-700 hover:bg-gray-200 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
             Chatear</Link>
           </div>

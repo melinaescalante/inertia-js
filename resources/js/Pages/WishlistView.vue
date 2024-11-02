@@ -14,7 +14,7 @@ onMounted(() => {
         try {
 
             const response = await fetch('https://api.tvmaze.com/shows/' + Object.keys(serie)[0] + '')
-            // resto de tu código...
+     
             if (response) {
                 const json = await response.json();
                 arrayFetch.value.push(json)

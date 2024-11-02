@@ -30,6 +30,16 @@ class AppController extends Controller
         return Inertia::render('Profile/ProfileView', ['id' => $postId]);
      
     }
+    public function chatPrivate($id,$email)
+    {
+
+        return Inertia::render('Profile/ChatPrivateView',[
+            'id' => $id,
+            'email' => $email,
+        ]);
+     
+    }
+
     public function profileEdit()
     {
         return Inertia::render('EditProfileView');
@@ -70,11 +80,11 @@ class AppController extends Controller
     public function endedSeries(Request $request)
 {
   
-    // $seriesToWatch = $request->input('seriesToWatch', []);
+    $seriesWatched = $request->input('seriesWatched', []);
 
     // Renderiza la vista con Inertia
     return Inertia::render('EndedSeriesView', [
-        // 'seriesToWatch' => $seriesToWatch
+        'seriesWatched' => $seriesWatched
     ]);
 }
     public function misSeries()

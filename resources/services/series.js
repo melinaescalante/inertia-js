@@ -1,6 +1,6 @@
 import { error } from "laravel-mix/src/Log";
 import { db } from "./firebase";
-import { doc, getDoc, updateDoc, setDoc, addDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, deleteField } from "firebase/firestore";
 
 export async function addSerieToWatch(idUser, idSerie, nameSerie) {
     try {
@@ -226,6 +226,9 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                         }
                     });
                     await addSerieEnded(idUser,idSerie,nameSerie)
+                    await updateDoc(toWatchDocRef, {
+                        [idSerie]: deleteField()
+                    });
                     
                     return 'endSeason';
                 } else {
