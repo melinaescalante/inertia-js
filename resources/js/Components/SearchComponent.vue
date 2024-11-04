@@ -31,10 +31,7 @@ export default {
             data: { name: value},
             // Manejamos los resultados en caso de éxito. Faltaría manejar en caso de error.
             onSuccess: page => {
-              if (this.series.length > 0) {
-                this.answer = "Success";
-        
-              } else {
+              if (!this.series.length > 0) {
                 this.answer = "No se encontraron series.";
               }
               this.loading = false;

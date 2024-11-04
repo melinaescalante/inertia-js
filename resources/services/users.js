@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { doc, getDoc, updateDoc, setDoc, collection, addDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, collection, addDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
 /**
  * Funcion que en base al id de un usuario nos permite tarer el display name actualizado de cada usuario.
  * @param {id:string} dataUser
@@ -42,47 +42,84 @@ export async function getEmailUser(id) {
     const profileDocument = await getDoc(profileRef)
     if (profileDocument.exists()) {
       return profileDocument.data().email
-      
+
     }
-    } catch (error) {
-      console.log('Hubo un error al traer el perfil', error)
-    }
+  } catch (error) {
+    console.log('Hubo un error al traer el perfil', error)
   }
+}
 /**
  * Traemos la informacion del usuario para su vista de perfil, ya sea el logueado o uno de la comunidad ya registrado
  * @param {{id:string, email:string}} data
  * @returns {{id: string, email: string, displayName: string, bio: string, career: string}|{email: string, bio: string, career: string}}
  */
 export async function getUsersProfileById(id, email) {
-    try {
+  try {
 
-      const profileRef = doc(db, `/users/${id}`)
-      
-      const profileDocument = await getDoc(profileRef)
-      if (profileDocument.exists()) {
-       
-        const profileSubcollection = collection(db, `users/${id}/series`);
-        // addDoc(profileSubcollection, {})
-        return {
-          id: profileDocument.id,
-          email: profileDocument.data().email,
-          displayName: profileDocument.data().displayName,
-          bio: profileDocument.data().bio,
-          genres: profileDocument.data().genres
-        }
-        
-      } else {
+    const profileRef = doc(db, `/users/${id}`)
 
-        await setDoc(doc(db, 'users', id), {
-          email: email,
-          bio: null,
-          genres: null
+    const profileDocument = await getDoc(profileRef)
+    if (profileDocument.exists()) {
 
-        });
-        return { id, email, bio: null };
+      const profileSubcollection = collection(db, `users/${id}/series`);
+      // addDoc(profileSubcollection, {})
+      return {
+        id: profileDocument.id,
+        email: profileDocument.data().email,
+        displayName: profileDocument.data().displayName,
+        bio: profileDocument.data().bio,
+        genres: profileDocument.data().genres
       }
-    } catch (error) {
-      console.log('Hubo un error al traer el perfil', error)
+
+    } else {
+
+      await setDoc(doc(db, 'users', id), {
+        email: email,
+        bio: null,
+        genres: null
+
+      });
+      return { id, email, bio: null };
+    }
+  } catch (error) {
+    console.log('Hubo un error al traer el perfil', error)
+  }
+
+}
+
+export async function getUsers(searchTerm,callback) {
+  try {
+    const usersRef = collection(db, "users");
+    // const users = [];
+
+    if (searchTerm) {
+      const q = query(usersRef, where('displayName', '>=', searchTerm), where('displayName', '<=', searchTerm + '\uf8ff'));
+      // const querySnapshot = await getDocs(q);
+      onSnapshot(q , snapshot => {
+        const users = snapshot.docs.map(doc => {
+            return {
+                id: doc.id,
+                bio: doc.data().bio,
+                displayName: doc.data().displayName,
+                genres: doc.data().genres,
+            }
+        });
+        callback(users);
+    });
+    //   querySnapshot.map((doc) => {
+    //     const user = {
+    //       id: doc.id,
+    //       bio: doc.data().bio,
+    //       displayName: doc.data().displayName,
+    //       genres: doc.data().genres,
+    //     }
+    //     users.push(user); // Acumula los datos de los usuarios
+    //   });
     }
 
+    // return users;
+  } catch (error) {
+    console.log('Hubo un error al traer el perfil', error);
+
   }
+}

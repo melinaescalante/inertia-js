@@ -127,9 +127,13 @@ onUnmounted(() => {
           </Link>
         </div>
       </div>
-      <div class="text-center" v-if="postsById.length===0">
+      <div class="text-center" v-if="userData.id!==loginUser.id && postsById.length===0">
+        <p>No tiene ni una publicación hecha</p>
+      </div>
+      <div class="text-center" v-if="userData.id==loginUser.id && postsById.length===0">
         <p>No tienes ni una publicación hecha</p>
       </div>
+      
     </template>
   </template>
 </template>

@@ -37,7 +37,8 @@ const excludedPages = [
     'DiscoverView',
     'SeriesView',
     'ConfigView',
-    'SearchView'
+    'SearchView',
+    'SearchUsersView'
 ];
 onUnmounted(() => {
     unSubscribeFromAuth();
@@ -55,7 +56,7 @@ onUnmounted(() => {
         </div>
 
         <ul class="flex items-center">
-            <template v-if="currentPage != 'Profile/ProfileView' && currentPage !== 'ChatView'">
+            <template v-if="currentPage !== 'Profile/ProfileView' && currentPage !== 'ChatView'">
                 <li>
                     <Link data-tooltip-target="tooltip-search" href="/buscador"
                         class="block px-4 rounded-s-full dark:hover:fill-gray-800 group m-auto">

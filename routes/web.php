@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\FirebaseController;
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SerieController;
 
@@ -43,6 +44,8 @@ Route::get('/descubrir', [AppController::class,"discover"])
 ->name('discover');
 
 Route::get('/buscador', [SerieController::class, 'buscador']);
+
+Route::get('/buscadorUsuarios', [SerieController::class, 'buscadorUsuarios']);
 
 //Rutas especificas de series con respecto a peticiones a la api
 Route::get('/show/{id}', [SerieController::class, 'getSerieById'])
