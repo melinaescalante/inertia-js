@@ -6,6 +6,7 @@ import { Link } from '@inertiajs/vue3';
 const props = defineProps({
     seriesWatched: Array
 });
+console.log(props.seriesWatched)
 const loading = ref(true)
 const arrayFetch = ref([])
 onMounted(() => {

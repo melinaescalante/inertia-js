@@ -7,7 +7,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
 import { allSeriesWatched } from '../../services/series';
 import Spinner from '../Components/Spinner.vue';
-
+import CardWithData from '../Components/CardWithData.vue';
 let unSubscribeFromAuth = () => { };
 const seriesToWatch = ref([])
 const seriesWatched = ref([])
@@ -173,7 +173,7 @@ async function next(id, idSerie, nameSerie) {
             });
 
             seriesWatchingJson.value = seriesWatchingJson.value.filter(serie => serie.id !== idSerie);
-await loadSeriesWatched()
+            await loadSeriesWatched()
         }
         console.log("Updated seriesWatching:", localSeriesWatching.value);
     } catch (error) {
@@ -181,40 +181,40 @@ await loadSeriesWatched()
     }
 }
 
-function visitWishlist() {
-    router.visit('/wishlist', {
-        data: {
-            seriesToWatch: seriesToWatch.value
-        },
-    });
+// function visitWishlist() {
+//     router.visit('/wishlist', {
+//         data: {
+//             seriesToWatch: seriesToWatch.value
+//         },
+//     });
 
-}
-function visitWatchedSeries() {
-    router.visit('/seriesVistas', {
-        data: {
-            seriesWatched: seriesWatched.value
-        },
-    });
+// }
+// function visitWatchedSeries() {
+//     router.visit('/seriesVistas', {
+//         data: {
+//             seriesWatched: seriesWatched.value
+//         },
+//     });
 
-}
-console.log(localSeriesWatching.value[0]) 
+// }
+// console.log(localSeriesWatching.value[0]) 
 </script>
 <template>
     <NavBar></NavBar>
     <div v-if="loading" class="flex justify-center mt-[50%]">
-        <Spinner >
-            
+        <Spinner>
+
         </Spinner>
-        
+
     </div>
     <template v-else>
-        
+
         <h1 class="text-xl m-4" v-if="!seriesWatching.length >= 1">
             Oops, no tienes ni una serie empezada!
-    
+
         </h1>
         <h1 v-else class="text-2xl font-medium ms-2 mt-3 mb-3">Series empezadas</h1>
-    
+
         <div class="flex flex-col gap-3 m-4">
             <Link href="/buscador" v-if="!seriesWatching.length >= 1"
                 class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
@@ -224,12 +224,13 @@ console.log(localSeriesWatching.value[0])
             <div v-else v-for="(serie, index) in seriesWatchingJson"
                 class=" m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
                 <Link :href="`/show/${serie.id}`" class="flex">
-    
+
                 <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1"
                     :src="serie.image ? serie.image.medium : '/public/noimage.png'"
                     :alt="`Portada de la última serie en la wishlist ${serie.name}`">
                 <div class="flex flex-col p-4 ">
-                    <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ serie.name }}</h2>
+                    <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ serie.name }}
+                    </h2>
                     <p v-if="localSeriesWatching.find(series =>
                         series[serie.id])?.[serie.id].state !== 'end'"
                         class="mb-3 font-medium text-gray-700 dark:text-gray-400">
@@ -241,30 +242,30 @@ console.log(localSeriesWatching.value[0])
                 </div>
                 </Link>
                 <button v-if="localSeriesWatching.find(series =>
-                    series[serie.id])?.[serie.id].state !== 'end'" @click.stop="next(loginUser.id, serie.id, serie.name)"
-                    type="button"
+                    series[serie.id])?.[serie.id].state !== 'end'"
+                    @click.stop="next(loginUser.id, serie.id, serie.name)" type="button"
                     class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 self-end ">Lo
                     terminé</button>
             </div>
             <h2 class="text-xl m-4" v-if="!seriesToWatch.length >= 1">Ops, no tienes ni una serie en tu lista!</h2>
-    
+
             <div class="" v-if="!seriesToWatch.length >= 1">
                 <Link href="/buscador"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 block w-full text-center">
                 Agregar
                 serie a wishlist</Link>
-    
+
             </div>
             <div v-if="seriesToWatch.length >= 1 && !loading">
                 <h2 class="text-2xl font-medium ms-2 mt-3 mb-3">Series en tu lista</h2>
                 <Link @click="visitWishlist" :data="{ seriesToWatch: seriesToWatch.value }"
                     class=" m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
-    
+
                 <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1"
                     :src="lastSerie?.image?.medium || '/public/noimage.png'"
                     :alt="`Portada de la última serie en la wishlist ${lastSerie?.name || 'sin título'}`">
                 <div class="flex flex-col justify-between p-4 leading-normal">
-    
+
                     <p class="mb-3 font-medium text-gray-700 dark:text-gray-400">Tu lista de series para ver </p>
                     <p>{{ seriesToWatch.length }}</p>
                 </div>
@@ -272,18 +273,13 @@ console.log(localSeriesWatching.value[0])
             </div>
             <div v-if="seriesWatched.length >= 1 && !loading">
                 <h2 class="text-2xl font-medium ms-2 mt-3 mb-3">Series vistas</h2>
-                <Link @click="visitWatchedSeries" :data="{ seriesWatched: seriesWatched.value }"
-                    class=" m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
-    
-                <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1"
-                    :src="lastSerieWatched?.image?.medium || '/public/noimage.png'"
-                    :alt="`Portada de la última serie en la wishlist ${lastSerieWatched?.name || 'sin título'}`">
-                <div class="flex flex-col justify-between p-4 leading-normal">
-    
-                    <p class="mb-3 font-medium text-gray-700 dark:text-gray-400">Tu lista de series vistas </p>
-                    <p>{{ seriesWatched.length }}</p>
-                </div>
-                </Link>
+                
+                <CardWithData 
+                :data=seriesWatched :imgContent="lastSerieWatched?.image?.medium"
+                    :altImgContent="lastSerieWatched?.name" text="Tu lista de series vistas"
+                    :description="seriesWatched.length" :lastSerieName="lastSerieWatched?.name" route="/seriesVistas"
+                    dataKey="seriesWatched">
+                </CardWithData>
             </div>
         </div>
     </template>
