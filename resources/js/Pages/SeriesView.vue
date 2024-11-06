@@ -258,8 +258,14 @@ async function next(id, idSerie, nameSerie) {
             </div>
             <div v-if="seriesToWatch.length >= 1 && !loading">
                 <h2 class="text-2xl font-medium ms-2 mt-3 mb-3">Series en tu lista</h2>
+                <CardWithData :data=seriesToWatch :imgContent="lastSerie?.image?.medium"
+                :altImgContent="lastSerie?.name" text="Tu lista de series para ver"
+                :description="seriesToWatch.length" :lastSerieName="lastSerie?.name" 
+                route="/wishlist"
+                dataName="seriesToWatch">
+                </CardWithData>
                 <Link @click="visitWishlist" :data="{ seriesToWatch: seriesToWatch.value }"
-                    class=" m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
+                    class="m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
 
                 <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1"
                     :src="lastSerie?.image?.medium || '/public/noimage.png'"
@@ -273,12 +279,11 @@ async function next(id, idSerie, nameSerie) {
             </div>
             <div v-if="seriesWatched.length >= 1 && !loading">
                 <h2 class="text-2xl font-medium ms-2 mt-3 mb-3">Series vistas</h2>
-                
-                <CardWithData 
-                :data=seriesWatched :imgContent="lastSerieWatched?.image?.medium"
+
+                <CardWithData :data=seriesWatched :imgContent="lastSerieWatched?.image?.medium"
                     :altImgContent="lastSerieWatched?.name" text="Tu lista de series vistas"
                     :description="seriesWatched.length" :lastSerieName="lastSerieWatched?.name" route="/seriesVistas"
-                    dataKey="seriesWatched">
+                    dataName="seriesWatched">
                 </CardWithData>
             </div>
         </div>

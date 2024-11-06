@@ -12,13 +12,13 @@ const props = defineProps({
     description: String,
     lastSerieName: String,
     route: String,
-    dataKey: String, 
+    dataName: String, 
 });
 
 function visit() {
     router.visit(props.route, {
         data:{
-            [props.dataKey]: props.data
+            [props.dataName]: props.data
         } 
     });
 }

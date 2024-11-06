@@ -18,17 +18,22 @@ const loading = ref(true);
 let unSubscribeFromAuth = () => { };
 onMounted(async () => {
     try {
-
         unSubscribeFromAuth = await suscribeToAuthChanged(async newUserData => {
-            loginUser.value = newUserData
+            loginUser.value = newUserData;
             serie.value = [];
-            loginUser.value.genres ? await loadSeriesByUsersGenres() : await loadSeriesByDefault
-        })
+            if (loginUser.value.genres) {
+                await loadSeriesByUsersGenres();
+                loading.value = false;
+            } else {
+                await loadSeriesByDefault();
+                loading.value = false;
+
+            }
+        });
     } catch (error) {
         console.error('Error fetching posts:', error.message);
-
     }
-})
+});
 async function loadSeriesByUsersGenres() {
     if (loginUser.value.genres !== undefined && loginUser.value.genres !== null) {
         let idShows = [];
@@ -52,7 +57,6 @@ async function loadSeriesByUsersGenres() {
 
             serie.value.push(genreArray)
         });
-        loading.value = true
     }
 }
 async function loadSeriesByDefault() {
@@ -64,7 +68,6 @@ async function loadSeriesByDefault() {
     genresStatic.set("Drama", "Drama");
 
     console.log(loginUser.value.genres, genresStatic, 'generos')
-    if (loginUser.value.genres.length === 0) {
         genresStatic.forEach(async (genre) => {
             let genreArray = []
             const limit = 10
@@ -82,9 +85,7 @@ async function loadSeriesByDefault() {
             serie.value.push(genreArray)
 
         });
-        loading.value = true
 
-    }
 }
 onUnmounted(() => {
     unSubscribeFromAuth();
@@ -94,7 +95,7 @@ defineProps({ genres: Array })
 <template>
     <NavBar></NavBar>
     {{ console.log(loading.value) }}
-    <section v-if="loading">
+    <section v-if="!loading">
 
         <div v-for="genero in serie" class="flex  flex-col ">
             <div>

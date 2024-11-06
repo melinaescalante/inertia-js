@@ -51,7 +51,8 @@ onUnmounted( ()=>{
     :comments="post.comments" 
     :userName="post.user"
     :liked="post.liked" 
-    :userId="post.userid">
+    :userId="post.userid"
+    :created_at="post.created_at">
     </PostUser>
     <div class="flex justify-center mt-80" v-if="loading">
       <Spinner msg="Cargando tu inicio"></Spinner>

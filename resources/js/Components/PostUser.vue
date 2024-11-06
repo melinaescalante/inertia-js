@@ -5,7 +5,8 @@ import { getNameUser } from '../../services/users';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { suscribeToAuthChanged } from "../../services/auth";
 import { Link } from '@inertiajs/vue3'
-
+import BottomSheet from './BottomSheet.vue';
+import { formatDate } from '../helpers/date';
 const loginUser = ref({
     id: null,
     email: null,
@@ -14,14 +15,14 @@ const loginUser = ref({
     genres: null
 
 })
-let unSubscribeFromAuth = () => {};
+let unSubscribeFromAuth = () => { };
 
-onMounted(async() => {
-    unSubscribeFromAuth=suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
+onMounted(async () => {
+    unSubscribeFromAuth = suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
 
 })
-onUnmounted( ()=>{
-  unSubscribeFromAuth();
+onUnmounted(() => {
+    unSubscribeFromAuth();
 
 })
 defineProps({
@@ -35,7 +36,8 @@ defineProps({
     serie: String,
     likes: Number,
     comments: Array,
-    liked: Boolean
+    liked: Boolean,
+    created_at: String
 
 })
 const commentText = ref('')
@@ -79,32 +81,32 @@ const areCommentsVisible = ref(false);
 async function seeComments(id) {
 
     if (areCommentsVisible.value) {
-    
-    areCommentsVisible.value = false;
-    commentsObtained.value = [];
-} else {
-    // Si no están visibles, los cargamos
-    const comments = await getComments(id);
 
-   
-    const commentsWithUserNames = await Promise.all(
-        comments.map(async comment => {
-            const userId = Object.keys(comment)[0];
-            console.log(userId)
-            const userName = await getNameUser(userId);
-            console.log(userName) 
-            return { ...comment, userName }; 
-        })
-    );
+        areCommentsVisible.value = false;
+        commentsObtained.value = [];
+    } else {
+        // Si no están visibles, los cargamos
+        const comments = await getComments(id);
 
-    commentsObtained.value = commentsWithUserNames;
-    areCommentsVisible.value = true; 
-}
+
+        const commentsWithUserNames = await Promise.all(
+            comments.map(async comment => {
+                const userId = Object.keys(comment)[0];
+                console.log(userId)
+                const userName = await getNameUser(userId);
+                console.log(userName)
+                return { ...comment, userName };
+            })
+        );
+
+        commentsObtained.value = commentsWithUserNames;
+        areCommentsVisible.value = true;
+    }
 
 }
 async function giveLike(e) {
     const heart = e.target
-    if (loginUser.value.id === undefined ||  loginUser.value.id === null) {
+    if (loginUser.value.id === undefined || loginUser.value.id === null) {
         router.replace('/ingresar');
         return
     }
@@ -126,7 +128,6 @@ async function giveLike(e) {
 }
 </script>
 <template>
-
     <div class="m-4 border rounded-2xl p-4 mb-[2rem]">
         <div class="flex flex-row justify-between  items-center">
             <div>
@@ -139,9 +140,23 @@ async function giveLike(e) {
                 <a href="#" class=" text-center decoration-none text-blue-500">{{ serie }}</a>
             </div>
             <div class="">
-                <svg class="w-6 h-6 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-  <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M6 4v10m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v2m6-16v2m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v10m6-16v10m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v2"/>
-</svg>
+                <BottomSheet>
+                    <div class="flex">
+                        <div>
+
+                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        </div>
+
+                        <p>Informacion: {{formatDate(created_at)}}</p>
+                    </div>
+                </BottomSheet>
+
 
             </div>
         </div>
@@ -222,10 +237,12 @@ async function giveLike(e) {
         </div>
         <ul id="commentObtained" open="false" v-if="commentsObtained">
             <li v-for="comment in commentsObtained" class="border-b-2 ms-2 mt-3 mb-3">
-                <strong><Link :href="`perfil/${Object.keys(comment)[0]}`">{{comment.userName }}</Link></strong>: {{ Object.values(comment)[0] }}
+                <strong>
+                    <Link :href="`perfil/${Object.keys(comment)[0]}`">{{ comment.userName }}</Link>
+                </strong>: {{ Object.values(comment)[0] }}
             </li>
         </ul>
-      
+
         <p v-else class="text-slate-400 ms-2">¡Se el primero en comentar!</p>
         <span class="sr-only">Deja tu comentario debajo:</span>
         <div class="relative">

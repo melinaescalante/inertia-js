@@ -57,8 +57,9 @@ export async function readPosts(callback, userid) {
         comments: doc.data().comments,
         shares: doc.data().shares,
         user: await getNameUser(doc.data().userid),
-        userid:doc.data().userid,
-        liked: like
+        userid: doc.data().userid,
+        liked: like,
+        created_at:doc.data().created_at
       };
       posts.push(post);
       console.log(post)
@@ -74,7 +75,7 @@ export async function readPosts(callback, userid) {
 * @returns {{Promise}}
 */
 
-export async function readPostsById(callback,id, userid ) {
+export async function readPostsById(callback, id, userid) {
   const postRef = doc(db, "posts-public", id);
 
   onSnapshot(postRef, async (postSnapshot) => {
@@ -91,10 +92,12 @@ export async function readPostsById(callback,id, userid ) {
         comments: postSnapshot.data().comments,
         shares: postSnapshot.data().shares,
         userid: postSnapshot.data().userid,
-        liked: like
+        liked: like,
+        created_at:postSnapshot.data().created_at
+
       };
 
-      callback(postFound); 
+      callback(postFound);
     }
   });
 }
@@ -118,15 +121,15 @@ export async function readPostsByUser(callback, userid) {
         date: doc.data().date,
         user: await getNameUser(doc.data().userid),
         likes: doc.data().likes,
-        userid:doc.data().userid,
+        userid: doc.data().userid,
 
         comments: doc.data().comments,
         shares: doc.data().shares,
-    liked: like
-
+        liked: like,
+        created_at:doc.data().created_at
       };
       posts.push(post);
-      
+
     }
 
     callback(posts);
@@ -156,16 +159,16 @@ export async function like(id, operador, userid) {
       if (operador === 'plus') {
         const newLike = { [userid]: userid };
         currentLikes.push(newLike);
-      
+
         await updateDoc(postRef, {
           likes: currentLikes
         });
 
-      } 
-      else if(operador==='less') {
+      }
+      else if (operador === 'less') {
         const newArray = currentLikes.filter(user => {
-          const userIdKey = Object.keys(user)[0]; 
-          return userIdKey !== userid; 
+          const userIdKey = Object.keys(user)[0];
+          return userIdKey !== userid;
         });
 
         await updateDoc(postRef, {

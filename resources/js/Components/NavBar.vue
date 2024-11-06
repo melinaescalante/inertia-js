@@ -25,6 +25,9 @@ onMounted(async () => {
 
             userUrl.value = `/perfil/${loginUser.value.id}`
             loading.value = false;
+        }else{
+            loading.value = false;
+
         }
 
     })
@@ -52,7 +55,7 @@ onUnmounted(() => {
 
             <ButtonGoBack v-if="!excludedPages.includes(currentPage)">
             </ButtonGoBack>
-            <Link href="/" class="text-xl"><img src="/public/Isotipo-TVON.svg" type="svg" alt="Isotipo-TVON" class="block h-8 w-8"></Link>
+            <Link href="/" class="text-xl"><img src="/public/Isotipo-TVON.svg" type="image/svg+xml" alt="Isotipo-TVON" class="block h-8 w-8"></Link>
         </div>
 
         <ul class="flex items-center">
