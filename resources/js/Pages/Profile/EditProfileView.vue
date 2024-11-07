@@ -1,10 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import NavBar from '../components/NavBar.vue';
-import { editProfile, suscribeToAuthChanged } from '../../services/auth';
-import ButtonGoBack from '../components/ButtonGoBack.vue'
+import NavBar from '../../components/NavBar.vue';
+import { editProfile, suscribeToAuthChanged } from '../../../services/auth';
 let unSubscribeFromAuth = () => {};
-
 const editData = ref({
     displayName: '',
     bio: '',

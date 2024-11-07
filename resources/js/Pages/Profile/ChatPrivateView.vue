@@ -8,12 +8,12 @@ import { formatDate } from "../../helpers/date.js"
 import { Link } from "@inertiajs/vue3";
 import { ref, onMounted, onUnmounted } from 'vue'
 import NavBar from '../../components/NavBar.vue';
-const page = usePage()
-console.log(page.props.id)
-const { loginUser } = useLoginUser()
-console.log( loginUser)
 
-const { user, loading: loadingUser } = useUser(page.props.id, page.props.email)
+const page = usePage()
+
+const { loginUser } = useLoginUser()
+
+const { user, loading: loadingUser } = useUser(page.props.id, page.props.email )
 
 
 const loadingMessages = ref(true)
@@ -61,12 +61,9 @@ onMounted(async () => {
         </div>
 
         <div class="p-4 m-1 min-h-[65vh] border rounded">
-            {{console.log(messages)}}
             <ul v-if="!loading" class="flex flex-col items-start">
-                <li v-for="message in messages" class="my-2 rounded bg-gray-200 p-2" :class="{
-                    'bg-gray-200': loginUser.id !== message.user_id,
-                    'bg-blue-0 self-end': loginUser.id === message.user_id
-                }">
+                <li v-for="message in messages" class="my-2 rounded p-2" :class="{'bg-gray-200': loginUser.id !== message.user_id,
+                    'bg-blue-0 self-end': loginUser.id === message.user_id}">
                     <div>
                         <Link class="font-medium text-cyan-700 underline"
                             :to="`/perfilUsuario/${message.id}/${message.email}`">{{ message.email }}</Link>

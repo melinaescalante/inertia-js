@@ -5,8 +5,10 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import Spinner from '../../components/Spinner.vue'
 import { suscribeToAuthChanged } from "../../../services/auth";
 import { readPostsByUser } from '../../../services/posts';
-import { getEmailUser, getUsersProfileById } from '../../../services/users';
-let unSubscribeFromAuth = () => { };
+import { getEmailUser,getUserName, getUsersProfileById } from '../../../services/users';
+import { useLoginUser } from "../../composables/useLoginUser";
+
+const { loginUser } = useLoginUser()
 
 defineProps({
   userName: String,
@@ -16,36 +18,34 @@ defineProps({
 const page = usePage()
 const id = ref(null)
 const loading = ref(true)
-const loginUser = ref({
-  id: null,
-  email: null,
-  displayName: null,
-  bio: null,
-  genres: null
-})
-
+ // {
+  //   "src": "/path/to/desktop-screenshot.png",
+  //   "sizes": "1280x720",
+  //   "type": "image/png",
+  //   "form_factor": "wide"
+  // },
 const postsById = ref([])
 const userData = ref([])
 const emailUser = ref('')
+const userName = ref('')
 id.value = page.props.id
 
 onMounted(async () => {
-  // Suscribir a cambios de autenticación
-  unSubscribeFromAuth = suscribeToAuthChanged(async (newUserData) => {
-    loginUser.value = newUserData
 
     if (loginUser.value.id !== null && id.value !== null) {
       try {
         await readPostsByUser(async (newPosts) => {
           postsById.value = newPosts
           emailUser.value = await getEmailUser(id.value)
+          userName.value = await getUserName(id.value)
+          
           if (emailUser.value) {
-            userData.value = await getUsersProfileById(id.value, emailUser.value)
+            console.log((emailUser.value));
+            userData.value = await getUsersProfileById(id.value, emailUser.value,userName.value)
             console.log(userData.value)
             loading.value = false;
 
           }
-          console.log(postsById.value)
         }, id.value)
 
 
@@ -56,12 +56,7 @@ onMounted(async () => {
     }
 
   })
-  // Asegúrate de que los posts se han cargado antes de acceder a ellos
-})
-onUnmounted(() => {
-  unSubscribeFromAuth();
 
-})
 </script>
 <template>
   <NavBar></NavBar>

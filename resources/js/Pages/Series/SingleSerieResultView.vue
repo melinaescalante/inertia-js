@@ -2,23 +2,17 @@
 import NavBar from '../../components/NavBar.vue'
 import ButtonBase from '../../components/ButtonBase.vue'
 import { Link } from '@inertiajs/vue3';
-import { addSerieToWatch } from '../../../services/series';
-import { allSeriesToWatch } from '../../../services/series';
+import { addSerieToWatch, allSeriesToWatch, startSerie, isStarted } from '../../../services/series';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { suscribeToAuthChanged } from "../../../services/auth";
-import { startSerie, isStarted } from '../../../services/series';
-let unSubscribeFromAuth = () => { };
+import { useLoginUser } from "../../composables/useLoginUser";
+
+const { loginUser } = useLoginUser()
+
 const props = defineProps({
     serie: Array
 })
-const loginUser = ref({
-    id: null,
-    email: null,
-    displayName: null,
-    bio: null,
-    genres: null
 
-})
 const seriesToWatch = ref([])
 const localseries = ref([])
 const loading = ref(true)
@@ -26,8 +20,6 @@ const loading = ref(true)
 const ini = ref(false)
 const watching = ref(false)
 onMounted(async () => {
-    unSubscribeFromAuth = suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
-
     if (loginUser.value.id !== null && loginUser.value.id !== undefined) {
         // return
         seriesToWatch.value = await allSeriesToWatch(loginUser.value.id)
@@ -55,9 +47,6 @@ async function isInWishlist(id) {
     }
 
 }
-onUnmounted(() => {
-    unSubscribeFromAuth();
-})
 
 async function addSerie(idUser, idSerie, nameSerie) {
     await addSerieToWatch(idUser, idSerie, nameSerie)
@@ -77,7 +66,7 @@ async function start(idUser, idSerie) {
     <NavBar></NavBar>
     <h1 class="text-2xl font-medium ms-2 mt-3 mb-3">{{ serie.name }}</h1>
     <div class="flex gap-3 m-2">
-        <img class="h-64 md:h-72" :src="serie.image.medium ? serie.image.medium : 'noimage.png'"
+        <img class="h-64 md:h-72" :src="serie.image?.medium ? serie.image.medium : '/noimage.png'"
             :alt="`Imagen de portada de la serie de ${serie.name}`">
         <div>
 

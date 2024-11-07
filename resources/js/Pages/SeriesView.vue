@@ -32,7 +32,11 @@ onMounted(async () => {
         await loadSeriesToWatch()
         await loadSeriesWatching()
         await loadSeriesWatched()
+
         loading.value = false
+    }else{
+        loading.value = false
+
     }
 
 
@@ -44,7 +48,7 @@ onUnmounted(() => {
 async function loadSeriesWatched() {
     seriesWatched.value = await allSeriesWatched(loginUser.value.id)
     try {
-        if (seriesWatched === []) return
+        if (seriesWatched.value ===false)return;
         if (seriesWatched) {
             const lastWatchedSerie = seriesWatched.value.at(-1);
             if (lastWatchedSerie) {
@@ -63,10 +67,11 @@ async function loadSeriesWatched() {
         throw new Error(error);
     }
 }
+
 async function loadSeriesToWatch() {
     seriesToWatch.value = await allSeriesToWatch(loginUser.value.id)
     try {
-        if (seriesToWatch === []) return
+        if (seriesToWatch===false) return
         if (seriesToWatch) {
             const lastSeries = seriesToWatch.value.at(-1);
             if (lastSeries) {
@@ -181,23 +186,6 @@ async function next(id, idSerie, nameSerie) {
     }
 }
 
-// function visitWishlist() {
-//     router.visit('/wishlist', {
-//         data: {
-//             seriesToWatch: seriesToWatch.value
-//         },
-//     });
-
-// }
-// function visitWatchedSeries() {
-//     router.visit('/seriesVistas', {
-//         data: {
-//             seriesWatched: seriesWatched.value
-//         },
-//     });
-
-// }
-// console.log(localSeriesWatching.value[0]) 
 </script>
 <template>
     <NavBar></NavBar>
@@ -264,20 +252,11 @@ async function next(id, idSerie, nameSerie) {
                 route="/wishlist"
                 dataName="seriesToWatch">
                 </CardWithData>
-                <Link @click="visitWishlist" :data="{ seriesToWatch: seriesToWatch.value }"
-                    class="m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
-
-                <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1"
-                    :src="lastSerie?.image?.medium || '/public/noimage.png'"
-                    :alt="`Portada de la última serie en la wishlist ${lastSerie?.name || 'sin título'}`">
-                <div class="flex flex-col justify-between p-4 leading-normal">
-
-                    <p class="mb-3 font-medium text-gray-700 dark:text-gray-400">Tu lista de series para ver </p>
-                    <p>{{ seriesToWatch.length }}</p>
-                </div>
-                </Link>
+                
             </div>
             <div v-if="seriesWatched.length >= 1 && !loading">
+        
+        {{ console.log(seriesWatched) }}
                 <h2 class="text-2xl font-medium ms-2 mt-3 mb-3">Series vistas</h2>
 
                 <CardWithData :data=seriesWatched :imgContent="lastSerieWatched?.image?.medium"

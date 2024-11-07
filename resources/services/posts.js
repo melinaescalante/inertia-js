@@ -1,21 +1,17 @@
 import { db, storage } from './firebase'
-import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, updateDoc, doc, getDoc, where } from 'firebase/firestore'
+import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, updateDoc, doc, getDoc, where, deleteDoc } from 'firebase/firestore'
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { getNameUser } from './users';
-import { login } from './auth';
 
-export async function uploadPost({ text, serie, image, date, userid }) {
+export async function uploadPost({ text, serie, image, userid }) {
   const postRef = collection(db, 'posts-public')
-
-  if (image == undefined) {
-    image = null
-  }
+console.log(image,' soy la imagen')
+  
 
   await addDoc(postRef, {
     text,
     serie,
     image,
-    date,
     userid,
     created_at: serverTimestamp()
   });
@@ -25,9 +21,7 @@ export async function uploadPhoto(image) {
   try {
     const storageRefe = storageRef(storage, `posts/${image.name}`);
     await uploadBytes(storageRefe, image);
-    // Obtén la URL de descarga
     const downloadURL = await getDownloadURL(storageRefe);
-    // Agrega la URL y los datos asociados a la colección 'fotos' en Firestore
     return downloadURL
   } catch (error) {
     console.error('Error al subir la imagen:', error);
@@ -52,14 +46,13 @@ export async function readPosts(callback, userid) {
         serie: doc.data().serie,
         text: doc.data().text,
         image: doc.data().image,
-        date: doc.data().date,
         likes: doc.data().likes,
         comments: doc.data().comments,
         shares: doc.data().shares,
         user: await getNameUser(doc.data().userid),
         userid: doc.data().userid,
         liked: like,
-        created_at:doc.data().created_at
+        created_at: doc.data().created_at
       };
       posts.push(post);
       console.log(post)
@@ -86,14 +79,14 @@ export async function readPostsById(callback, id, userid) {
         serie: postSnapshot.data().serie,
         text: postSnapshot.data().text,
         image: postSnapshot.data().image,
-        date: postSnapshot.data().date,
+       
         user: await getNameUser(postSnapshot.data().userid),
         likes: postSnapshot.data().likes,
         comments: postSnapshot.data().comments,
         shares: postSnapshot.data().shares,
         userid: postSnapshot.data().userid,
         liked: like,
-        created_at:postSnapshot.data().created_at
+        created_at: postSnapshot.data().created_at
 
       };
 
@@ -126,7 +119,7 @@ export async function readPostsByUser(callback, userid) {
         comments: doc.data().comments,
         shares: doc.data().shares,
         liked: like,
-        created_at:doc.data().created_at
+        created_at: doc.data().created_at
       };
       posts.push(post);
 
@@ -226,6 +219,16 @@ export async function getComments(id) {
   } catch (error) {
     console.log("Documento no existente");
 
+  }
+
+}
+export async function deletePost(id) {
+  try {
+
+    const postRef = doc(db, "posts-public", id);
+    await deleteDoc(postRef);
+  } catch (error) {
+console.log(error)
   }
 
 }

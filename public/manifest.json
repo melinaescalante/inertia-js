@@ -48,12 +48,7 @@
  "lang": "es-AR",
  "dir":"ltr",
  "screenshots": [
-  {
-    "src": "/path/to/desktop-screenshot.png",
-    "sizes": "1280x720",
-    "type": "image/png",
-    "form_factor": "wide"
-  },
+ 
   {
     "src": "/mobile.png",
     "sizes": "370x801",

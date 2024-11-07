@@ -14,6 +14,8 @@ Route::get('/', [AppController::class,"home"])
 
 Route::get('/chatPrivado/{id}/{email}', [AppController::class,"chatPrivate"]);
 
+Route::get('/chat', [AppController::class,"chat"]);
+
 Route::get('/configuraciones', [AppController::class,"configuraciones"])
 ->name('config');
 

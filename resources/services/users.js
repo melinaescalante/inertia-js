@@ -31,7 +31,7 @@ export async function updateUserProfile(id, { displayName, bio, genres }) {
   await updateDoc(profileRef, {
     displayName,
     bio,
-    genres: genres
+    genres
 
   });
 }
@@ -48,12 +48,25 @@ export async function getEmailUser(id) {
     console.log('Hubo un error al traer el perfil', error)
   }
 }
+export async function getUserName(id) {
+  try {
+
+    const profileRef = doc(db, `/users/${id}`)
+    const profileDocument = await getDoc(profileRef)
+    if (profileDocument.exists()) {
+      return profileDocument.data().displayName
+
+    }
+  } catch (error) {
+    console.log('Hubo un error al traer el perfil', error)
+  }
+}
 /**
  * Traemos la informacion del usuario para su vista de perfil, ya sea el logueado o uno de la comunidad ya registrado
  * @param {{id:string, email:string}} data
  * @returns {{id: string, email: string, displayName: string, bio: string, career: string}|{email: string, bio: string, career: string}}
  */
-export async function getUsersProfileById(id, email) {
+export async function getUsersProfileById(id, email,displayName) {
   try {
 
     const profileRef = doc(db, `/users/${id}`)
@@ -62,7 +75,7 @@ export async function getUsersProfileById(id, email) {
     if (profileDocument.exists()) {
 
       const profileSubcollection = collection(db, `users/${id}/series`);
-      // addDoc(profileSubcollection, {})
+ 
       return {
         id: profileDocument.id,
         email: profileDocument.data().email,
@@ -75,11 +88,12 @@ export async function getUsersProfileById(id, email) {
 
       await setDoc(doc(db, 'users', id), {
         email: email,
+        displayName:displayName,
         bio: null,
         genres: null
 
       });
-      return { id, email, bio: null };
+      return { id, email, bio: null,displayName };
     }
   } catch (error) {
     console.log('Hubo un error al traer el perfil', error)
@@ -106,15 +120,7 @@ export async function getUsers(searchTerm,callback) {
         });
         callback(users);
     });
-    //   querySnapshot.map((doc) => {
-    //     const user = {
-    //       id: doc.id,
-    //       bio: doc.data().bio,
-    //       displayName: doc.data().displayName,
-    //       genres: doc.data().genres,
-    //     }
-    //     users.push(user); // Acumula los datos de los usuarios
-    //   });
+
     }
 
     // return users;

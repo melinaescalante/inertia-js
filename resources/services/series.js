@@ -13,7 +13,6 @@ export async function addSerieToWatch(idUser, idSerie, nameSerie) {
             const exists = currentsToWatch.some(serie => {
                 return Object.keys(serie)[0] === idSerie.toString();
             });
-            console.log(exists)
 
             if (exists) {
                 let currentsToWatchFilter = currentsToWatch.filter(serie => {
@@ -43,15 +42,15 @@ export async function addSerieToWatch(idUser, idSerie, nameSerie) {
 }
 
 export async function allSeriesToWatch(idUser) {
-   try {
+    try {
         const seriesToWatchRef = doc(db, `users/${idUser}/series/toWatch`);
         const seriesToWatchSnapshot = await getDoc(seriesToWatchRef);
-        const seriesToWatchObtained = await seriesToWatchSnapshot.data().seriesData || []
-        // seriesToWatchObtained.reverse()
+        const seriesToWatchObtained = await seriesToWatchSnapshot.data()?.seriesData || []
+
         return seriesToWatchObtained;
     } catch (error) {
         console.error(error)
-    } 
+    }
 }
 export async function isStarted(idUser, idSerie) {
 
@@ -73,12 +72,12 @@ export async function isStarted(idUser, idSerie) {
         console.error(error)
     }
 }
+
 export async function allSeriesWatching(idUser) {
 
     try {
         const seriesWatchingRef = doc(db, `users/${idUser}/series/watching`);
         const watchedSnapshot = await getDoc(seriesWatchingRef);
-        // const querySeriesWatching=
         if (watchedSnapshot.exists()) {
             let seriesWatching = watchedSnapshot.data()
             seriesWatching = [seriesWatching]
@@ -151,7 +150,6 @@ async function verifySeason(idSerie, temporada) {
         throw new Error("Error al obtener los episodios");
     }
     if (seasonExists) {
-
         const nextSeasonId = seasonExists.id
         return { seasonExists, nextSeasonId };
     } else {
@@ -171,7 +169,6 @@ export async function currentInformation(idUser, idSerie) {
             const currentEpisode = seriesData.current
             const currentSeason = seriesData.currentSeason
             const currentIdSeason = seriesData.currentIdSeason
-            console.log(currentEpisode, currentSeason)
             return { currentEpisode, currentSeason, currentIdSeason }
         }
     } else {
@@ -180,7 +177,7 @@ export async function currentInformation(idUser, idSerie) {
 
 
 }
-export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo,nameSerie) {
+export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo, nameSerie) {
     const userDocRef = doc(db, "users", idUser);
     const toWatchDocRef = doc(userDocRef, `series/watching`);
     const toWatchSnapshot = await getDoc(toWatchDocRef);
@@ -207,7 +204,6 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
             console.log('no se puede pasar de capitulo', error)
         }
     } else {
-        // debugger;
         let season, idCurrentSeason;
         try {
             const result = await verifySeason(idSerie, temporada);
@@ -225,11 +221,11 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                             state: 'end' // Establece 'state' a false
                         }
                     });
-                    await addSerieEnded(idUser,idSerie,nameSerie)
+                    await addSerieEnded(idUser, idSerie, nameSerie)
                     await updateDoc(toWatchDocRef, {
                         [idSerie]: deleteField()
                     });
-                    
+
                     return 'endSeason';
                 } else {
                     return false;
@@ -275,22 +271,22 @@ export async function addSerieEnded(idUser, idSerie, nameSerie) {
     const watchedDocRef = doc(userDocRef, `series/watched`);
     const watchedSnapshot = await getDoc(watchedDocRef);
 
-    const newWatchedSerie = {[nameSerie]: idSerie};
+    const newWatchedSerie = { [nameSerie]: idSerie };
     if (watchedSnapshot.exists()) {
         const alreadyWatched = watchedSnapshot.data().watched || [];
         alreadyWatched.push(newWatchedSerie);
 
         await updateDoc(watchedDocRef, {
-            watched:alreadyWatched
+            watched: alreadyWatched
         });
-   
-    }else{
-        
-        await setDoc(watchedDocRef, { watched: [newWatchedSerie]});
+
+    } else {
+
+        await setDoc(watchedDocRef, { watched: [newWatchedSerie] });
     }
 
 }
-async function deleteFromWatching(){
+async function deleteFromWatching() {
 
 }
 /**
@@ -302,13 +298,17 @@ export async function allSeriesWatched(idUser) {
     try {
         const seriesWatchedRef = doc(db, `users/${idUser}/series/watched`);
         const seriesWatchedSnapshot = await getDoc(seriesWatchedRef);
-        let seriesWatchedObtained = seriesWatchedSnapshot.data().watched || [];
-        console.log(seriesWatchedObtained)
-        // Reversamos directamente
-        seriesWatchedObtained = seriesWatchedObtained.reverse();
-        
-        return seriesWatchedObtained;
+        if (seriesWatchedSnapshot.exists()) {
+            let seriesWatchedObtained = seriesWatchedSnapshot.data().watched || [];
+            console.log(seriesWatchedObtained)
+            // Reversamos directamente
+            seriesWatchedObtained = seriesWatchedObtained.reverse();
+
+            return seriesWatchedObtained;
+        } else {
+            return false
+        }
     } catch (error) {
         console.error(error);
-    } 
+    }
 }

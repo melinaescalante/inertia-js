@@ -49,7 +49,8 @@ async function privateChatDocument(senderId, receiverId) {
             users: {
                 [senderId]: true,
                 [receiverId]: true,
-            }
+            },
+            userId:senderId
         });
     } else {
         chatDoc = chatSnapshot.docs[0];
@@ -94,4 +95,20 @@ export async function subscribeToPrivateChatMessages(senderId, receiverId, callb
         )
         callback(messages)
     })
+}
+
+export async function allChats(idUser){
+    // const chatRef = collection(db, 'private-chats');
+
+    let allChats=[]
+    const messagesRef = collection(db, `private-chats`);
+    
+    const chatQuery = query(messagesRef, where("userId", "==", idUser));
+
+    const chatSnapshot = await getDocs(chatQuery);
+    console.log(chatSnapshot,'chat snapshotttt')
+    chatSnapshot.forEach(doc => {
+        allChats.push(doc.data())
+    });
+    return allChats
 }

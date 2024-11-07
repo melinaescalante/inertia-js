@@ -11,7 +11,8 @@ defineProps({
 const isValid = ref(false)
 const user = ref({
     email: '',
-    password: ''
+    password: '',
+    userName:''
 })
 const loading = ref(false)
 function passwordIsValid(e) {
@@ -29,7 +30,7 @@ async function handleSubmit() {
 
         router.replace('/')
     } catch (error) {
-        console.log("Login error ", error)
+        console.log( error)
         msg.value = "Su usuario no se ha registrado"
         //Manjera error e interfaz amigable
     }
@@ -46,6 +47,11 @@ async function handleSubmit() {
                     <label for="email" class="block mb-2 ">Email</label>
                     <input type="email" id="email" class=" p-2 mb-2 w-full border rounded-md  bg-slate-100 "
                         v-model="user.email" required placeholder="nombre@gmail.com">
+                </div>
+                <div class="mb-5">
+                    <label for="username" class="block mb-2 ">Nombre de usuario</label>
+                    <input type="text" id="username" class=" p-2 mb-2 w-full border rounded-md  bg-slate-100 "
+                        v-model="user.userName" required placeholder="@melina2">
                 </div>
                 <div class="mb-6">
                     <label for="text" class="block mb-2">Constraseña</label>

@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, applyActionCode, onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile  } from "firebase/auth";
 import { auth } from "./firebase";
 import { updateUserProfile, getUsersProfileById } from "./users";
 
@@ -20,7 +20,7 @@ onAuthStateChanged(auth, user => {
       email: user.email,
       displayName: user.displayName,
     })
-    getUsersProfileById(user.uid, user.email)
+    getUsersProfileById(user.uid, user.email,user.displayName)
       .then(userProfile => {
         updateLoginUser({
           ...loginUser,
@@ -74,9 +74,19 @@ export async function login({ email, password }) {
   }
 }
 
-export async function signUp({ email, password }) {
+export async function signUp({ email, password, userName }) {
   try {
-    const user = await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(userCredential.user, { displayName:userName })
+    
+    updateLoginUser({
+      id: userCredential.user.uid,
+      email: userCredential.user.email,
+      displayName: userCredential.user.displayName,
+      bio: null,
+      genres: null
+    });
+    await updateUserProfile(userCredential.user.uid, { displayName:userName, bio:null , genres:null})
   } catch (error) {
     throw error;
   }

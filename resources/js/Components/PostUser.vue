@@ -1,30 +1,16 @@
 <script setup>
 import { router } from '@inertiajs/vue3';
 import { like, comment, getComments, isLike } from '../../services/posts';
+import { useLoginUser } from "../composables/useLoginUser";
 import { getNameUser } from '../../services/users';
 import { ref, onMounted, onUnmounted } from 'vue';
-import { suscribeToAuthChanged } from "../../services/auth";
 import { Link } from '@inertiajs/vue3'
 import BottomSheet from './BottomSheet.vue';
 import { formatDate } from '../helpers/date';
-const loginUser = ref({
-    id: null,
-    email: null,
-    displayName: null,
-    bio: null,
-    genres: null
+import ModalComponentDelete from './ModalComponentDelete.vue'
+const { loginUser } = useLoginUser()
 
-})
-let unSubscribeFromAuth = () => { };
 
-onMounted(async () => {
-    unSubscribeFromAuth = suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
-
-})
-onUnmounted(() => {
-    unSubscribeFromAuth();
-
-})
 defineProps({
     userName: String,
     userId: String,
@@ -85,10 +71,7 @@ async function seeComments(id) {
         areCommentsVisible.value = false;
         commentsObtained.value = [];
     } else {
-        // Si no están visibles, los cargamos
         const comments = await getComments(id);
-
-
         const commentsWithUserNames = await Promise.all(
             comments.map(async comment => {
                 const userId = Object.keys(comment)[0];
@@ -126,6 +109,18 @@ async function giveLike(e) {
     }
 
 }
+async function handleDeletePost(id) {
+    try {
+        await deletePost(id)
+    } catch (error) {
+
+    }
+}
+const isBottomSheetOpen = ref(true);
+function handleClose(e) {
+    console.log(e)
+    isBottomSheetOpen.value = !isBottomSheetOpen.value;
+}
 </script>
 <template>
     <div class="m-4 border rounded-2xl p-4 mb-[2rem]">
@@ -139,21 +134,28 @@ async function giveLike(e) {
                 <a :href="`/perfil/${userId}`" class="text-[1.04rem] font-medium text-center  ">{{ userName }}</a>
                 <a href="#" class=" text-center decoration-none text-blue-500">{{ serie }}</a>
             </div>
-            <div class="">
+            <div>
                 <BottomSheet>
-                    <div class="flex">
-                        <div>
+                    <div class="flex flex-col">
+                        <div class="flex">
+                            <div>
 
-                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
+                                <svg class="w-6 h-6 text-gray-400 dark:text-white" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                                <span class="sr-only">Cerrar modal</span>
+                            </div>
+                            <p class="text-gray-400  ms-2">Informacion: {{ formatDate(created_at) }}</p>
                         </div>
 
-                        <p>Informacion: {{formatDate(created_at)}}</p>
+                        <div class="max-w-[50%] mt-2" v-if="loginUser.id === userId">
+
+                            <ModalComponentDelete @closeModal="handleClose" :id="id"></ModalComponentDelete>
+                        </div>
                     </div>
                 </BottomSheet>
 
@@ -167,7 +169,7 @@ async function giveLike(e) {
             <div v-if="img">
                 <img :src="img" :alt="imgAlt" class="mx-auto mt-3 w-[30rem] border rounded-xl">
             </div>
-            <p class="text-slate-500 ms-1 mt-2">{{ date }}</p>
+            <p class="text-slate-500 ms-1 mt-2">{{ formatDate(created_at) }}</p>
         </div>
         <div class="flex justify-between my-5 mx-5">
             <div>
@@ -196,7 +198,7 @@ async function giveLike(e) {
                     <p v-if="comments != undefined">
                         <span>{{ comments.length }}</span>
                     </p>
-                    <svg @click="seeComments(id)" id=":id" xmlns="http://www.w3.org/2000/svg"
+                    <svg @click="seeComments(id)" :id="id" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" class="h-6 w-6 cursor-pointer" version="1.1"
                         viewBox="0 0 512 512" xml:space="preserve">
                         <title>Comentar</title>

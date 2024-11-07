@@ -16,7 +16,7 @@ class AppController extends Controller
 
     public function chat()
     {
-        return Inertia::render('ChatView');
+        return Inertia::render('Profile/ChatView');
     }
 
     public function discover()
@@ -42,7 +42,7 @@ class AppController extends Controller
 
     public function profileEdit()
     {
-        return Inertia::render('EditProfileView');
+        return Inertia::render('Profile/EditProfileView');
     }
     public function editPhotoProfile(){
         return Inertia::render('Profile/EditPhotoProfileView');
