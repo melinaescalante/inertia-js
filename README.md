@@ -1,4 +1,4 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="/public/tvon-logo.svg" width="400" alt="TVON Logo"></a></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="/public/images/tvon-logo.svg" width="400" alt="TVON Logo"></a></p>
 
 
 
