@@ -197,17 +197,19 @@ async function next(id, idSerie, nameSerie) {
     </div>
     <template v-else>
 
-        <h1 class="text-xl m-4" v-if="!seriesWatching.length >= 1">
+        <h1 class="text-xl m-4" v-if="!seriesWatching">
             Oops, no tienes ni una serie empezada!
 
         </h1>
         <h1 v-else class="text-2xl font-medium ms-2 mt-3 mb-3">Series empezadas</h1>
 
         <div class="flex flex-col gap-3 m-4">
-            <Link href="/buscador" v-if="!seriesWatching.length >= 1"
+            <Link href="/buscador" v-if="!seriesWatching"
                 class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
             Empezar
             nueva serie
+        {{ console.log(seriesWatching) }}
+
             </Link>
             <div v-else v-for="(serie, index) in seriesWatchingJson"
                 class=" m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">

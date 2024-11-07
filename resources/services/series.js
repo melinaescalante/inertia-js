@@ -80,8 +80,12 @@ export async function allSeriesWatching(idUser) {
         const watchedSnapshot = await getDoc(seriesWatchingRef);
         if (watchedSnapshot.exists()) {
             let seriesWatching = watchedSnapshot.data()
-            seriesWatching = [seriesWatching]
-            return seriesWatching
+            if (seriesWatching>=1) {
+                
+                seriesWatching = [seriesWatching]
+                console.log(seriesWatching)
+                return seriesWatching
+            }
         } else {
             return false
         }
