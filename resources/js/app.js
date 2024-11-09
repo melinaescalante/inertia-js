@@ -1,7 +1,7 @@
 import "../css/app.css";
 
 import { createApp, h } from "vue";
-import { createInertiaApp } from "@inertiajs/vue3";
+import { createInertiaApp, router } from "@inertiajs/vue3";
 
 createInertiaApp({
     resolve: (name) => {
@@ -14,3 +14,7 @@ createInertiaApp({
             .mount(el);
     },
 });
+
+// router.on('start', event => {
+//     console.log('Navegando a: ', event.detail.visit.url.pathname);
+// });

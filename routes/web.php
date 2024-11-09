@@ -1,20 +1,23 @@
 <?php
 
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FirebaseController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SerieController;
-
+use App\Http\Middleware\CheckAuthSession;
 
 //Rutas de vistas basicas
 
 Route::get('/', [AppController::class,"home"])
 ->name('home');
 
-Route::get('/chatPrivado/{id}/{email}', [AppController::class,"chatPrivate"]);
+Route::get('/chatPrivado/{id}/{email}', [AppController::class,"chatPrivate"])
+    ->middleware(CheckAuthSession::class);
 
-Route::get('/chat', [AppController::class,"chat"]);
+Route::get('/chat', [AppController::class,"chat"])
+->middleware(CheckAuthSession::class);
 
 Route::get('/configuraciones', [AppController::class,"configuraciones"])
 ->name('config');
@@ -24,7 +27,8 @@ Route::get('/perfil/{id}', [AppController::class,"profile"])
 ->whereAlphaNumeric('id');
 
 Route::get('/perfilinfo/edit', [AppController::class,"profileEdit"])
-->name('profileEdit');
+->name('profileEdit')
+->middleware(CheckAuthSession::class);
 
 Route::get('/editFotoPerfil', [AppController::class,"editPhotoProfile"])
 ;
@@ -34,12 +38,15 @@ Route::get('/post/{id}', [AppController::class,"singlePost"])
 ->whereAlphaNumeric('id');
 
 Route::get('/misSeries', [AppController::class,"mySeries"])
-->name('mySeries');
+->name('mySeries')
+->middleware(CheckAuthSession::class);
 
 //SubViews de las series del usuario
-Route::get('/wishlist', [AppController::class,"myWishlist"]);
+Route::get('/wishlist', [AppController::class,"myWishlist"])
+->middleware(CheckAuthSession::class);
 
-Route::get('/seriesVistas', [AppController::class,"endedSeries"]);
+Route::get('/seriesVistas', [AppController::class,"endedSeries"])
+->middleware(CheckAuthSession::class);
 // Route::post('/wishlist', [AppController::class, 'myWishlist']);
 
 Route::get('/descubrir', [AppController::class,"discover"])
@@ -70,7 +77,8 @@ Route::get('show/{name}/galeria/{id}', [SerieController::class, 'getAllImagesByS
 
 Route::get('show/{name}/{id}/{idimage}/imagen', [SerieController::class, 'getImageById']);
 
-Route::get('/subirPublicacion', [SerieController::class, 'buscadorPost']);
+Route::get('/subirPublicacion', [SerieController::class, 'buscadorPost'])
+->middleware(CheckAuthSession::class);
 
 
 //Rutas para registro y autenticacion
@@ -80,3 +88,5 @@ Route::get('/ingresar', [AppController::class,"login"])
 Route::get('/registrarme', [AppController::class,"signUp"])
 ->name('signUp');
 
+Route::post('/asignarAuth', [AuthController::class, 'setAuth']);
+Route::post('/cerrarSesion', [AuthController::class, 'logout']);

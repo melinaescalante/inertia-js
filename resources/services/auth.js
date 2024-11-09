@@ -3,46 +3,48 @@ import { auth } from "./firebase";
 import { updateUserProfile, getUsersProfileById } from "./users";
 
 let loginUser = {
-  id: null,
-  email: null,
-  displayName: null,
-  bio: null,
-  genres: null
+    id: null,
+    email: null,
+    displayName: null,
+    bio: null,
+    genres: null
 }
 let observers = []
 if (localStorage.getItem('user')) {
-  loginUser = JSON.parse(localStorage.getItem('user'))
+    loginUser = JSON.parse(localStorage.getItem('user'))
 }
 onAuthStateChanged(auth, user => {
-  if (user) {
-    updateLoginUser({
-      id: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-    })
-    getUsersProfileById(user.uid, user.email,user.displayName)
-      .then(userProfile => {
+    if (user) {
+        authBackend(user.uid);
         updateLoginUser({
-          ...loginUser,
-          bio: userProfile.bio,
-          genres: userProfile.genres
+            id: user.uid,
+            email: user.email,
+            displayName: user.displayName,
         })
-      })
-  } else {
-    updateLoginUser({
-      id: null,
-      email: null,
-      displayName: null,
-      bio: null,
-      genres: null
-    })
-    localStorage.removeItem("user")
-  }
-  //Se cambiaron datos del login user
+        getUsersProfileById(user.uid, user.email,user.displayName)
+        .then(userProfile => {
+            updateLoginUser({
+            ...loginUser,
+            bio: userProfile.bio,
+            genres: userProfile.genres
+            })
+        })
+    } else {
+        logoutBackend();
+        updateLoginUser({
+        id: null,
+        email: null,
+        displayName: null,
+        bio: null,
+        genres: null
+        })
+        localStorage.removeItem("user")
+    }
+    //Se cambiaron datos del login user
 
 })
 /**
- * 
+ *
  * @param {{displayName: string, bio: string}}DataProfile
  * @returns {Promise<null>}
  */
@@ -61,24 +63,61 @@ export async function editProfile({ displayName, bio, genres }) {
     console.log(error)
   }
 }
+
+async function authBackend(id) {
+    try {
+        const response = await fetch('/asignarAuth', {
+            method: 'post',
+            body: JSON.stringify({id, _token: document.body.dataset.csrf}),
+            headers: {
+                "Content-Type": 'application/json',
+                "X-Requested-With": 'XMLHttpRequest',
+            },
+            credentials: "include",
+        });
+        const json = await response.json();
+        return json.success;
+    } catch (error) {
+        console.error('Error al notificar al backend de la autenticación.');
+    }
+}
+
+async function logoutBackend() {
+    try {
+        const response = await fetch('/cerrarSesion', {
+            method: 'post',
+            body: JSON.stringify({_token: document.body.dataset.csrf}),
+            headers: {
+                "Content-Type": 'application/json',
+                "X-Requested-With": 'XMLHttpRequest',
+            },
+            credentials: "include",
+        });
+        const json = await response.json();
+        return json.success;
+    } catch (error) {
+        console.error('Error al notificar al backend de la autenticación.');
+    }
+}
+
 export async function login({ email, password }) {
   // 1.Instancia de Autenticacion
   // 2.Email
   // 3.Password
-  try {
-    const user = await signInWithEmailAndPassword(auth, email, password);
+    try {
+        const user = await signInWithEmailAndPassword(auth, email, password);
 
-    console.log(user)
-  } catch (error) {
-    throw error;
-  }
+        console.log(user)
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function signUp({ email, password, userName }) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(userCredential.user, { displayName:userName })
-    
+
     updateLoginUser({
       id: userCredential.user.uid,
       email: userCredential.user.email,
@@ -100,8 +139,8 @@ export async function logout() {
 }
 
 /**
- * 
- * @param {Function} callback 
+ *
+ * @param {Function} callback
  */
 export function suscribeToAuthChanged(callback) {
   observers.push(callback)
@@ -113,8 +152,8 @@ export function suscribeToAuthChanged(callback) {
 /**
  * Ejecuta el callback pasándole una copia de los datos del usuario
  * autenticado.
- * 
- * @param {Function} callback 
+ *
+ * @param {Function} callback
  */
 export async function notify(callback) {
   callback({ ...loginUser })

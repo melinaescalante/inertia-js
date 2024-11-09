@@ -9,8 +9,6 @@ import BottomSheet from './BottomSheet.vue';
 import { formatDate } from '../helpers/date';
 import ModalComponentDelete from './ModalComponentDelete.vue'
 const { loginUser } = useLoginUser()
-
-
 defineProps({
     userName: String,
     userId: String,
@@ -20,22 +18,23 @@ defineProps({
     img: String,
     imgAlt: String,
     serie: String,
-    likes: Number,
+    likes: Array ,
     comments: Array,
     liked: Boolean,
-    created_at: String
+    created_at: Object
 
 })
 const commentText = ref('')
 const commentsObtained = ref([])
 console.log(loginUser.value.id)
 async function giveComment(id) {
+    if (loginUser.value.id === undefined || loginUser.value.id === null) {
+        router.replace('/ingresar');
+        return
+    }
     if (loginUser.value.id !== undefined) {
         comment(id, commentText.value, loginUser.value.id)
         commentText.value = ''
-    }
-    else {
-        router.replace('/ingresar')
     }
 }
 async function share(id) {
@@ -72,18 +71,25 @@ async function seeComments(id) {
         commentsObtained.value = [];
     } else {
         const comments = await getComments(id);
-        const commentsWithUserNames = await Promise.all(
-            comments.map(async comment => {
-                const userId = Object.keys(comment)[0];
-                console.log(userId)
-                const userName = await getNameUser(userId);
-                console.log(userName)
-                return { ...comment, userName };
-            })
-        );
+        if (comments) {
 
-        commentsObtained.value = commentsWithUserNames;
-        areCommentsVisible.value = true;
+            const commentsWithUserNames = await Promise.all(
+                comments.map(async comment => {
+                    const userId = Object.keys(comment)[0];
+                    console.log(userId)
+                    const userName = await getNameUser(userId);
+                    console.log(userName)
+                    return { ...comment, userName };
+                })
+            );
+
+            commentsObtained.value = commentsWithUserNames;
+            areCommentsVisible.value = true;
+        } else {
+            commentsObtained.value = false
+            areCommentsVisible.value = true;
+
+        }
     }
 
 }
@@ -131,16 +137,16 @@ function handleClose(e) {
             </div>
             <div class="flex flex-col mx-2">
 
-                <a :href="`/perfil/${userId}`" class="text-[1.04rem] font-medium text-center  ">{{ userName }}</a>
-                <a href="#" class=" text-center decoration-none text-blue-500">{{ serie }}</a>
+                <Link :href="`/perfil/${userId}`" class="text-[1.04rem] font-medium text-center  ">{{ userName }}</Link>
+                <Link href="#" class=" text-center decoration-none text-blue-500">{{ serie }}</Link>
             </div>
             <div>
-                <BottomSheet>
+                <BottomSheet :isclosed="isBottomSheetOpen">
                     <div class="flex flex-col">
                         <div class="flex">
                             <div>
 
-                                <svg class="w-6 h-6 text-gray-400 dark:text-white" aria-hidden="true"
+                                <svg class="w-6 h-6 text-gray-400 " aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                     viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -183,7 +189,7 @@ function handleClose(e) {
 
                         <svg :id="id" class="h-6 w-6 cursor-pointer" xmlns="http://www.w3.org/2000/svg"
                             data-name="Layer 1" viewBox="0 0 122.88 113.41">
-                            <titlel>Like</titlel>
+                            <title>Like</title>
                             <path :id="id"
                                 :style="liked ? 'stroke: red; fill: red; stroke-width: 10px;' : 'stroke: black; fill: white; stroke-width: 10px;'"
                                 class="cls-1"

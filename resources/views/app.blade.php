@@ -10,7 +10,7 @@
     @vite('resources/css/app.css')
     @inertiaHead
   </head>
-  <body class=" font-sans font max-w-xl mx-auto box-border mb-24 ">
+  <body class=" font-sans font max-w-xl mx-auto box-border mb-24 " data-csrf="{{ csrf_token() }}">
     @inertia
   </body>
 </html>

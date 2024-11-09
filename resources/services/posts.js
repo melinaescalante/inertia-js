@@ -13,6 +13,7 @@ console.log(image,' soy la imagen')
     serie,
     image,
     userid,
+    likes:[],
     created_at: serverTimestamp()
   });
 }
@@ -35,7 +36,6 @@ export async function uploadPhoto(image) {
 export async function readPosts(callback, userid) {
   const postsRef = collection(db, 'posts-public')
   const postQuery = query(postsRef, orderBy("created_at", "desc"));
-  console.log(userid, 'id')
   onSnapshot(postQuery, async (snapshot) => {
     const posts = [];
     for (const doc of snapshot.docs) {
@@ -46,7 +46,7 @@ export async function readPosts(callback, userid) {
         serie: doc.data().serie,
         text: doc.data().text,
         image: doc.data().image,
-        likes: doc.data().likes,
+        likes: doc.data().likes||[],
         comments: doc.data().comments,
         shares: doc.data().shares,
         user: await getNameUser(doc.data().userid),
@@ -55,7 +55,6 @@ export async function readPosts(callback, userid) {
         created_at: doc.data().created_at
       };
       posts.push(post);
-      console.log(post)
     }
     callback(posts)
 

@@ -54,9 +54,8 @@ onMounted(async () => {
 
         <div class="flex items-center gap-4  m-4 ms-2">
             <img class="w-10 h-10 rounded-full" src="/public/noimage.png" alt="">
-            <div class="font-medium dark:text-white">
+            <div class="font-medium ">
                 <div>{{user.displayName}}</div>
-
             </div>
         </div>
 

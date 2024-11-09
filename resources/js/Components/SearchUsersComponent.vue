@@ -1,52 +1,57 @@
 <script>
 import Spinner from './Spinner.vue';
 import { getUsers } from '../../services/users';
+import { Link } from '@inertiajs/vue3';
 
 export default {
   components: {
-    Spinner
+    Spinner,
+    Link,
   },
   data() {
     return {
       formInput: '',
       answer: '',
       loading: false,
-      users: []  // Mover users a data si va a ser dinámico
+      users: [],
     };
   },
   methods: {
     async getAnswer(value) {
       if (value) {
         this.loading = true;
-        this.answer = 'Buscando usuarios...';
+        this.answer = ''; 
+        this.users = [];  
         try {
-          const users = await getUsers(value, (array) => {
-            this.users = array
-            console.log(this.users)
-          });
-          if (this.users) {
-            this.users = users;
+          
+          await getUsers(value, (array) => {
+            this.users = array;
             this.loading = false;
-
-          } else {
-            this.answer = "No se encontraron usuarios.";
-          }
+            
+            if (this.users.length === 0) {
+              this.answer = "No se encontraron usuarios.";
+            }
+          });
         } catch (error) {
           this.answer = 'Error al buscar usuarios.';
           console.error(error);
           this.loading = false;
         }
+      } else {
+        this.users = []; 
+        this.answer = ''; 
       }
     },
     handleSubmit() {
       this.getAnswer(this.formInput);
-    }
-  }
+    },
+  },
 };
 </script>
 
+
 <template>
-  <form @submit.prevent="handleSubmit" class="max-w-2xl m-4 mb-5 mt-5" method="get">
+  <form @submit.prevent="handleSubmit" class="max-w-2xl m-4 mt-5" method="get">
     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
       Busca a tus amigos
     </label>
@@ -60,7 +65,7 @@ export default {
       </div>
       <input type="search" id="default-search"
         class="block w-full p-4 ps-10 text-sm text-gray-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4"
-        placeholder="Busca a tus amigos" required v-model="formInput" @input="getAnswer(formInput)" />
+        placeholder="Busca a tus amigos" required v-model="formInput" @input="answer = ''; getAnswer(formInput)" />
 
       <button type="submit"
         class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
@@ -68,18 +73,21 @@ export default {
       </button>
     </div>
   </form>
-  <div v-if="loading" class="flex flex-col justify-center items-center">
+  <div v-if="loading && answer === 'Buscando usuarios...'" class="flex flex-col justify-center items-center">
 
     <p>{{ answer }}</p>
     <Spinner msg="Buscando usuarios"></Spinner>
   </div>
-  <ul v-if="!loading && users.length">
+  <div v-if="!loading && answer === 'No se encontraron usuarios.'" class="p-4 m-2 bg-red-200 rounded-md">
+    <p>{{ answer }}</p>
+  </div>
+  <ul v-if="!loading && users?.length">
 
     <li class="p-2 ps-6 border flex items-center" v-for="user in users">
       <img class="h-[100%] w-12" :src="user.photoURL ? user.photoURL : 'noimage.png'" :alt="user.displayName">
       <div class="flex flex-col">
 
-        <a :href="`/perfil/${user.id}`" class="ms-3 font-medium block"> {{ user.displayName }}</a>
+        <Link :href="`/perfil/${user.id}`" class="ms-3 font-medium block"> {{ user.displayName }}</Link>
         <div class="flex">
 
           <p v-for="genre in user.genres" class="ms-3 text-blue-400 ">{{ genre }}</p>
@@ -88,8 +96,5 @@ export default {
     </li>
 
   </ul>
-  <div v-if="!loading && answer == 'No se encontraron usuarios.'" class="p-4 m-2 bg-red-200 rounded-md">
-    <p>{{ answer }}</p>
-  </div>
 
 </template>

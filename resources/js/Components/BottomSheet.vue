@@ -1,6 +1,8 @@
 <script setup>
-import { ref } from 'vue';
-
+import { ref , watch} from 'vue';
+const props=defineProps({
+    isclosed:Boolean
+})
 const showModal = ref(false);
 
 function openModal() {
@@ -10,6 +12,11 @@ function openModal() {
 function closeModal() {
     showModal.value = false;
 }
+watch(() => props.isclosed, (val) => {
+    if (val === false) {
+        closeModal();
+    } 
+});
 
 </script>
 <template>
@@ -19,7 +26,7 @@ function closeModal() {
         <div class="flex  flex-col w-full bg-white max-w-[500px] rounded-3xl rounded-b-none rounded-bl-none  rounded-s-3xl p-7 "
             style="box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
     animation: slide-up 0.3s ease-out" @click.stop>
-            <button class="self-end" @click="closeModal"><svg class="w-6 h-6 text-gray-400  dark:text-white"
+            <button class="self-end" @click="closeModal"><svg class="w-6 h-6 text-gray-400  "
                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                     viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -30,7 +37,7 @@ function closeModal() {
         </div>
     </div>
     <button @click="openModal">
-        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+        <svg class="w-6 h-6 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
             width="24" height="24" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
                 d="M6 4v10m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v2m6-16v2m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v10m6-16v10m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v2" />

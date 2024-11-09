@@ -1,9 +1,12 @@
 <script>
 import { router } from '@inertiajs/vue3';
-import Spinner  from './Spinner.vue'
+import Spinner from './Spinner.vue'
+import { Link } from '@inertiajs/vue3'
+
 export default {
   components: {
-    Spinner
+    Spinner,
+    Link
   },
   props: {
     series: {
@@ -28,7 +31,7 @@ export default {
           // https://inertiajs.com/manual-visits
           router.reload({
             // Le pasamos los datos que queremos que tenga en el query string.
-            data: { name: value},
+            data: { name: value },
             // Manejamos los resultados en caso de éxito. Faltaría manejar en caso de error.
             onSuccess: page => {
               if (!this.series.length > 0) {
@@ -46,13 +49,13 @@ export default {
       }
     },
     handleSubmit() {
-      this.getAnswer(this.formInput); 
+      this.getAnswer(this.formInput);
     }
   }
 }
 </script>
 <template>
-  <form @submit.prevent="handleSubmit" class="max-w-2xl m-4 mb-5 mt-5" method="get">
+  <form @submit.prevent="handleSubmit" class="max-w-2xl m-4 mt-5" method="get">
     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
       Busca tu serie
     </label>
@@ -66,10 +69,10 @@ export default {
       </div>
       <input type="search" id="default-search"
         class="block w-full p-4 ps-10 text-sm text-gray-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4"
-        placeholder="Busca tu serie"  required v-model="formInput" @input="getAnswer(formInput)" />
-      
-        <button type="submit"
-        class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2" >
+        placeholder="Busca tu serie" required v-model="formInput" @input="getAnswer(formInput)" />
+
+      <button type="submit"
+        class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
         Buscar
       </button>
     </div>
@@ -77,20 +80,24 @@ export default {
   <div v-if="loading" class="flex flex-col justify-center items-center">
 
     <p>{{ answer }}</p>
-<Spinner msg="Buscando series"></Spinner>
+    <Spinner msg="Buscando series"></Spinner>
+  </div>
+  <div class="flex gap-4 flex-wrap justify-center mb-3">
+    <Link href="/buscador" class="border  rounded-lg border-blue-500 px-2 py-1">Series</Link>
+    <Link href="/buscadorUsuarios" class="border rounded-lg border-blue-500 px-2 py-1">Personas</Link>
   </div>
   <ul v-if="!loading && series.length">
 
     <li class="p-2 ps-6 border flex items-center" v-for="item in series">
-    <img class="h-[100%] w-12" :src="item.show.image ? item.show.image.medium : 'noimage.png'" :alt="item.show.name">  
-    <div class="flex flex-col">
-      
-      <a :href="`/show/${item.show.id}`" class="ms-3 font-medium block">  {{ item.show.name }}</a>
-      <div class="flex">
+      <img class="h-[100%] w-12" :src="item.show.image ? item.show.image.medium : 'noimage.png'" :alt="item.show.name">
+      <div class="flex flex-col">
 
-        <p v-for="genre in item.show.genres" class="ms-3 text-blue-400 ">{{ genre }}</p>
+        <Link :href="`/show/${item.show.id}`" class="ms-3 font-medium block"> {{ item.show.name }}</Link>
+        <div class="flex">
+
+          <p v-for="genre in item.show.genres" class="ms-3 text-blue-400 ">{{ genre }}</p>
+        </div>
       </div>
-    </div>
     </li>
 
   </ul>
