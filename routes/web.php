@@ -25,6 +25,9 @@ Route::get('/configuraciones', [AppController::class,"configuraciones"])
 Route::get('/perfil/{id}', [AppController::class,"profile"])
 ->name('profile')
 ->whereAlphaNumeric('id');
+Route::get('/miPerfil', [AppController::class,"myProfile"])
+->name('myProfile')
+->middleware(CheckAuthSession::class);
 
 Route::get('/perfilinfo/edit', [AppController::class,"profileEdit"])
 ->name('profileEdit')

@@ -5,15 +5,15 @@ import { getNameUser } from './users';
 
 export async function uploadPost({ text, serie, image, userid }) {
   const postRef = collection(db, 'posts-public')
-console.log(image,' soy la imagen')
-  
+  console.log(image, ' soy la imagen')
+
 
   await addDoc(postRef, {
     text,
     serie,
     image,
     userid,
-    likes:[],
+    likes: [],
     created_at: serverTimestamp()
   });
 }
@@ -46,7 +46,7 @@ export async function readPosts(callback, userid) {
         serie: doc.data().serie,
         text: doc.data().text,
         image: doc.data().image,
-        likes: doc.data().likes||[],
+        likes: doc.data().likes || [],
         comments: doc.data().comments,
         shares: doc.data().shares,
         user: await getNameUser(doc.data().userid),
@@ -78,7 +78,7 @@ export async function readPostsById(callback, id, userid) {
         serie: postSnapshot.data().serie,
         text: postSnapshot.data().text,
         image: postSnapshot.data().image,
-       
+
         user: await getNameUser(postSnapshot.data().userid),
         likes: postSnapshot.data().likes,
         comments: postSnapshot.data().comments,
@@ -100,11 +100,13 @@ export async function readPostsById(callback, id, userid) {
 */
 export async function readPostsByUser(callback, userid) {
   const postQuery = query(collection(db, "posts-public"), where("userid", "==", userid));
+  
   onSnapshot(postQuery, async (snapshot) => {
     const posts = [];
-    //Utilizo este metodo para poder llamar a la funcion de getnameuser, sino me devolvia promesas con el return en conjunto al map
-    for (const doc of snapshot.docs) {
-      const like = await isLike(doc.id, userid)
+
+    // Map de promesas para procesar cada post
+    const promises = snapshot.docs.map(async (doc) => {
+      const like = await isLike(doc.id, userid);
       const post = {
         id: doc.id,
         serie: doc.data().serie,
@@ -114,120 +116,121 @@ export async function readPostsByUser(callback, userid) {
         user: await getNameUser(doc.data().userid),
         likes: doc.data().likes,
         userid: doc.data().userid,
-
         comments: doc.data().comments,
         shares: doc.data().shares,
         liked: like,
-        created_at: doc.data().created_at
+        created_at: doc.data().created_at,
       };
       posts.push(post);
+    });
 
-    }
+    // Espera a que todas las promesas se resuelvan antes de ejecutar el callback
+    await Promise.all(promises);
 
     callback(posts);
   });
 }
 
 export async function isLike(id, userid) {
-  const postRef = doc(db, 'posts-public', id);
-  const postSnapshot = await getDoc(postRef);
-  const currentLikes = postSnapshot.data().likes || [];
-  const userFound = currentLikes.find(user => {
-    return Object.keys(user)[0] === userid;
-  });
-  if (userFound) {
-    return true;
-  } else {
-    return false;
-  }
-}
-export async function like(id, operador, userid) {
-  try {
-
     const postRef = doc(db, 'posts-public', id);
     const postSnapshot = await getDoc(postRef);
-    if (postSnapshot) {
-      const currentLikes = postSnapshot.data().likes || [];
-      if (operador === 'plus') {
-        const newLike = { [userid]: userid };
-        currentLikes.push(newLike);
-
-        await updateDoc(postRef, {
-          likes: currentLikes
-        });
-
-      }
-      else if (operador === 'less') {
-        const newArray = currentLikes.filter(user => {
-          const userIdKey = Object.keys(user)[0];
-          return userIdKey !== userid;
-        });
-
-        await updateDoc(postRef, {
-          likes: newArray
-        });
-        console.log("Menos.", newArray);
-      }
-    }
-  } catch (error) {
-    console.log("Documento no existente");
-
-  }
-
-}
-export async function comment(id, comment, iduser) {
-  try {
-
-    const postRef = doc(db, 'posts-public', id);
-    const postSnapshot = await getDoc(postRef);
-    if (postSnapshot) {
-      const currentComments = postSnapshot.data().comments || [];
-      const newComment = { [iduser]: comment };
-      currentComments.push(newComment);
-
-      await updateDoc(postRef, {
-        comments: currentComments
-      });
-
-      console.log("Comentario agregado exitosamente.");
+    const currentLikes = postSnapshot.data().likes || [];
+    const userFound = currentLikes.find(user => {
+      return Object.keys(user)[0] === userid;
+    });
+    if (userFound) {
+      return true;
     } else {
-      console.log("El post no existe.");
+      return false;
     }
-  } catch (error) {
-    console.log("Error al agregar el comentario:", error);
   }
-}
+  export async function like(id, operador, userid) {
+    try {
 
-export async function getComments(id) {
-  try {
-    const postRef = doc(db, 'posts-public', id);
-    const postSnapshot = await getDoc(postRef);
-    const commentsObtained = await postSnapshot.data().comments
-    const updatedComments = [];
+      const postRef = doc(db, 'posts-public', id);
+      const postSnapshot = await getDoc(postRef);
+      if (postSnapshot) {
+        const currentLikes = postSnapshot.data().likes || [];
+        if (operador === 'plus') {
+          const newLike = { [userid]: userid };
+          currentLikes.push(newLike);
 
-    for (const comment of commentsObtained) {
-      const iduser = Object.keys(comment)[0];
-      // const email = await getNameUser(iduser);
-      const newComment = { [iduser]: comment[iduser] };
-      updatedComments.push(newComment);
+          await updateDoc(postRef, {
+            likes: currentLikes
+          });
+
+        }
+        else if (operador === 'less') {
+          const newArray = currentLikes.filter(user => {
+            const userIdKey = Object.keys(user)[0];
+            return userIdKey !== userid;
+          });
+
+          await updateDoc(postRef, {
+            likes: newArray
+          });
+          console.log("Menos.", newArray);
+        }
+      }
+    } catch (error) {
+      console.log("Documento no existente");
+
     }
-    //Asi traemos lo ultimo comentarios
-    updatedComments.reverse()
-    return updatedComments;
-
-  } catch (error) {
-    console.log("Documento no existente");
 
   }
+  export async function comment(id, comment, iduser) {
+    try {
 
-}
-export async function deletePost(id) {
-  try {
+      const postRef = doc(db, 'posts-public', id);
+      const postSnapshot = await getDoc(postRef);
+      if (postSnapshot) {
+        const currentComments = postSnapshot.data().comments || [];
+        const newComment = { [iduser]: comment };
+        currentComments.push(newComment);
 
-    const postRef = doc(db, "posts-public", id);
-    await deleteDoc(postRef);
-  } catch (error) {
-console.log(error)
+        await updateDoc(postRef, {
+          comments: currentComments
+        });
+
+        console.log("Comentario agregado exitosamente.");
+      } else {
+        console.log("El post no existe.");
+      }
+    } catch (error) {
+      console.log("Error al agregar el comentario:", error);
+    }
   }
 
-}
+  export async function getComments(id) {
+    try {
+      const postRef = doc(db, 'posts-public', id);
+      const postSnapshot = await getDoc(postRef);
+      const commentsObtained = await postSnapshot.data().comments
+      const updatedComments = [];
+
+      for (const comment of commentsObtained) {
+        const iduser = Object.keys(comment)[0];
+        // const email = await getNameUser(iduser);
+        const newComment = { [iduser]: comment[iduser] };
+        updatedComments.push(newComment);
+      }
+      //Asi traemos lo ultimo comentarios
+      updatedComments.reverse()
+      return updatedComments;
+
+    } catch (error) {
+      console.log("Documento no existente");
+
+    }
+
+  }
+  export async function deletePost(id) {
+    try {
+
+      const postRef = doc(db, "posts-public", id);
+      await deleteDoc(postRef);
+    } catch (error) {
+      console.log(error)
+    }
+
+  }

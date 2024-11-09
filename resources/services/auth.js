@@ -1,48 +1,73 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile  } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
 import { auth } from "./firebase";
+import { getFileURL, uploadFile } from "./file-storage";
+
 import { updateUserProfile, getUsersProfileById } from "./users";
 
 let loginUser = {
-    id: null,
-    email: null,
-    displayName: null,
-    bio: null,
-    genres: null
+  id: null,
+  email: null,
+  displayName: null,
+  bio: null,
+  genres: null,
+  photoURL: null
+}
+if (localStorage.getItem('user')) {
+  loginUser = JSON.parse(localStorage.getItem('user'))
 }
 let observers = []
-if (localStorage.getItem('user')) {
-    loginUser = JSON.parse(localStorage.getItem('user'))
-}
 onAuthStateChanged(auth, user => {
-    if (user) {
-        authBackend(user.uid);
+  if (user) {
+    authBackend(user.uid);
+    updateLoginUser({
+      id: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL
+    })
+    getUsersProfileById(user.uid, user.email, user.displayName)
+      .then(userProfile => {
         updateLoginUser({
-            id: user.uid,
-            email: user.email,
-            displayName: user.displayName,
+          ...loginUser,
+          bio: userProfile.bio,
+          genres: userProfile.genres
         })
-        getUsersProfileById(user.uid, user.email,user.displayName)
-        .then(userProfile => {
-            updateLoginUser({
-            ...loginUser,
-            bio: userProfile.bio,
-            genres: userProfile.genres
-            })
-        })
-    } else {
-        logoutBackend();
-        updateLoginUser({
-        id: null,
-        email: null,
-        displayName: null,
-        bio: null,
-        genres: null
-        })
-        localStorage.removeItem("user")
-    }
-    //Se cambiaron datos del login user
+      })
+  } else {
+    logoutBackend();
+    updateLoginUser({
+      id: null,
+      email: null,
+      displayName: null,
+      bio: null,
+      genres: null,
+      photoURL:null
+    })
+    localStorage.removeItem("user")
+  }
+  //Se cambiaron datos del login user
 
 })
+
+export async function editMyProfilePhoto(photo) {
+  try {
+    const filePath = `users/${loginUser.id}/mifotodeperfil`;
+    await uploadFile(filePath, photo);
+
+    const photoURL = await getFileURL(filePath);
+    console.log("New photo URL:", photoURL); 
+    const promiseAuth = updateProfile(auth.currentUser, { photoURL });
+
+    const promiseFirestore = updateUserProfile(loginUser.id, { photoURL });
+
+    await Promise.all([promiseAuth, promiseFirestore]);
+    updateLoginUser({ photoURL });
+
+  } catch (error) {
+    console.log("Error updating photo URL:", error);
+  }
+}
+
 /**
  *
  * @param {{displayName: string, bio: string}}DataProfile
@@ -51,8 +76,12 @@ onAuthStateChanged(auth, user => {
 export async function editProfile({ displayName, bio, genres }) {
 
   try {
-    await updateProfile(auth.currentUser, { displayName })
-    await updateUserProfile(loginUser.id, { displayName, bio, genres })
+    const promiseAuth = updateProfile(auth.currentUser, { displayName })
+    const promiseProfile = updateUserProfile(loginUser.id, { displayName, bio, genres })
+    await Promise.all([promiseAuth, promiseProfile])
+
+    // await updateProfile(auth.currentUser, { displayName })
+    // await updateUserProfile(loginUser.id, { displayName, bio, genres })
     updateLoginUser({
       ...loginUser,
       displayName,
@@ -65,67 +94,69 @@ export async function editProfile({ displayName, bio, genres }) {
 }
 
 async function authBackend(id) {
-    try {
-        const response = await fetch('/asignarAuth', {
-            method: 'post',
-            body: JSON.stringify({id, _token: document.body.dataset.csrf}),
-            headers: {
-                "Content-Type": 'application/json',
-                "X-Requested-With": 'XMLHttpRequest',
-            },
-            credentials: "include",
-        });
-        const json = await response.json();
-        return json.success;
-    } catch (error) {
-        console.error('Error al notificar al backend de la autenticación.');
-    }
+  try {
+    const response = await fetch('/asignarAuth', {
+      method: 'post',
+      body: JSON.stringify({ id, _token: document.body.dataset.csrf }),
+      headers: {
+        "Content-Type": 'application/json',
+        "X-Requested-With": 'XMLHttpRequest',
+      },
+      credentials: "include",
+    });
+    const json = await response.json();
+    return json.success;
+  } catch (error) {
+    console.error('Error al notificar al backend de la autenticación.');
+  }
 }
 
 async function logoutBackend() {
-    try {
-        const response = await fetch('/cerrarSesion', {
-            method: 'post',
-            body: JSON.stringify({_token: document.body.dataset.csrf}),
-            headers: {
-                "Content-Type": 'application/json',
-                "X-Requested-With": 'XMLHttpRequest',
-            },
-            credentials: "include",
-        });
-        const json = await response.json();
-        return json.success;
-    } catch (error) {
-        console.error('Error al notificar al backend de la autenticación.');
-    }
+  try {
+    const response = await fetch('/cerrarSesion', {
+      method: 'post',
+      body: JSON.stringify({ _token: document.body.dataset.csrf }),
+      headers: {
+        "Content-Type": 'application/json',
+        "X-Requested-With": 'XMLHttpRequest',
+      },
+      credentials: "include",
+    });
+    const json = await response.json();
+    return json.success;
+  } catch (error) {
+    console.error('Error al notificar al backend de la autenticación.');
+  }
 }
 
 export async function login({ email, password }) {
   // 1.Instancia de Autenticacion
   // 2.Email
   // 3.Password
-    try {
-        const user = await signInWithEmailAndPassword(auth, email, password);
+  try {
+    const user = await signInWithEmailAndPassword(auth, email, password);
 
-        console.log(user)
-    } catch (error) {
-        throw error;
-    }
+    console.log(user)
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function signUp({ email, password, userName }) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(userCredential.user, { displayName:userName })
+    await updateProfile(userCredential.user, { displayName: userName })
 
     updateLoginUser({
       id: userCredential.user.uid,
       email: userCredential.user.email,
       displayName: userCredential.user.displayName,
       bio: null,
-      genres: null
+      genres: null,
+      photoURL:null
     });
-    await updateUserProfile(userCredential.user.uid, { displayName:userName, bio:null , genres:null})
+      
+      await updateUserProfile(userCredential.user.uid, { displayName: userName, bio: null, genres: null,photoURL:null })
   } catch (error) {
     throw error;
   }

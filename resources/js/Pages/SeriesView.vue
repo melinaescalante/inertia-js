@@ -19,7 +19,8 @@ const loginUser = ref({
     email: null,
     displayName: null,
     bio: null,
-    genres: null
+    photoURL:null,
+    genres: null,
 
 })
 const loading = ref(true)

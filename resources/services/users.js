@@ -17,22 +17,22 @@ export async function getNameUser(id) {
   }
 }
 
+
 /**
-*Actualizamos los datos del usuario.
-*Su nombre, biografía y géneros favoritos.
-* @param {{id:string}} Id
-* @param {{displayName:string, carrer:string}} DatosUsuario
-* @returns {}
-*/
-export async function updateUserProfile(id, { displayName, bio, genres }) {
+ * 
+ * @param {string} id 
+ * @param {{displayName: string, bio: string, career: string, photoURL: string}} data
+ */
+export async function updateUserProfile(id, data) {
+  // En esta ocasión, nosotros queremos modificar un documento en
+  // específico.
+  // Esto requeire que usemos la función doc() de Firestore para crear
+  // la referencia a un documento.
+  const profileRef = doc(db, `/users/${id}`);
 
-  const profileRef = doc(db, 'users', id);
-
+  // Editamos el documento usando la función updateDoc().
   await updateDoc(profileRef, {
-    displayName,
-    bio,
-    genres
-
+      ...data,
   });
 }
 export async function getEmailUser(id) {
@@ -66,42 +66,40 @@ export async function getUserName(id) {
  * @param {{id:string, email:string}} data
  * @returns {{id: string, email: string, displayName: string, bio: string, career: string}|{email: string, bio: string, career: string}}
  */
-export async function getUsersProfileById(id, email,displayName) {
+export async function getUsersProfileById(id, email, displayName) {
   try {
+    const profileRef = doc(db, `/users/${id}`);
+    const profileDocument = await getDoc(profileRef);
 
-    const profileRef = doc(db, `/users/${id}`)
-
-    const profileDocument = await getDoc(profileRef)
     if (profileDocument.exists()) {
-
-      const profileSubcollection = collection(db, `users/${id}/series`);
- 
+      console.log("Perfil encontrado:",id,email); 
+      console.log(profileDocument.data())
       return {
         id: profileDocument.id,
         email: profileDocument.data().email,
         displayName: profileDocument.data().displayName,
         bio: profileDocument.data().bio,
-        genres: profileDocument.data().genres
-      }
-
+        genres: profileDocument.data().genres,
+        photoURL: profileDocument.data().photoURL,
+      };
     } else {
-
-      await setDoc(doc(db, 'users', id), {
+      
+      await setDoc(profileRef, {
         email: email,
-        displayName:displayName,
+        displayName: displayName,
         bio: null,
-        genres: null
-
+        genres: null,
+        photoURL: null
       });
-      return { id, email, bio: null,displayName };
+      return { id, email, displayName, bio: null, genres: null, photoURL: null };
     }
   } catch (error) {
-    console.log('Hubo un error al traer el perfil', error)
+    console.log("Hubo un error al traer el perfil", error);
   }
-
 }
 
-export async function getUsers(searchTerm,callback) {
+
+export async function getUsers(searchTerm, callback) {
   try {
     const usersRef = collection(db, "users");
     // const users = [];
@@ -109,17 +107,18 @@ export async function getUsers(searchTerm,callback) {
     if (searchTerm) {
       const q = query(usersRef, where('displayName', '>=', searchTerm), where('displayName', '<=', searchTerm + '\uf8ff'));
       // const querySnapshot = await getDocs(q);
-      onSnapshot(q , snapshot => {
+      onSnapshot(q, snapshot => {
         const users = snapshot.docs.map(doc => {
-            return {
-                id: doc.id,
-                bio: doc.data().bio,
-                displayName: doc.data().displayName,
-                genres: doc.data().genres,
-            }
+          return {
+            id: doc.id,
+            bio: doc.data().bio,
+            displayName: doc.data().displayName,
+            genres: doc.data().genres,
+            photoURL:doc.data().photoURL
+          }
         });
         callback(users);
-    });
+      });
 
     }
 

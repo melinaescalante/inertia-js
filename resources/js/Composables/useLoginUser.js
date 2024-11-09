@@ -7,11 +7,11 @@ export function useLoginUser() {
         email: null,
         displayName: null,
         bio: null,
-        genres:null
+        genres:null,
+        photoURL: null
     });
     onMounted(() => {
         unsubscribeFromAuth = suscribeToAuthChanged(newUserData =>  loginUser.value = newUserData)
-        console.log(loginUser.value)
     })
     onUnmounted(() => {
         unsubscribeFromAuth();

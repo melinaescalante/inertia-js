@@ -10,6 +10,7 @@ const loginUser = ref({
     email: null,
     displayName: null,
     bio: null,
+    photoURL:null,
     genres: null
 
 })

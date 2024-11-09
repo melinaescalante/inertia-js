@@ -10,11 +10,12 @@ const { loginUser } = useLoginUser()
 defineProps({
     series: Array,
 });
+const msg = ref('')
 const loading = ref(false);
 const imageInput = ref(null);
 const newPost = ref({
     userid: null,
-    serie: "",
+    serie: null,
     text: "",
     image: null,
 });
@@ -22,33 +23,50 @@ const newPost = ref({
 const refreshCount = ref(0);
 function setSerieSeleccionada(serieSeleccionada) {
     newPost.value.serie = serieSeleccionada;
+    if (newPost.value.serie!==null) {
+        msg.value = '';
+        return;
+    }
 }
 async function handlePost() {
+    console.log("Serie seleccionada:", newPost.value.serie);
+
+    // Verifica si ya se está cargando o si falta información
     if (loading.value) return;
+    if (!newPost.value.text && !newPost.value.image) {
+        msg.value = 'Formulario incompleto';
+        return;
+    }
+    if (newPost.value.serie===null) {
+        msg.value = 'Seleccione una serie válida';
+        return;
+    }
+
     loading.value = true;
     let imageURL = null;
     if (newPost.value.image !== null) {
         imageURL = await uploadPhoto(newPost.value.image);
     }
-
     newPost.value.image = imageURL;
     newPost.value.userid = loginUser.value.id;
 
     try {
         await uploadPost({ ...newPost.value });
         refreshCount.value++;
+        msg.value = 'Se ha publicado correctamente';
     } catch (error) {
-        console.log(error);
+        console.log("Error al publicar:", error);
+    } finally {
+        newPost.value.text = "";
+        newPost.value.serie = null;
+        newPost.value.image = null;
+        if (imageInput.value) {
+            imageInput.value.value = "";
+        }
+        loading.value = false;
     }
-
-    newPost.value.text = "";
-    newPost.value.serie = "";
-    newPost.value.image = null;
-    if (imageInput.value) {
-        imageInput.value.value = "";
-    }
-    loading.value = false;
 }
+
 function handleImageChange(e) {
     const file = e.target.files[0];
     newPost.value.image = file;
@@ -84,5 +102,12 @@ function handleImageChange(e) {
             class="m-2 border rounded-lg py-2 px-4 bg-blue-700 text-white hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-900 transition-colors">
             {{ !loading ? "Publicar" : "Publicando.." }}
         </button>
+        <div v-if="msg !== 'Se ha publicado correctamente' && msg!==''" class="bg-red-200 p-4 m-2 rounded-md">
+            {{ msg }}
+        </div>
+
+        <div v-if="msg == 'Se ha publicado correctamente'" class="bg-green-200 p-4 m-2 rounded-md">
+            <p>{{ msg }}</p>
+        </div>
     </form>
 </template>

@@ -12,7 +12,8 @@ const loginUser = ref({
     email: null,
     displayName: null,
     bio: null,
-    genres: null
+    genres: null,
+    photoURL:null
 })
 const page = usePage()
 const currentPage = page.component
@@ -59,7 +60,7 @@ onUnmounted(() => {
         </div>
 
         <ul class="flex items-center">
-            <template v-if="currentPage !== 'Profile/ProfileView' && currentPage !== 'ChatView'">
+            <template v-if="currentPage !== 'Profile/ProfileAuthView' && currentPage !== 'Profile/ChatView'">
                 <li>
                     <Link data-tooltip-target="tooltip-search" href="/buscador"
                         class="block px-4 rounded-s-full dark:hover:fill-gray-800 group m-auto">
@@ -92,7 +93,7 @@ onUnmounted(() => {
                 </li>
                 <!-- </ul> -->
             </template>
-            <template v-if="loginUser.id !== null && currentPage === 'Profile/ProfileView'">
+            <template v-if="loginUser.id !== null && currentPage === 'Profile/ProfileAuthView'">
                 <li>
                     <Link data-tooltip-target="tooltip-config" href="/configuraciones"
                         class="block px-3 rounded-s-full group m-auto">
@@ -201,7 +202,7 @@ onUnmounted(() => {
                 </svg>
                 <span class="sr-only">Mis Series</span>
             </NavItem>
-            <NavItem titleLink="Mi Perfil" :route="`/perfil/${loginUser.id}`"
+            <NavItem titleLink="Mi Perfil" :route="`/miPerfil`"
                 roundedClass=" rounded-e-full hover:bg-gray-50 ">
 
                 <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-blue-600 " aria-hidden="true"

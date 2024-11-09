@@ -30,6 +30,13 @@ class AppController extends Controller
         return Inertia::render('Profile/ProfileView', ['id' => $postId]);
      
     }
+    public function myProfile(Request $request)
+    {
+        // $postId = request('id');
+       
+        return Inertia::render('Profile/ProfileAuthView');
+     
+    }
     public function chatPrivate($id,$email)
     {
 

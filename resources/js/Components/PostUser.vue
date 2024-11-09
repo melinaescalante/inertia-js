@@ -3,7 +3,7 @@ import { router } from '@inertiajs/vue3';
 import { like, comment, getComments, isLike } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
 import { getNameUser } from '../../services/users';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref} from 'vue';
 import { Link } from '@inertiajs/vue3'
 import BottomSheet from './BottomSheet.vue';
 import { formatDate } from '../helpers/date';
@@ -18,7 +18,7 @@ defineProps({
     img: String,
     imgAlt: String,
     serie: String,
-    likes: Array ,
+    likes: Array,
     comments: Array,
     liked: Boolean,
     created_at: Object
@@ -115,18 +115,16 @@ async function giveLike(e) {
     }
 
 }
-async function handleDeletePost(id) {
-    try {
-        await deletePost(id)
-    } catch (error) {
 
-    }
-}
 const isBottomSheetOpen = ref(true);
-function handleClose(e) {
-    console.log(e)
-    isBottomSheetOpen.value = !isBottomSheetOpen.value;
+function handleClose() {
+
+    isBottomSheetOpen.value = false;
+    setTimeout(() => {
+        isBottomSheetOpen.value = true;
+    }, 100);
 }
+
 </script>
 <template>
     <div class="m-4 border rounded-2xl p-4 mb-[2rem]">
