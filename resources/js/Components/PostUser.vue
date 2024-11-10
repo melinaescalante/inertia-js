@@ -26,7 +26,6 @@ defineProps({
 })
 const commentText = ref('')
 const commentsObtained = ref([])
-console.log(loginUser.value.id)
 async function giveComment(id) {
     if (loginUser.value.id === undefined || loginUser.value.id === null) {
         router.replace('/ingresar');

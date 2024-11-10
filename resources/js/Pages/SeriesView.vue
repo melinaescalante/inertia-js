@@ -1,34 +1,24 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
 import { allSeriesToWatch, allSeriesWatching, nextEpisode } from '../../services/series';
-import { suscribeToAuthChanged } from "../../services/auth";
 import { currentInformation } from '../../services/series';
-import { ref, onMounted, onUnmounted } from 'vue';
-import { Link, router } from '@inertiajs/vue3';
+import { ref, onMounted } from 'vue';
+import { Link} from '@inertiajs/vue3';
+import { useLoginUser } from '../composables/useLoginUser';
 import { allSeriesWatched } from '../../services/series';
 import Spinner from '../Components/Spinner.vue';
 import CardWithData from '../Components/CardWithData.vue';
-let unSubscribeFromAuth = () => { };
+
 const seriesToWatch = ref([])
 const seriesWatched = ref([])
 const seriesWatching = ref([])
 const localSeriesWatching = ref([])
 const seriesWatchingJson = ref([])
-const loginUser = ref({
-    id: null,
-    email: null,
-    displayName: null,
-    bio: null,
-    photoURL:null,
-    genres: null,
-
-})
+const {loginUser}=useLoginUser()
 const loading = ref(true)
 const lastSerie = ref()
 const lastSerieWatched = ref()
 onMounted(async () => {
-    unSubscribeFromAuth = suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
-    await loginUser.value
     if (loginUser.value?.id) {
         await loadSeriesToWatch()
         await loadSeriesWatching()
@@ -42,10 +32,7 @@ onMounted(async () => {
 
 
 })
-onUnmounted(() => {
-    unSubscribeFromAuth();
 
-})
 async function loadSeriesWatched() {
     seriesWatched.value = await allSeriesWatched(loginUser.value.id)
     try {
@@ -94,10 +81,12 @@ async function loadSeriesToWatch() {
 }
 
 
-async function loadSeriesWatching() {
+async function loadSeriesWatching() {3
+   console.log(loginUser.value.id)
+
     seriesWatching.value = await allSeriesWatching(loginUser.value.id)
-    console.log(seriesWatching.value)
-    if (seriesWatching === []) return
+    console.log(seriesWatching.value, 'viendo')
+    if (seriesWatching === false) return
 
     localSeriesWatching.value = seriesWatching.value;
     try {
@@ -238,7 +227,7 @@ async function next(id, idSerie, nameSerie) {
                     class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 self-end ">Lo
                     terminé</button>
             </div>
-            <h2 class="text-xl m-4" v-if="!seriesToWatch.length >= 1">Ops, no tienes ni una serie en tu lista!</h2>
+            <h2 class="text-xl m-4 ms-2" v-if="!seriesToWatch.length >= 1">Ops, no tienes ni una serie en tu lista!</h2>
 
             <div class="" v-if="!seriesToWatch.length >= 1">
                 <Link href="/buscador"
@@ -251,7 +240,6 @@ async function next(id, idSerie, nameSerie) {
                 <h2 class="text-2xl font-medium ms-2 mt-3 mb-3">Series en tu lista</h2>
                 <CardWithData :data=seriesToWatch :imgContent="lastSerie?.image?.medium"
                 :altImgContent="lastSerie?.name" text="Tu lista de series para ver"
-                :description="seriesToWatch.length" :lastSerieName="lastSerie?.name" 
                 route="/wishlist"
                 dataName="seriesToWatch">
                 </CardWithData>
@@ -264,7 +252,6 @@ async function next(id, idSerie, nameSerie) {
 
                 <CardWithData :data=seriesWatched :imgContent="lastSerieWatched?.image?.medium"
                     :altImgContent="lastSerieWatched?.name" text="Tu lista de series vistas"
-                    :description="seriesWatched.length" :lastSerieName="lastSerieWatched?.name" route="/seriesVistas"
                     dataName="seriesWatched">
                 </CardWithData>
             </div>

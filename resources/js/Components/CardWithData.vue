@@ -1,5 +1,4 @@
 
-Copiar código
 <script setup>
 import { Link, router } from '@inertiajs/vue3';
 
@@ -9,7 +8,6 @@ const props = defineProps({
     altImgContent: String,
     text: String,
     title: String,
-    description: String,
     lastSerieName: String,
     route: String,
     dataName: String, 
@@ -25,7 +23,7 @@ function visit() {
 </script>
 <template>
     {{ console.log(data) }}
-    <Link @click="visit" :data="data"
+    <Link href="#" @click="visit" :data="data"
         class=" m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
 
     <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1"

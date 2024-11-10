@@ -51,7 +51,7 @@ onUnmounted(() => {
 </script>
 <template>
 
-    <nav class="flex justify-between items-center p-4 bg-blue-200 text-slate-800">
+    <nav class="flex justify-between items-center p-4 bg-blue-200 opacity-80  text-slate-800">
         <div v-if="!loading" class="flex items-center gap-6">
 
             <ButtonGoBack v-if="!excludedPages.includes(currentPage)">
@@ -65,7 +65,7 @@ onUnmounted(() => {
                     <Link data-tooltip-target="tooltip-search" href="/buscador"
                         class="block px-4 rounded-s-full dark:hover:fill-gray-800 group m-auto">
 
-                    <svg class="w-7 h-6  text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+                    <svg class="w-7 h-6  text-gray-500 dark:text-gray-400 group-hover:text-blue-1000 dark:group-hover:text-blue-500"
                         aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <title>Búsqueda</title>
 
@@ -82,7 +82,7 @@ onUnmounted(() => {
 
 
 
-                    <svg class="w-6 h-6  text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 rotate-[270]"
+                    <svg class="w-6 h-6  text-gray-500 dark:text-gray-400 group-hover:text-blue-1000 dark:group-hover:text-blue-500 rotate-[270]"
                         aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <title>Chat</title>
                         <path
@@ -99,7 +99,7 @@ onUnmounted(() => {
                         class="block px-3 rounded-s-full group m-auto">
 
 
-                    <svg class="w-7 h-6  text-gray-500 group-hover:text-blue-600 " aria-hidden="true"
+                    <svg class="w-7 h-6  text-gray-500 group-hover:text-blue-1000 " aria-hidden="true"
                         fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="800px" height="800px"
                         viewBox="0 0 28 28">
                         <path clip-rule="evenodd"
@@ -121,7 +121,7 @@ onUnmounted(() => {
         class="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 ">
         <div class="grid h-full max-w-lg grid-cols-[repeat(auto-fit,_minmax(60px,_1fr))] mx-auto">
             <NavItem titleLink="Inicio" route="/" roundedClass="rounded-s-full hover:bg-gray-50">
-                <svg class="w-5 h-5 mb-1 text-gray-500 0 group-hover:text-blue-600 " aria-hidden="true"
+                <svg class="w-5 h-5 mb-1 text-gray-500 0 group-hover:text-blue-1000 " aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <title>Inicio</title>
                     <path
@@ -130,7 +130,7 @@ onUnmounted(() => {
             </NavItem>
 
             <NavItem titleLink="Descubrir" route="/descubrir" roundedClass="hover:bg-gray-50 ">
-                <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-blue-600 " fill="currentColor"
+                <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-blue-1000 " fill="currentColor"
                     xmlns="http://www.w3.org/2000/svg" version="1.1" id="Layer_1" viewBox="0 0 511.995 511.995"
                     xml:space="preserve">
                     <title>Descubrir</title>
@@ -180,7 +180,7 @@ onUnmounted(() => {
             <div v-if="loginUser.id!==null" class="flex items-center justify-center">
 
                 <NavItem    titleLink="Nuevo Posteo" route="/subirPublicacion"
-                    roundedClass=" w-10 h-10 font-medium bg-blue-600 rounded-full hover:bg-blue-700 group focus:ring-4 focus:ring-blue-300 focus:outline-none ">
+                    roundedClass=" w-10 h-10 font-medium bg-blue-800 rounded-full hover:bg-blue-1000 group focus:ring-4 focus:ring-blue-300 focus:outline-none ">
                     <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 18 18">
                         <title>Nuevo Posteo</title>
@@ -192,7 +192,7 @@ onUnmounted(() => {
                 </NavItem>
             </div>
             <NavItem v-if="loginUser.id!==null"  titleLink="Mis Series" route="/misSeries" roundedClass=" hover:bg-gray-50">
-                <svg class="w-7 h-7 mb-1 text-gray-500  group-hover:text-blue-600 " aria-hidden="true"
+                <svg class="w-7 h-7 mb-1 text-gray-500  group-hover:text-blue-1000 " aria-hidden="true"
                     fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <title>Mis Series</title>
 
@@ -205,7 +205,7 @@ onUnmounted(() => {
             <NavItem titleLink="Mi Perfil" :route="`/miPerfil`"
                 roundedClass=" rounded-e-full hover:bg-gray-50 ">
 
-                <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-blue-600 " aria-hidden="true"
+                <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-blue-1000 " aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <title>Perfil</title>
 

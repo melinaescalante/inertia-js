@@ -48,6 +48,19 @@ export async function getEmailUser(id) {
     console.log('Hubo un error al traer el perfil', error)
   }
 }
+export async function getPhotoURL(id) {
+  try {
+
+    const profileRef = doc(db, `/users/${id}`)
+    const profileDocument = await getDoc(profileRef)
+    if (profileDocument.exists()) {
+      return profileDocument.data().photoURL
+
+    }
+  } catch (error) {
+    console.log('Hubo un error al traer el perfil', error)
+  }
+}
 export async function getUserName(id) {
   try {
 
@@ -70,10 +83,7 @@ export async function getUsersProfileById(id, email, displayName) {
   try {
     const profileRef = doc(db, `/users/${id}`);
     const profileDocument = await getDoc(profileRef);
-
     if (profileDocument.exists()) {
-      console.log("Perfil encontrado:",id,email); 
-      console.log(profileDocument.data())
       return {
         id: profileDocument.id,
         email: profileDocument.data().email,

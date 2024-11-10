@@ -23,7 +23,7 @@ const newPost = ref({
 const refreshCount = ref(0);
 function setSerieSeleccionada(serieSeleccionada) {
     newPost.value.serie = serieSeleccionada;
-    if (newPost.value.serie!==null) {
+    if (newPost.value.serie !== null) {
         msg.value = '';
         return;
     }
@@ -37,7 +37,7 @@ async function handlePost() {
         msg.value = 'Formulario incompleto';
         return;
     }
-    if (newPost.value.serie===null) {
+    if (newPost.value.serie === null) {
         msg.value = 'Seleccione una serie válida';
         return;
     }
@@ -54,6 +54,9 @@ async function handlePost() {
         await uploadPost({ ...newPost.value });
         refreshCount.value++;
         msg.value = 'Se ha publicado correctamente';
+        setTimeout(() => {
+            msg.value = '';
+        }, 3000);
     } catch (error) {
         console.log("Error al publicar:", error);
     } finally {
@@ -102,7 +105,7 @@ function handleImageChange(e) {
             class="m-2 border rounded-lg py-2 px-4 bg-blue-700 text-white hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-900 transition-colors">
             {{ !loading ? "Publicar" : "Publicando.." }}
         </button>
-        <div v-if="msg !== 'Se ha publicado correctamente' && msg!==''" class="bg-red-200 p-4 m-2 rounded-md">
+        <div v-if="msg !== 'Se ha publicado correctamente' && msg !== ''" class="bg-red-200 p-4 m-2 rounded-md">
             {{ msg }}
         </div>
 

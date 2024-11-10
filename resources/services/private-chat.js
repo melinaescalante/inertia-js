@@ -97,18 +97,22 @@ export async function subscribeToPrivateChatMessages(senderId, receiverId, callb
     })
 }
 
-export async function allChats(idUser){
-    // const chatRef = collection(db, 'private-chats');
-
-    let allChats=[]
+export async function allChats(idUser) {
+    let allChats = []
     const messagesRef = collection(db, `private-chats`);
     
-    const chatQuery = query(messagesRef, where("userId", "==", idUser));
+    // Modificamos la consulta para que busque chats en los que el usuario esté como participante
+    const chatQuery = query(
+        messagesRef, 
+        where("users." + idUser, "==", true)  // Verifica que el usuario esté en el mapa de participantes
+    );
 
     const chatSnapshot = await getDocs(chatQuery);
-    console.log(chatSnapshot,'chat snapshotttt')
+    console.log(chatSnapshot, 'chat snapshotttt');
+    
     chatSnapshot.forEach(doc => {
-        allChats.push(doc.data())
+        allChats.push(doc.data());
     });
-    return allChats
+
+    return allChats;
 }

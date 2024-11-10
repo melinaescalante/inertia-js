@@ -1,6 +1,6 @@
 import { error } from "laravel-mix/src/Log";
 import { db } from "./firebase";
-import { doc, getDoc, updateDoc, setDoc, deleteField } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, deleteField, FieldValue } from "firebase/firestore";
 
 export async function addSerieToWatch(idUser, idSerie, nameSerie) {
     try {
@@ -74,14 +74,15 @@ export async function isStarted(idUser, idSerie) {
 }
 
 export async function allSeriesWatching(idUser) {
-
     try {
         const seriesWatchingRef = doc(db, `users/${idUser}/series/watching`);
         const watchedSnapshot = await getDoc(seriesWatchingRef);
+
         if (watchedSnapshot.exists()) {
+            console.log(watchedSnapshot.data())
             let seriesWatching = watchedSnapshot.data()
-            if (seriesWatching>=1) {
-                
+            if (seriesWatching) {
+
                 seriesWatching = [seriesWatching]
                 console.log(seriesWatching)
                 return seriesWatching
@@ -107,6 +108,20 @@ export async function startSerie(idUser, idSerie, idSeason) {
     };
     if (toWatchSnapshot.exists()) {
         const currentsWatching = toWatchSnapshot.data();
+        console.log(Object.keys(currentsWatching))
+        const exists = Object.keys(currentsWatching).some(serie => {
+            console.log(serie)
+            return serie === idSerie.toString();
+        });
+        console.log(exists);
+//Elimino serie si ya esta en el documento
+        if (exists) {
+            await updateDoc(toWatchDocRef, {
+                [idSerie]: deleteField() 
+            });
+            return
+        }
+        
         await updateDoc(toWatchDocRef, {
             [idSerie]: {
                 ...newAddSerie,
@@ -122,6 +137,7 @@ export async function startSerie(idUser, idSerie, idSeason) {
         });
 
     }
+
 }
 async function verifyChapter(idSeason, temporada, capitulo) {
     try {
@@ -133,7 +149,6 @@ async function verifyChapter(idSeason, temporada, capitulo) {
         if (response.status !== 200) {
             throw new Error("Error al obtener los episodios");
         }
-        console.log(await episodeExists)
         return episodeExists;
     } catch (error) {
         console.error("Error verificando el capítulo:", error);
@@ -146,10 +161,8 @@ async function verifySeason(idSerie, temporada) {
     const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
     const seasons = await response.json();
     const seasonExists = seasons.find(season => {
-        console.log(season)
         return season.number === temporada + 1
     });
-    console.log(await seasonExists)
     if (response.status !== 200) {
         throw new Error("Error al obtener los episodios");
     }
@@ -186,8 +199,6 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
     const toWatchDocRef = doc(userDocRef, `series/watching`);
     const toWatchSnapshot = await getDoc(toWatchDocRef);
     const prueba = await verifyChapter(idSeason, temporada, capitulo)
-    console.log(await prueba)
-    // return
     if (prueba !== false && prueba !== undefined) {
 
         if (toWatchSnapshot.exists()) {
@@ -217,7 +228,6 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                 idCurrentSeason = result.nextSeasonId;
             } else {
                 const data = toWatchSnapshot.data();
-                console.log(data, 'data')
                 if (data[idSerie] !== undefined) {
                     await updateDoc(toWatchDocRef, {
                         [idSerie]: {

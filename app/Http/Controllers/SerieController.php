@@ -10,9 +10,7 @@ use Illuminate\Http\Request;
 
 class SerieController extends Controller
 {
-    // public function getSugerencesByGenres()
-    // {
-    // }
+
     public function getCastBySerie($id, $name)
     {
         $cast = [];

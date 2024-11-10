@@ -1,25 +1,25 @@
-import { onMounted, onUnmounted } from "vue";
+import { ref, onMounted } from "vue";
 import { getUsersProfileById } from "../../services/users";
-import { ref } from "vue";
 
-export  function useUser(id, email, username) {
-
-    // const name = ref(await getUserName(id));
+export function useUser(id, email, displayName) {
     const user = ref({
         id: null,
         email: null,
-        displayName: username,
+        displayName: null,
         bio: null,
         genres: null,
         photoURL: null
     });
-    // const loading = ref(true);
-    onMounted(async () => {
-        user.value = await getUsersProfileById(          id,email,displayName,
-        );
-        // loading.value = false;
-        console.log(user)
-        
+
+    // Función asíncrona separada para cargar el perfil
+    const loadUserProfile = async () => {
+        user.value = await getUsersProfileById(id, email, displayName);
+        console.log("Perfil cargado:", user.value);
+    };
+
+    // Llamamos a la función asíncrona dentro de onMounted sin await
+    onMounted(() => {
+        loadUserProfile();
     });
 
     return { user };

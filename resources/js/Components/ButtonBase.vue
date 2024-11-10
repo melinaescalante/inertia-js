@@ -2,9 +2,9 @@
 import { Link } from '@inertiajs/vue3';
 
 defineProps({
-    href: String,
-    name:String,
-    param:String
+    href: String|Number,
+    name:String|Number,
+    param:String|Number
 })
 </script>
 <template>
