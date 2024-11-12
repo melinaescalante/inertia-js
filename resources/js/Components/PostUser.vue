@@ -2,14 +2,15 @@
 import { router } from '@inertiajs/vue3';
 import { like, comment, getComments, isLike } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
-import { getNameUser } from '../../services/users';
-import { ref} from 'vue';
+import { getNameUser, getPhotoURL } from '../../services/users';
+import { onMounted, ref} from 'vue';
 import { Link } from '@inertiajs/vue3'
 import BottomSheet from './BottomSheet.vue';
 import { formatDate } from '../helpers/date';
 import ModalComponentDelete from './ModalComponentDelete.vue'
 const { loginUser } = useLoginUser()
-defineProps({
+const photoURL=ref(null)
+const props=defineProps({
     userName: String,
     userId: String,
     id: String,
@@ -123,13 +124,16 @@ function handleClose() {
         isBottomSheetOpen.value = true;
     }, 100);
 }
+onMounted(async() => {
+  photoURL.value=await getPhotoURL(props.userId)  
 
+})
 </script>
 <template>
     <div class="m-4 border rounded-2xl p-4 mb-[2rem]">
         <div class="flex flex-row justify-between  items-center">
             <div>
-                <img src="/public/noimage.png" class="border rounded-md  w-10 h-10 " alt="">
+                <img :src="photoURL|| '/noimage.png'" class="border rounded-md  w-10 h-10 " alt="">
 
             </div>
             <div class="flex flex-col mx-2">

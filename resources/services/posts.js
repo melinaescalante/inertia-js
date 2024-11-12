@@ -178,6 +178,33 @@ export async function isLike(id, userid) {
     }
 
   }
+  export async function toggleLike(id, operador, userid) {
+    try {
+      const postRef = doc(db, 'posts-public', id);
+      const postSnapshot = await getDoc(postRef);
+  
+      if (postSnapshot.exists()) {
+        let currentLikes = postSnapshot.data().likes || [];
+  
+        // Verifica si el usuario ya ha dado "like"
+        const userIndex = currentLikes.findIndex(user => Object.values(user)[0] === userid);
+        const userHasLiked = userIndex !== -1;
+  
+        if (operador === 'plus' && !userHasLiked) {
+          // Añadir "like"
+          currentLikes.push({ [userid]: userid });
+          await updateDoc(postRef, { likes: currentLikes });
+        } else if (operador === 'less' && userHasLiked) {
+          // Quitar "like"
+          currentLikes = currentLikes.filter((_, index) => index !== userIndex);
+          await updateDoc(postRef, { likes: currentLikes });
+        }
+      }
+    } catch (error) {
+      console.error("Error en el proceso de like:", error);
+    }
+  }
+  
   export async function comment(id, comment, iduser) {
     try {
 

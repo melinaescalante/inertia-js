@@ -7,8 +7,8 @@ import ButtonGoBack from '../../components/ButtonGoBack.vue'
 defineProps({
     imageUrl: String,
     name:String,
-    idimage:Number,
-    foundImage:Array
+    idimage:String,
+    foundImage:Object
 })
 </script>
 <template>

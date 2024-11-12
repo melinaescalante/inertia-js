@@ -18,7 +18,7 @@ defineProps({
              {{(seasons[index][index].number)?'Temporada '+seasons[index][index].season: 'No tiene numero de temporada'  }} 
         </h1>
         <div v-for="episode in season">
-            <Link  class=" m-2 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <div  class=" m-2 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
             
                     <img class="object-cover w-full rounded-t-lg h-52  md:w-44  md:rounded-none md:rounded-s-lg" :src="episode.image?episode.image.medium:'noimage.png'" alt="">
                     <div class="flex flex-col justify-between p-4 leading-normal">
@@ -27,7 +27,7 @@ defineProps({
                         <p class="mb-3 font-normal text-gray-700 dark:text-gray-400" v-html="episode.summary.length>200?`${episode.summary.slice(0,200)}...`:episode.summary"></p>
                         <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"> Estreno {{  episode.airdate}} </p>
                     </div>
-                </Link>
+                </div>
         </div>
     </div>
 </template>

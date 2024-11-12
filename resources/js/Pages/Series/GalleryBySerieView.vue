@@ -8,7 +8,7 @@ defineProps({
     banners: Array,
     posters: Array,
     name: String,
-    id:Number
+    id:String
 })
 
 </script>

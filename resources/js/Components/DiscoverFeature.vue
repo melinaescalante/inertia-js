@@ -6,7 +6,7 @@ defineProps({
   titleSerie: String,
   dateSerie: String,
   synopsis: String,
-  cover: String,
+  cover: Object,
   text: String
 });
 

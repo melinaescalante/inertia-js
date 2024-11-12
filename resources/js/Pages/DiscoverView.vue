@@ -104,7 +104,7 @@ defineProps({ genres: Array })
                 <p class="m-3 mt-4 ms-5 font-medium">Segun tus generos favoritos:</p>
             </div>
             <div class="flex overflow-x-auto scroll overflow-scroll ">
-
+{{console.log(serie)}}
                 <DiscoverFeature v-for="show in genero" :id="show.id" :genres="show.genres" :titleSerie="show.name"
                     :dateSerie="show.premiered" :synopsis="show.summary" :cover="show.image" :text="show.schedule.time">
 
