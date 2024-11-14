@@ -6,6 +6,7 @@ import Spinner from '../../components/Spinner.vue'
 import { readPostsByUser } from '../../../services/posts';
 import { getEmailUser, getNameUser, getUserName, getUsersProfileById } from '../../../services/users';
 import { useUser } from "../../composables/useUser";
+import { useLoginUser } from '../../composables/useLoginUser';
 
 defineProps({
   userName: String,
@@ -20,16 +21,17 @@ const postsById = ref([])
 const emailUser = ref('')
 const userName = ref('')
 const user = ref(null)
+const { loginUser } = useLoginUser()
 onMounted(async () => {
   try {
     emailUser.value = await getEmailUser(id.value)
     userName.value = await getNameUser(id.value)
-    user.value =  useUser(id.value, await emailUser.value, userName.value)
-    
+    user.value = useUser(id.value, await emailUser.value, userName.value)
+
     await readPostsByUser(async (newPosts) => {
       loading.value = true
       postsById.value = newPosts
-      user.value=await getUsersProfileById(id.value, await emailUser.value, userName.value)
+      user.value = await getUsersProfileById(id.value, await emailUser.value, userName.value)
       loading.value = false
     }, id.value)
   } catch (error) {
@@ -51,23 +53,28 @@ onMounted(async () => {
 
     <div class="grid grid-cols-3 items-center mt-3 justify-around mb-3">
 
-        <img :src="user.photoURL || '/no-image.jpg'" :alt="'Foto de perfil de ' + user.email"
-          class=" ms-2 w-20 h-20 col-span-1 rounded-full object-cover group-hover:opacity-50">
+      <img :src="user.photoURL || '/no-image.jpg'" :alt="'Foto de perfil de ' + user.email"
+        class=" ms-2 w-20 h-20 col-span-1 rounded-full object-cover group-hover:opacity-50">
 
 
       <div class="flex flex-col col-span-2">
-        {{ console.log(user) }}
+
         <p class="font-medium text-center">{{ user.displayName }}</p>
         <div class="flex justify-around">
           <p class="me-2">Series vistas</p>
           <p>Amigos</p>
         </div>
-        <div class="mt-2 flex flex-wrap justify-around">
+        <div class="mt-2 flex flex-wrap justify-around" v-if="user.id !== loginUser.id">
 
 
           <Link :href="`/chatPrivado/${user.id}/${user.email}`"
             class="text-center text-blue-800 border border-blue-700 hover:bg-gray-200 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
           Chatear</Link>
+        </div>
+        <div class=" flex flex-wrap justify-around" v-else>
+          <Link v-if="loginUser.id" href="/perfilinfo/edit"
+            class="text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
+          Editar Perfil</Link>
         </div>
         <p class="border-b text-blue-500 text-center " v-if="user.bio">{{ user.bio }}</p>
         <div class="flex flex-wrap">

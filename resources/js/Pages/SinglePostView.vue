@@ -54,13 +54,18 @@ onUnmounted( ()=>{
         </div>
     </template>
     <template v-else>
-        <div class="ms-2 mt-1">
-
-            <ButtonGoBack></ButtonGoBack>
-        </div>
-
-        <PostUser :id="post.id" :descriptionUser="post.text" :img="post.image" :imgAlt="post.image" :serie="post.serie"
-            :date="post.date" :likes="post.likes" :comments="post.comments" :userName="post.user" :liked="post.liked"
+        <PostUser 
+    :photoURL="post.photoURL"
+        
+        :id="post.id" 
+        :descriptionUser="post.text" 
+        :img="post.image" 
+        :imgAlt="post.image" 
+        :serie="post.serie"
+            :date="post.date" 
+            :likes="post.likes" 
+            :comments="post.comments" 
+            :userName="post.user" :liked="post.liked"
             :userId="post.userid"></PostUser>
     </template>
 </template>

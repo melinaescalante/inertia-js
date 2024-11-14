@@ -22,10 +22,10 @@ defineProps({
             
                     <img class="object-cover w-full rounded-t-lg h-52  md:w-44  md:rounded-none md:rounded-s-lg" :src="episode.image?episode.image.medium:'noimage.png'" alt="">
                     <div class="flex flex-col justify-between p-4 leading-normal">
-                        <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ episode.name }}</h2>
+                        <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">{{ episode.name }}</h2>
                         <p>Temporada {{ episode.season}} episodio {{ episode.number }}</p>
-                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400" v-html="episode.summary.length>200?`${episode.summary.slice(0,200)}...`:episode.summary"></p>
-                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"> Estreno {{  episode.airdate}} </p>
+                        <p class="mb-3 font-normal text-gray-700 " v-html="episode.summary.length>200?`${episode.summary.slice(0,200)}...`:episode.summary"></p>
+                        <p class="mb-3 font-normal text-gray-700 "> Estreno {{  episode.airdate}} </p>
                     </div>
                 </div>
         </div>

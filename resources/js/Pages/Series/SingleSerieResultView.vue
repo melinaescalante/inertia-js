@@ -2,25 +2,25 @@
 import NavBar from '../../components/NavBar.vue'
 import ButtonBase from '../../components/ButtonBase.vue'
 import { Link } from '@inertiajs/vue3';
-import { addSerieToWatch, allSeriesToWatch, startSerie, isStarted } from '../../../services/series';
+import { addSerieToWatch, allSeriesToWatch, startSerie, isStarted, addCommentToSerie, bringCommentsFromSeries } from '../../../services/series';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useLoginUser } from "../../composables/useLoginUser";
+import CommentSection from '../../Components/CommentSection.vue';
 
 const { loginUser } = useLoginUser()
 
 const props = defineProps({
     serie: Object
 })
-
+const comments = ref([])
 const seriesToWatch = ref([])
 const localseries = ref([])
 const loading = ref(true)
-
+const loadingSeries = ref(true)
 const ini = ref(false)
 const watching = ref(false)
 onMounted(async () => {
     if (loginUser.value.id !== null && loginUser.value.id !== undefined) {
-        // return
         seriesToWatch.value = await allSeriesToWatch(loginUser.value.id)
         localseries.value = seriesToWatch.value || []
         await isInWishlist(props.serie.id)
@@ -28,7 +28,10 @@ onMounted(async () => {
         loading.value = false
 
     }
-
+    comments.value = await bringCommentsFromSeries((newComments) => {
+        comments.value = newComments
+    }, props.serie.id)
+    loadingSeries.value = false
 
 })
 async function isInWishlist(id) {
@@ -70,7 +73,6 @@ async function start(idUser, idSerie) {
         <div>
 
             <div v-html="serie.summary"></div>
-            <p></p>
             <div>
                 <ul class="flex flex-wrap">
                     <li class="rounded-xl bg-opacity-70  border border-blue-950  text-sm  text-blue-950 font-medium p-2 m-1 ms-0 text-center  "
@@ -107,7 +109,7 @@ async function start(idUser, idSerie) {
         </Link>
         <Link href="#" @click="start(loginUser.id, serie.id, serie.name)" type="button"
             class="h-20 py-2.5 px-5 text-sm font-medium text-white focus:outline-none bg-blue-700 rounded-lg  hover:bg-blue-500 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 text-center inline-flex items-center ">
-        <svg class="w-6 h-6 me-1 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+        <svg class="w-6 h-6 me-1 text-white " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
             width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
             <path v-if="!watching" fill-rule="evenodd"
                 d="M8.6 5.2A1 1 0 0 0 7 6v12a1 1 0 0 0 1.6.8l8-6a1 1 0 0 0 0-1.6l-8-6Z" clip-rule="evenodd" />
@@ -117,8 +119,9 @@ async function start(idUser, idSerie) {
 
 
         </svg>
-
+        {{ console.log(serie.id) }}
         {{ watching ? 'La estas viendo' : 'Comenzar a ver' }}
         </Link>
     </div>
+    <CommentSection :idSerie="serie.id" :comments="comments"></CommentSection>
 </template>

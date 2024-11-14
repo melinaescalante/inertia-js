@@ -43,8 +43,8 @@ onMounted(() => {
                 :src="serie.image ? serie.image.medium : '/noimage.png'"
                 :alt="`Portada de la serie en la wishlist ${serie.name}`">
             <div class="flex flex-col justify-between p-4 leading-normal">
-                <p class="mb-3 font-medium text-gray-700 dark:text-gray-400">Tienes en tu lista para ver </p>
-                <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ serie.name }}
+                <p class="mb-3 font-medium text-gray-700 ">Tienes en tu lista para ver </p>
+                <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">{{ serie.name }}
                 </h2>
                 <div class="flex flex-wrap gap-4">
                     <p v-for="genre in serie.genres">{{genre}}</p>

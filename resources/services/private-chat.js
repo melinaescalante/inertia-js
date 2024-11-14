@@ -26,11 +26,9 @@ async function privateChatDocument(senderId, receiverId) {
     const cacheKey=getCacheKey(senderId,receiverId)
     const cacheDoc=retrieveFromCache(cacheKey)
     if (cacheDoc) {
-        console.log('buscando doc')
+
         return cacheDoc
     }
-    console.log('buscando doc en firebase')
-
     // Necesitamos tener el documento de la conversación privada.
     // Empecemos por buscar a ver si ya existe.
     const chatRef = collection(db, 'private-chats');
@@ -101,14 +99,12 @@ export async function allChats(idUser) {
     let allChats = []
     const messagesRef = collection(db, `private-chats`);
     
-    // Modificamos la consulta para que busque chats en los que el usuario esté como participante
     const chatQuery = query(
         messagesRef, 
-        where("users." + idUser, "==", true)  // Verifica que el usuario esté en el mapa de participantes
+        where("users." + idUser, "==", true)
     );
 
     const chatSnapshot = await getDocs(chatQuery);
-    console.log(chatSnapshot, 'chat snapshotttt');
     
     chatSnapshot.forEach(doc => {
         allChats.push(doc.data());

@@ -28,7 +28,9 @@ onMounted(async () => {
   <NavBar></NavBar>
   <section class="posts px-3">
 
-    <PostUser v-for="post in posts" :id="post.id" :descriptionUser="post.text" :img="post.image" :imgAlt="post.image"
+    <PostUser v-for="post in posts" 
+    :photoURL="post.photoURL"
+    :id="post.id" :descriptionUser="post.text" :img="post.image" :imgAlt="post.image"
       :serie="post.serie" :date="post.date" :likes="post.likes" :comments="post.comments" :userName="post.user"
       :liked="post.liked" :userId="post.userid" :created_at="post.created_at">
     </PostUser>

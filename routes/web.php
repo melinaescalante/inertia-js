@@ -50,7 +50,6 @@ Route::get('/wishlist', [AppController::class,"myWishlist"])
 
 Route::get('/seriesVistas', [AppController::class,"endedSeries"])
 ->middleware(CheckAuthSession::class);
-// Route::post('/wishlist', [AppController::class, 'myWishlist']);
 
 Route::get('/descubrir', [AppController::class,"discover"])
 ->name('discover');

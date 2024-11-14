@@ -1,13 +1,10 @@
 import { db, storage } from './firebase'
 import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, updateDoc, doc, getDoc, where, deleteDoc } from 'firebase/firestore'
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { getNameUser } from './users';
+import { getNameUser, getPhotoURL } from './users';
 
 export async function uploadPost({ text, serie, image, userid }) {
   const postRef = collection(db, 'posts-public')
-  console.log(image, ' soy la imagen')
-
-
   await addDoc(postRef, {
     text,
     serie,
@@ -42,7 +39,7 @@ export async function readPosts(callback, userid) {
       const like = await isLike(doc.id, userid)
       const post = {
         id: doc.id,
-        // username:doc.data().username,
+        photoURL: await getPhotoURL(doc.data().userid),
         serie: doc.data().serie,
         text: doc.data().text,
         image: doc.data().image,
@@ -100,11 +97,10 @@ export async function readPostsById(callback, id, userid) {
 */
 export async function readPostsByUser(callback, userid) {
   const postQuery = query(collection(db, "posts-public"), where("userid", "==", userid));
-  
+
   onSnapshot(postQuery, async (snapshot) => {
     const posts = [];
 
-    // Map de promesas para procesar cada post
     const promises = snapshot.docs.map(async (doc) => {
       const like = await isLike(doc.id, userid);
       const post = {
@@ -124,7 +120,6 @@ export async function readPostsByUser(callback, userid) {
       posts.push(post);
     });
 
-    // Espera a que todas las promesas se resuelvan antes de ejecutar el callback
     await Promise.all(promises);
 
     callback(posts);
@@ -132,132 +127,111 @@ export async function readPostsByUser(callback, userid) {
 }
 
 export async function isLike(id, userid) {
+  const postRef = doc(db, 'posts-public', id);
+  const postSnapshot = await getDoc(postRef);
+  const currentLikes = postSnapshot.data().likes || [];
+  const userFound = currentLikes.find(user => {
+    return Object.keys(user)[0] === userid;
+  });
+  if (userFound) {
+    return true;
+  } else {
+    return false;
+  }
+}
+export async function like(id, operador, userid) {
+  try {
+
     const postRef = doc(db, 'posts-public', id);
     const postSnapshot = await getDoc(postRef);
-    const currentLikes = postSnapshot.data().likes || [];
-    const userFound = currentLikes.find(user => {
-      return Object.keys(user)[0] === userid;
-    });
-    if (userFound) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  export async function like(id, operador, userid) {
-    try {
-
-      const postRef = doc(db, 'posts-public', id);
-      const postSnapshot = await getDoc(postRef);
-      if (postSnapshot) {
-        const currentLikes = postSnapshot.data().likes || [];
-        if (operador === 'plus') {
-          const newLike = { [userid]: userid };
-          currentLikes.push(newLike);
-
-          await updateDoc(postRef, {
-            likes: currentLikes
-          });
-
-        }
-        else if (operador === 'less') {
-          const newArray = currentLikes.filter(user => {
-            const userIdKey = Object.keys(user)[0];
-            return userIdKey !== userid;
-          });
-
-          await updateDoc(postRef, {
-            likes: newArray
-          });
-          console.log("Menos.", newArray);
-        }
-      }
-    } catch (error) {
-      console.log("Documento no existente");
-
-    }
-
-  }
-  export async function toggleLike(id, operador, userid) {
-    try {
-      const postRef = doc(db, 'posts-public', id);
-      const postSnapshot = await getDoc(postRef);
-  
-      if (postSnapshot.exists()) {
-        let currentLikes = postSnapshot.data().likes || [];
-  
-        // Verifica si el usuario ya ha dado "like"
-        const userIndex = currentLikes.findIndex(user => Object.values(user)[0] === userid);
-        const userHasLiked = userIndex !== -1;
-  
-        if (operador === 'plus' && !userHasLiked) {
-          // Añadir "like"
-          currentLikes.push({ [userid]: userid });
-          await updateDoc(postRef, { likes: currentLikes });
-        } else if (operador === 'less' && userHasLiked) {
-          // Quitar "like"
-          currentLikes = currentLikes.filter((_, index) => index !== userIndex);
-          await updateDoc(postRef, { likes: currentLikes });
-        }
-      }
-    } catch (error) {
-      console.error("Error en el proceso de like:", error);
-    }
-  }
-  
-  export async function comment(id, comment, iduser) {
-    try {
-
-      const postRef = doc(db, 'posts-public', id);
-      const postSnapshot = await getDoc(postRef);
-      if (postSnapshot) {
-        const currentComments = postSnapshot.data().comments || [];
-        const newComment = { [iduser]: comment };
-        currentComments.push(newComment);
+    if (postSnapshot) {
+      const currentLikes = postSnapshot.data().likes || [];
+      if (operador === 'plus') {
+        const newLike = { [userid]: userid };
+        currentLikes.push(newLike);
 
         await updateDoc(postRef, {
-          comments: currentComments
+          likes: currentLikes
         });
 
-        console.log("Comentario agregado exitosamente.");
-      } else {
-        console.log("El post no existe.");
       }
-    } catch (error) {
-      console.log("Error al agregar el comentario:", error);
-    }
-  }
+      else if (operador === 'less') {
+        const newArray = currentLikes.filter(user => {
+          const userIdKey = Object.keys(user)[0];
+          return userIdKey !== userid;
+        });
 
-  export async function getComments(id) {
-    try {
-      const postRef = doc(db, 'posts-public', id);
-      const postSnapshot = await getDoc(postRef);
-      const commentsObtained = await postSnapshot.data().comments
-      const updatedComments = [];
-
-      for (const comment of commentsObtained) {
-        const iduser = Object.keys(comment)[0];
-        // const email = await getNameUser(iduser);
-        const newComment = { [iduser]: comment[iduser] };
-        updatedComments.push(newComment);
+        await updateDoc(postRef, {
+          likes: newArray
+        });
+        console.log("Menos.", newArray);
       }
-      //Asi traemos lo ultimo comentarios
-      updatedComments.reverse()
-      return updatedComments;
-
-    } catch (error) {
-      console.log("Documento no existente");
-
     }
+  } catch (error) {
+    console.log("Documento no existente");
 
   }
-  export async function deletePost(id) {
-    try {
 
-      const postRef = doc(db, "posts-public", id);
-      await deleteDoc(postRef);
-    } catch (error) {
-      console.log(error)
+}
+
+export async function comment(id, comment, iduser) {
+  try {
+
+    const postRef = doc(db, 'posts-public', id);
+    const postSnapshot = await getDoc(postRef);
+    if (postSnapshot) {
+      const currentComments = postSnapshot.data().comments || [];
+      const newComment = { [iduser]: comment };
+      currentComments.push(newComment);
+
+      await updateDoc(postRef, {
+        comments: currentComments
+      });
+
+      console.log("Comentario agregado exitosamente.");
+    } else {
+      console.log("El post no existe.");
     }
-
+  } catch (error) {
+    console.log("Error al agregar el comentario:", error);
   }
+}
+export async function getComments(callback, id) {
+  try {
+    const postRef = doc(db, 'posts-public', id);
+    onSnapshot(postRef, async (snapshot) => {
+      const commentsData = snapshot.data()?.comments;
+      if (commentsData) {
+        let commentsArray = [];
+        const promises = commentsData.map(async (comment) => {
+            const userName = await getNameUser(Object.keys(comment)[0]);
+            const commentInfo = Object.values(comment)[0];
+            const commentFull = {
+                userName,
+                userId:Object.keys(comment)[0],
+                commentInfo,
+            
+            };
+            commentsArray.push(commentFull)
+        });
+        await Promise.all(promises);
+        commentsArray.reverse();
+
+        callback(commentsArray);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deletePost(id) {
+  try {
+
+    const postRef = doc(db, "posts-public", id);
+    await deleteDoc(postRef);
+  } catch (error) {
+    console.log(error)
+  }
+
+}

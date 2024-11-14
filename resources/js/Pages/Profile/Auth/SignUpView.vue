@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { Link, router } from '@inertiajs/vue3'
-import { signUp } from '../../services/auth'
-import NavBarSecondary from '../Components/NavBarSecondary.vue';
+import { signUp } from '../../../../services/auth'
+import NavBarSecondary from '../../../Components/NavBarSecondary.vue';
 
 const msg = ref('')
 defineProps({

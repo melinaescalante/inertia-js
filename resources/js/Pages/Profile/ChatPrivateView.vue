@@ -28,7 +28,7 @@ onMounted(() => {
             loadingMessages.value = false;
         }
     );
-    console.log(messages.value)
+
     loading.value = false;
 });
 

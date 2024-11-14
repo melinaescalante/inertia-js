@@ -53,7 +53,7 @@ onMounted(async () => {
         <div v-if="!loading" v-for="(chat, index) in chats" :key="index"
             class="flex items-center gap-4  p-4  border-b border-blue-1000">
             <img class="w-10 h-10 rounded-full" :src="chat.photo || '/noimage.png'" :alt="`Foto de perfil del usuario ${chat.userName}`">
-            <div class="font-medium dark:text-white">
+            <div class="font-medium ">
                 <div>
                     <Link
                         :href="`/chatPrivado/${Object.keys(chat.users).find(id => id !== loginUser.id)}/${chat.email}`">

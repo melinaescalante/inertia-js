@@ -3,25 +3,18 @@ import { Link, router, usePage } from '@inertiajs/vue3'
 import { ref, onMounted, onUnmounted } from 'vue';
 import ButtonGoBack from '../components/ButtonGoBack.vue'
 import NavItem from './NavItem.vue';
+import { useLoginUser } from '../composables/useLoginUser';
 import { suscribeToAuthChanged } from "../../services/auth";
-let unSubscribeFromAuth = () => { };
+
 const loading = ref(true);
 
-const loginUser = ref({
-    id: null,
-    email: null,
-    displayName: null,
-    bio: null,
-    genres: null,
-    photoURL:null
-})
+const {loginUser} = useLoginUser()
 const page = usePage()
 const currentPage = page.component
 const currentUrl = router.page.url
 const userUrl = ref('')
 onMounted(async () => {
-    unSubscribeFromAuth = suscribeToAuthChanged(newUserData => {
-        loginUser.value = newUserData
+
         if (loginUser.value.id !== null) {
 
             userUrl.value = `/perfil/${loginUser.value.id}`
@@ -31,27 +24,24 @@ onMounted(async () => {
 
         }
 
-    })
+    
 })
 
 
 const excludedPages = [
     'HomeView',
-    'ProfileView',
     'DiscoverView',
     'SeriesView',
     'ConfigView',
     'SearchView',
-    'SearchUsersView'
+    'SearchUsersView',
+    'Profile/ProfileAuthView'
 ];
-onUnmounted(() => {
-    unSubscribeFromAuth();
 
-})
 </script>
 <template>
 
-    <nav class="flex justify-between items-center p-4 bg-blue-200 opacity-80  text-slate-800">
+    <nav class="flex justify-between items-center p-4 border-blue-0 border rounded-full  text-slate-800">
         <div v-if="!loading" class="flex items-center gap-6">
 
             <ButtonGoBack v-if="!excludedPages.includes(currentPage)">
@@ -63,9 +53,9 @@ onUnmounted(() => {
             <template v-if="currentPage !== 'Profile/ProfileAuthView' && currentPage !== 'Profile/ChatView'">
                 <li>
                     <Link data-tooltip-target="tooltip-search" href="/buscador"
-                        class="block px-4 rounded-s-full dark:hover:fill-gray-800 group m-auto">
+                        class="block px-4 rounded-s-full  group m-auto">
 
-                    <svg class="w-7 h-6  text-gray-500 dark:text-gray-400 group-hover:text-blue-1000 dark:group-hover:text-blue-500"
+                    <svg class="w-7 h-6  text-gray-600 group-hover:text-blue-1000 "
                         aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <title>Búsqueda</title>
 
@@ -78,11 +68,11 @@ onUnmounted(() => {
 
                 <li>
                     <Link data-tooltip-target="tooltip-chat" href="/chat"
-                        class="block px-3 rounded-s-full dark:hover:fill-gray-800 group m-auto">
+                        class="block px-3 rounded-s-full group m-auto">
 
 
 
-                    <svg class="w-6 h-6  text-gray-500 dark:text-gray-400 group-hover:text-blue-1000 dark:group-hover:text-blue-500 rotate-[270]"
+                    <svg class="w-6 h-6  text-gray-600 group-hover:text-blue-1000  rotate-[270]"
                         aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <title>Chat</title>
                         <path
@@ -118,7 +108,7 @@ onUnmounted(() => {
         </ul>
     </nav>
     <div
-        class="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 ">
+        class="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-blue-0 rounded-full bottom-4 left-1/2 ">
         <div class="grid h-full max-w-lg grid-cols-[repeat(auto-fit,_minmax(60px,_1fr))] mx-auto">
             <NavItem titleLink="Inicio" route="/" roundedClass="rounded-s-full hover:bg-gray-50">
                 <svg class="w-5 h-5 mb-1 text-gray-500 0 group-hover:text-blue-1000 " aria-hidden="true"

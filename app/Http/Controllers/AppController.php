@@ -64,7 +64,7 @@ class AppController extends Controller
     }
     public function login()
     {
-        return Inertia::render('LoginView');
+        return Inertia::render('Profile/Auth/LoginView');
     }
     public function signUp()
     {

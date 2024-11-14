@@ -3,14 +3,14 @@ import { router } from '@inertiajs/vue3';
 import { like, comment, getComments, isLike } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
 import { getNameUser, getPhotoURL } from '../../services/users';
-import { onMounted, ref} from 'vue';
+import { onMounted, ref } from 'vue';
 import { Link } from '@inertiajs/vue3'
 import BottomSheet from './BottomSheet.vue';
 import { formatDate } from '../helpers/date';
 import ModalComponentDelete from './ModalComponentDelete.vue'
 const { loginUser } = useLoginUser()
-const photoURL=ref(null)
-const props=defineProps({
+
+const props = defineProps({
     userName: String,
     userId: String,
     id: String,
@@ -22,11 +22,13 @@ const props=defineProps({
     likes: Array,
     comments: Array,
     liked: Boolean,
-    created_at: Object
+    created_at: Object,
+    photoURL: String
 
 })
 const commentText = ref('')
-const commentsObtained = ref([])
+const commentsArray = ref([])
+
 async function giveComment(id) {
     if (loginUser.value.id === undefined || loginUser.value.id === null) {
         router.replace('/ingresar');
@@ -64,30 +66,18 @@ async function share(id) {
 }
 const areCommentsVisible = ref(false);
 async function seeComments(id) {
-
     if (areCommentsVisible.value) {
-
         areCommentsVisible.value = false;
-        commentsObtained.value = [];
+        commentsArray.value = [];
     } else {
-        const comments = await getComments(id);
-        if (comments) {
-
-            const commentsWithUserNames = await Promise.all(
-                comments.map(async comment => {
-                    const userId = Object.keys(comment)[0];
-                    console.log(userId)
-                    const userName = await getNameUser(userId);
-                    console.log(userName)
-                    return { ...comment, userName };
-                })
-            );
-
-            commentsObtained.value = commentsWithUserNames;
+        commentsArray.value = await getComments(async (newComments) => {
+            commentsArray.value = newComments
             areCommentsVisible.value = true;
-        } else {
-            commentsObtained.value = false
-            areCommentsVisible.value = true;
+
+        }, id);
+        if (!commentsArray.value) {
+            commentsArray.value = []
+            areCommentsVisible.value = false;
 
         }
     }
@@ -124,16 +114,13 @@ function handleClose() {
         isBottomSheetOpen.value = true;
     }, 100);
 }
-onMounted(async() => {
-  photoURL.value=await getPhotoURL(props.userId)  
 
-})
 </script>
 <template>
-    <div class="m-4 border rounded-2xl p-4 mb-[2rem]">
+    <div class="m-4 border border-orange-0 rounded-2xl p-4 mb-[2rem]">
         <div class="flex flex-row justify-between  items-center">
             <div>
-                <img :src="photoURL|| '/noimage.png'" class="border rounded-md  w-10 h-10 " alt="">
+                <img :src="photoURL || '/noimage.png'" class="border rounded-md  w-10 h-10 " alt="">
 
             </div>
             <div class="flex flex-col mx-2">
@@ -205,50 +192,32 @@ onMounted(async() => {
                     <p v-if="comments != undefined">
                         <span>{{ comments.length }}</span>
                     </p>
-                    <svg @click="seeComments(id)" :id="id" xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink" class="h-6 w-6 cursor-pointer" version="1.1"
-                        viewBox="0 0 512 512" xml:space="preserve">
+                    <svg @click="seeComments(id)" :id="id" class="w-7 h-7 cursor-pointer" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"  fill="none" viewBox="0 0 24 24">
                         <title>Comentar</title>
 
-                        <g>
-                            <path class="st0"
-                                d="M410.431,63.966C370.965,24.479,316.251-0.015,256,0c-60.237-0.015-114.958,24.479-154.416,63.966   c-39.487,39.458-63.98,94.18-63.966,154.416c-0.014,57.076,21.986,109.21,57.881,148.053   c31.947,34.609,75.062,58.846,123.588,67.118v58.59c0,7.724,4.469,14.738,11.468,18c7,3.262,15.257,2.164,21.159-2.802   l144.725-121.715l-0.036,0.022c27.36-22.878,47.239-48.146,59.914-76.195c12.711-28.041,18.087-58.437,18.065-91.071   C474.397,158.146,449.91,103.424,410.431,63.966z M420.151,293.078c-10.006,22.029-25.562,42.266-49.237,62.13l-0.029,0.029   l-112.091,94.267v-33.373c0-10.304-7.906-18.913-18.167-19.784c-45.741-3.898-86.515-24.991-115.953-56.85   C95.258,307.61,77.339,265.19,77.325,218.382c0.014-49.404,19.974-93.945,52.338-126.346C162.054,59.672,206.603,39.714,256,39.706   c49.404,0.008,93.945,19.966,126.345,52.33c32.371,32.4,52.316,76.942,52.33,126.346   C434.661,246.781,430.111,271.026,420.151,293.078z" />
-                            <path class="st0"
-                                d="M151.771,191.906c-14.62,0-26.476,11.856-26.476,26.476c0,14.62,11.856,26.476,26.476,26.476   c14.613,0,26.469-11.856,26.469-26.476C178.24,203.762,166.385,191.906,151.771,191.906z" />
-                            <path class="st0"
-                                d="M256,191.906c-14.613,0-26.469,11.856-26.469,26.476c0,14.62,11.856,26.476,26.469,26.476   c14.62,0,26.476-11.856,26.476-26.476C282.476,203.762,270.62,191.906,256,191.906z" />
-                            <path class="st0"
-                                d="M360.236,191.906c-14.62,0-26.469,11.856-26.469,26.476c0,14.62,11.848,26.476,26.469,26.476   c14.62,0,26.476-11.856,26.476-26.476C386.712,203.762,374.856,191.906,360.236,191.906z" />
-                        </g>
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M7.556 8.5h8m-8 3.5H12m7.111-7H4.89a.896.896 0 0 0-.629.256.868.868 0 0 0-.26.619v9.25c0 .232.094.455.26.619A.896.896 0 0 0 4.89 16H9l3 4 3-4h4.111a.896.896 0 0 0 .629-.256.868.868 0 0 0 .26-.619v-9.25a.868.868 0 0 0-.26-.619.896.896 0 0 0-.63-.256Z" />
                     </svg>
-
-
                 </div>
             </div>
             <div @click="share(id)" :id="id">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 cursor-pointer" viewBox="-1 0 26 26"
-                    version="1.1">
+                <svg class="h-7 w-7 cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24">
                     <title>Compartir</title>
-                    <g fill="none" fill-rule="evenodd" sketch:type="MSPage">
-                        <g id="Icon-Set" sketch:type="MSLayerGroup" transform="translate(-312.000000, -726.000000)"
-                            fill="#000000">
-                            <path
-                                d="M331,750 C329.343,750 328,748.657 328,747 C328,745.343 329.343,744 331,744 C332.657,744 334,745.343 334,747 C334,748.657 332.657,750 331,750 L331,750 Z M317,742 C315.343,742 314,740.657 314,739 C314,737.344 315.343,736 317,736 C318.657,736 320,737.344 320,739 C320,740.657 318.657,742 317,742 L317,742 Z M331,728 C332.657,728 334,729.343 334,731 C334,732.657 332.657,734 331,734 C329.343,734 328,732.657 328,731 C328,729.343 329.343,728 331,728 L331,728 Z M331,742 C329.23,742 327.685,742.925 326.796,744.312 L321.441,741.252 C321.787,740.572 322,739.814 322,739 C322,738.497 321.903,738.021 321.765,737.563 L327.336,734.38 C328.249,735.37 329.547,736 331,736 C333.762,736 336,733.762 336,731 C336,728.238 333.762,726 331,726 C328.238,726 326,728.238 326,731 C326,731.503 326.097,731.979 326.235,732.438 L320.664,735.62 C319.751,734.631 318.453,734 317,734 C314.238,734 312,736.238 312,739 C312,741.762 314.238,744 317,744 C318.14,744 319.179,743.604 320.02,742.962 L320,743 L326.055,746.46 C326.035,746.64 326,746.814 326,747 C326,749.762 328.238,752 331,752 C333.762,752 336,749.762 336,747 C336,744.238 333.762,742 331,742 L331,742 Z"
-                                id="share" sketch:type="MSShapeGroup">
-
-                            </path>
-                        </g>
-                    </g>
+                    <path stroke="currentColor" stroke-linecap="round" stroke-width="1.5"
+                        d="M7.926 10.898 15 7.727m-7.074 5.39L15 16.29M8 12a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm12 5.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm0-11a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z" />
                 </svg>
                 <span class="sr-only">Compartir</span>
 
             </div>
         </div>
-        <ul id="commentObtained" open="false" v-if="commentsObtained">
-            <li v-for="comment in commentsObtained" class="border-b-2 ms-2 mt-3 mb-3">
+        <ul id="commentsArray" open="false" v-if="commentsArray">
+            <li v-for="comment in commentsArray" class="border-b-2 ms-2 mt-3 mb-3">
+                {{ console.log(comment) }}
                 <strong>
-                    <Link :href="`perfil/${Object.keys(comment)[0]}`">{{ comment.userName }}</Link>
-                </strong>: {{ Object.values(comment)[0] }}
+                    <Link :href="`/perfil/${comment.userId}`">{{ comment.userName }}</Link>
+                </strong>: {{ comment.commentInfo }}
             </li>
         </ul>
 
