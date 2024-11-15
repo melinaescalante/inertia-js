@@ -285,7 +285,8 @@ export async function addSerieEnded(idUser, idSerie, nameSerie, created) {
     const watchedDocRef = doc(userDocRef, `series/watched`);
     const watchedSnapshot = await getDoc(watchedDocRef);
 
-    const newWatchedSerie = { [nameSerie]: idSerie,['ended_at']:Timestamp.now() , ['created_at']:created};
+    const newWatchedSerie = {['ended_at']:Timestamp.now() , ['created_at']:created,['nameSerie']:nameSerie,['idSerie']:idSerie
+    };
     if (watchedSnapshot.exists()) {
         const alreadyWatched = watchedSnapshot.data().watched || [];
         alreadyWatched.push(newWatchedSerie);
@@ -315,7 +316,7 @@ export async function allSeriesWatched(idUser) {
             console.log(seriesWatchedObtained)
             // Reversamos directamente
             seriesWatchedObtained = seriesWatchedObtained.reverse();
-
+console.log(seriesWatchedObtained)
             return seriesWatchedObtained;
         } else {
             return false
@@ -326,21 +327,22 @@ export async function allSeriesWatched(idUser) {
 }
 export async function addCommentToSerie(comment, idUser, idSerie) {
     try {
+        debugger
         let currentComments
         const seriesInfoRef = doc(db, 'series', String(idSerie));
         const seriesInfoSnapshot = await getDoc(seriesInfoRef);
+        const newComment={
+            userId: idUser,  // ID del usuario
+            comment: comment,  // Comentario
+            created_at: Timestamp.now()// 
+        }
         if (seriesInfoSnapshot.exists()) {
             currentComments = seriesInfoSnapshot.data().comments || [];
-            const newComment={
-                userId: idUser,  // ID del usuario
-                comment: comment,  // Comentario
-                created_at: Timestamp.now()// 
-            }
             currentComments.push(newComment)
             await updateDoc(seriesInfoRef, { comments: currentComments })
         } else {
             currentComments = []
-            currentComments.push({ [idUser]: comment })
+            currentComments.push(newComment)
             await setDoc(seriesInfoRef, {
                 comments: currentComments
             })

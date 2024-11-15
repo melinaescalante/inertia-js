@@ -37,7 +37,7 @@ async function loadSeriesWatched() {
         if (seriesWatched) {
             const lastWatchedSerie = seriesWatched.value.at(-1);
             if (lastWatchedSerie) {
-                const response = await fetch('https://api.tvmaze.com/singlesearch/shows?q=' + Object.keys(lastWatchedSerie)[1] + '')
+                const response = await fetch('https://api.tvmaze.com/singlesearch/shows?q=' +lastWatchedSerie.nameSerie)
                 if (response) {
                     const json = await response.json();
                     // console.log(json )
@@ -59,6 +59,7 @@ async function loadSeriesToWatch() {
         if (seriesToWatch === false) return
         if (seriesToWatch) {
             const lastSeries = seriesToWatch.value.at(-1);
+            console.log(lastSeries)
             if (lastSeries) {
                 const response = await fetch('https://api.tvmaze.com/shows/' + Object.keys(lastSeries)[0] + '')
                 if (response) {
@@ -78,7 +79,7 @@ async function loadSeriesToWatch() {
 
 async function loadSeriesWatching() {
     seriesWatching.value = await allSeriesWatching(loginUser.value.id)
-    // console.log(seriesWatching.value, 'viendo')
+
     if (seriesWatching === false) return
 
     localSeriesWatching.value = seriesWatching.value;
@@ -191,7 +192,7 @@ async function next(id, idSerie, nameSerie) {
             
 
             </Link>
-            <div v-for="(serie, index) in seriesWatchingJson" class="m-2 grid items-center bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 
+            <div v-for="(serie, index) in seriesWatchingJson" class="m-2 grid items-center bg-white border border-orange-0 rounded-lg shadow hover:bg-gray-100 
            sm:grid-cols-1 md:grid-cols-3 md:max-w-xl md:gap-5">
                 <Link :href="`/show/${serie.id}`" class="col-span-2 flex items-center space-x-4 p-1">
                 <img class="object-cover w-28 h-auto rounded-lg"
@@ -205,12 +206,13 @@ async function next(id, idSerie, nameSerie) {
                             series[serie.id])?.[serie.id].currentSeason }}
                         capítulo {{ localSeriesWatching.find(series => series[serie.id])?.[serie.id].current }}
                     </p>
-                    <p v-else>Has terminado la serie</p>
+                
+                    
                 </div>
                 </Link>
                 <button v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
-                    @click.stop="next(loginUser.id, serie.id, serie.name)" type="button" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none 
-                   focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                    @click.stop="next(loginUser.id, serie.id, serie.name)" type="button" class="text-blue-1000 hover:text-white border border-blue-0 hover:bg-blue-1000  focus:outline-none focus:border-0
+                   focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
                    md:col-span-1 lg:justify-self-center lg:self-center  md:ms-0 md:self-center sm:items-start md:m-2 mb-2 ms-3 self-end sm:m-2 ">
                     Siguiente
                 </button>
@@ -236,7 +238,7 @@ async function next(id, idSerie, nameSerie) {
             <div v-if="seriesWatched.length >= 1 && !loading">
 
                 <h2 class="text-2xl font-medium ms-2 mt-3 mb-3">Series vistas</h2>
-
+{{ console.log(seriesWatched) }}
                 <CardWithData :data=seriesWatched :imgContent="lastSerieWatched?.image?.medium"
                     :altImgContent="lastSerieWatched?.name" text="Tu lista de series vistas" dataName="seriesWatched"
                     :lastSerieName="lastSerieWatched?.name" route="/seriesVistas">

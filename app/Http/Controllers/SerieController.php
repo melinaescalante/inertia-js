@@ -183,14 +183,7 @@ class SerieController extends Controller
     public function buscadorUsuarios(Request $request)
     {
         $usersArray = [];
-        // ; // Obtener la URL actual
-        
-        // if ($request->has('name')) {
-            
-        //     $seriesArray = $this->getSeriesByName($request->input('name'));
-            
-        // }
-        // $seriesArrayLimit = array_slice($seriesArray, 0, 7);
+     
         return Inertia::render('SearchUsersView', [
             'users' => $usersArray
         ]);

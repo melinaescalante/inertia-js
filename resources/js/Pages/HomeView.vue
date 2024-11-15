@@ -26,7 +26,7 @@ onMounted(async () => {
 </script>
 <template>
   <NavBar></NavBar>
-  <section class="posts px-3">
+  <section class="posts ">
 
     <PostUser v-for="post in posts" 
     :photoURL="post.photoURL"

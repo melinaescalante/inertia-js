@@ -32,7 +32,7 @@ export async function updateUserProfile(id, data) {
 
   // Editamos el documento usando la función updateDoc().
   await updateDoc(profileRef, {
-      ...data,
+    ...data,
   });
 }
 export async function getEmailUser(id) {
@@ -93,7 +93,7 @@ export async function getUsersProfileById(id, email, displayName) {
         photoURL: profileDocument.data().photoURL,
       };
     } else {
-      
+
       await setDoc(profileRef, {
         email: email,
         displayName: displayName,
@@ -116,7 +116,7 @@ export async function getUsers(searchTerm, callback) {
 
     if (searchTerm) {
       const q = query(usersRef, where('displayName', '>=', searchTerm), where('displayName', '<=', searchTerm + '\uf8ff'));
-      // const querySnapshot = await getDocs(q);
+
       onSnapshot(q, snapshot => {
         const users = snapshot.docs.map(doc => {
           return {
@@ -124,7 +124,7 @@ export async function getUsers(searchTerm, callback) {
             bio: doc.data().bio,
             displayName: doc.data().displayName,
             genres: doc.data().genres,
-            photoURL:doc.data().photoURL
+            photoURL: doc.data().photoURL
           }
         });
         callback(users);
@@ -137,4 +137,35 @@ export async function getUsers(searchTerm, callback) {
     console.log('Hubo un error al traer el perfil', error);
 
   }
+}
+export async function addFriend(idUserAuth, idFriend) {
+  const friendsCollectionRef = collection(db, `users/${idUserAuth}/friends`);
+
+  await addDoc(friendsCollectionRef, {
+    friends: {
+      [idFriend]: true,
+      [idUserAuth]: true
+    }
+  });
+}
+export async function allFriends(idUserAuth) {
+  let allFriends = []
+
+  const friendsCollectionRef = collection(db, `users/${idUserAuth}/friends`);
+
+  const friendQuery = query(
+    friendsCollectionRef,
+    where("friends." + idUserAuth, "==", true)
+  );
+  const friendsSnapshot = await getDocs(friendQuery);
+
+  friendsSnapshot.forEach(doc => {
+    allFriends.push(doc.data());
+  });
+  console.log(allFriends)
+  return allFriends;
+}
+
+export async function areFriends(idUserAuth, idUser2){
+  
 }

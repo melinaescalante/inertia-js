@@ -2,37 +2,40 @@
 import NavBar from '../components/NavBar.vue';
 import { onMounted, ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import { allSeriesToWatch } from '../../services/series';
+import Spinner from '../Components/Spinner.vue';
+import { useLoginUser } from '../composables/useLoginUser';
 
-const props = defineProps({
-    seriesToWatch: Array
-});
 const loading = ref(true)
+const { loginUser } = useLoginUser()
 
 const arrayFetch = ref([])
-onMounted(() => {
-    props.seriesToWatch.forEach(async serie => {
-        try {
+const series = ref([])
 
-            const response = await fetch('https://api.tvmaze.com/shows/' + Object.keys(serie)[0] + '')
-     
-            if (response) {
-                const json = await response.json();
-                arrayFetch.value.push(json)
-                arrayFetch.value.reverse()
-                loading.value = false;
-            }
+    onMounted(async () => {
+    try {
+        series.value = await allSeriesToWatch(loginUser.value.id)
+        console.log(series.value)
+        const promises = series.value.map(async (serie) => {
+            const response = await fetch('https://api.tvmaze.com/singlesearch/shows?q=' + Object.values(serie)[0]);
+            const json = await response.json();
+            return json;
+        });
+        const results = await Promise.all(promises);
+        loading.value = false
+        arrayFetch.value = results
 
 
-        } catch (error) {
-            throw new Error(error);
-        }
-    });
+    } catch (error) {
+        console.error('Error general:', error);
+    }
 })
 </script>
 
 <template>
     <NavBar />
     <h1 class="text-xl m-2">Tus series a ver</h1>
+    <div v-if="!loading">
     <ul v-if="arrayFetch.length>=1">
         <li v-for="serie in arrayFetch">
 
@@ -55,4 +58,6 @@ onMounted(() => {
         </li>
     </ul>
     <p class="m-2" v-else>No tienes nada en tu lista!</p>
+</div>
+<Spinner v-else msg="Cargando series vistas"></Spinner>
 </template>

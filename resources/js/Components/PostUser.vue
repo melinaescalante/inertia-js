@@ -56,7 +56,7 @@ async function share(id) {
     }
     navigator.share(shareData)
         .then(() =>
-            console.log('MDN shared successfully')
+            console.log('Share exitoso')
         )
         .catch((e) =>
             console.log(e)
@@ -117,7 +117,7 @@ function handleClose() {
 
 </script>
 <template>
-    <div class="m-4 border border-orange-0 rounded-2xl p-4 mb-[2rem]">
+    <div class="m-2 shadow-[inset_0_1px_18px_-10px_rgba(0,0,0,0.15)] shadow-orange-0 rounded-2xl p-4 mb-[2rem]">
         <div class="flex flex-row justify-between  items-center">
             <div>
                 <img :src="photoURL || '/noimage.png'" class="border rounded-md  w-10 h-10 " alt="">
@@ -138,7 +138,7 @@ function handleClose() {
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                     viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2"
+                                        stroke-width="1.5"
                                         d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                 </svg>
                                 <span class="sr-only">Cerrar modal</span>
@@ -216,7 +216,7 @@ function handleClose() {
             <li v-for="comment in commentsArray" class="border-b-2 ms-2 mt-3 mb-3">
                 {{ console.log(comment) }}
                 <strong>
-                    <Link :href="`/perfil/${comment.userId}`">{{ comment.userName }}</Link>
+                    <Link class="text-blue-1000" :href="`/perfil/${comment.userId}`">{{ comment.userName }}</Link>
                 </strong>: {{ comment.commentInfo }}
             </li>
         </ul>
@@ -230,10 +230,10 @@ function handleClose() {
                     class="block w-full p-3 border rounded-3xl focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4"
                     placeholder="Deja tu comentario aquí" required v-model="commentText" />
                 <button type="submit" class="text-white absolute end-2.5 bottom-2.5    rounded-lg  px-1 py-1">
-                    <svg class="w-7 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <svg class="w-7 h-6 stroke-blue-1000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path
                             d="M11.5003 12H5.41872M5.24634 12.7972L4.24158 15.7986C3.69128 17.4424 3.41613 18.2643 3.61359 18.7704C3.78506 19.21 4.15335 19.5432 4.6078 19.6701C5.13111 19.8161 5.92151 19.4604 7.50231 18.7491L17.6367 14.1886C19.1797 13.4942 19.9512 13.1471 20.1896 12.6648C20.3968 12.2458 20.3968 11.7541 20.1896 11.3351C19.9512 10.8529 19.1797 10.5057 17.6367 9.81135L7.48483 5.24303C5.90879 4.53382 5.12078 4.17921 4.59799 4.32468C4.14397 4.45101 3.77572 4.78336 3.60365 5.22209C3.40551 5.72728 3.67772 6.54741 4.22215 8.18767L5.24829 11.2793C5.34179 11.561 5.38855 11.7019 5.407 11.8459C5.42338 11.9738 5.42321 12.1032 5.40651 12.231C5.38768 12.375 5.34057 12.5157 5.24634 12.7972Z"
-                            stroke="blue" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                     <span class="sr-only">Publicar comentario</span>
 

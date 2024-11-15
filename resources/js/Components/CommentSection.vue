@@ -44,7 +44,10 @@ async function handleComment() {
                     <Link class="font-medium text-blue-1000" :href="`/perfil/${comment.userId}`">
                         {{ comment.userName }}
                     </Link>
-                    {{ comment.commentInfo }}
+                   <p>
+                       {{ comment.commentInfo }}
+                </p> 
+                    
                 </div>
                 <span class="text-sm text-blue-1000 self-end">{{ formatDate(comment.created_at) }}</span>
             </li>

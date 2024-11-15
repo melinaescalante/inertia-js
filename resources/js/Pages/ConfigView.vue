@@ -3,32 +3,21 @@ import { ref, onMounted, onUnmounted } from "vue";
 import NavBar from '../components/NavBar.vue'
 import { router } from "@inertiajs/vue3";
 import { suscribeToAuthChanged, logout } from "../../services/auth";
-let unSubscribeFromAuth = () => {};
+import { useLoginUser } from "../composables/useLoginUser";
 
-const loginUser = ref({
-    id: null,
-    email: null,
-    displayName: null,
-    bio:null
-
-})
-onMounted(() => {
-    unSubscribeFromAuth=suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
-})
-
+const {loginUser}=useLoginUser()
 const handleLogout=()=>{
 logout()
 router.replace('/ingresar')
-
 }
-onUnmounted( ()=>{
-  unSubscribeFromAuth();
-
-})
 </script>
 <template>
     <NavBar></NavBar>
+    <h1 class="text-2xl m-4 font-medium">
+
+      Ajustes
+    </h1>
      <form action="" @submit.prevent="handleLogout">
-          <button type="submit" class="block text-slate-50 font-medium w-full p-3 border rounded-3xl bg-blue-500 focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4">Cerrar sesion</button>
+          <button type="submit" class="inline-block text-slate-50 font-medium w-full p-3 border rounded-3xl bg-blue-1000 mt-4">Cerrar sesion</button>
         </form>
 </template>

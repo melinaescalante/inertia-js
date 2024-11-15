@@ -44,8 +44,8 @@ async function loadSeriesByUsersGenres() {
             const limit = 10
             const response = await fetch('https://api.tvmaze.com/shows');
             const shows = await response.json()
+            
             shows.forEach(show => {
-                console.log(show.genres.includes(genre))
                 if (genreArray.length < limit) {
                     if (show.genres.includes(genre) && !(idShows[show.id])) {
                         console.log(show)
@@ -57,6 +57,7 @@ async function loadSeriesByUsersGenres() {
             });
 
             serie.value.push(genreArray)
+            loading.value=false
         });
     }
 }
@@ -84,6 +85,7 @@ async function loadSeriesByDefault() {
                 }
             });
             serie.value.push(genreArray)
+            loading.value=false
 
         });
 
@@ -95,7 +97,6 @@ defineProps({ genres: Array })
 </script>
 <template>
     <NavBar></NavBar>
-    {{ console.log(loading.value) }}
     <section v-if="!loading">
 
         <div v-for="genero in serie" class="flex  flex-col ">
@@ -104,7 +105,6 @@ defineProps({ genres: Array })
                 <p class="m-3 mt-4 ms-5 font-medium">Segun tus generos favoritos:</p>
             </div>
             <div class="flex overflow-x-auto scroll overflow-scroll ">
-{{console.log(serie)}}
                 <DiscoverFeature v-for="show in genero" :id="show.id" :genres="show.genres" :titleSerie="show.name"
                     :dateSerie="show.premiered" :synopsis="show.summary" :cover="show.image" :text="show.schedule.time">
 

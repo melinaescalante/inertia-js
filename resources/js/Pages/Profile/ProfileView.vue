@@ -7,7 +7,8 @@ import { readPostsByUser } from '../../../services/posts';
 import { getEmailUser, getNameUser, getUserName, getUsersProfileById } from '../../../services/users';
 import { useUser } from "../../composables/useUser";
 import { useLoginUser } from '../../composables/useLoginUser';
-
+import { allSeriesWatched } from '../../../services/series';
+import { addFriend } from '../../../services/users';
 defineProps({
   userName: String,
   followers: Number,
@@ -21,9 +22,11 @@ const postsById = ref([])
 const emailUser = ref('')
 const userName = ref('')
 const user = ref(null)
+const seriesWatched=ref([])
 const { loginUser } = useLoginUser()
 onMounted(async () => {
   try {
+    seriesWatched.value=await allSeriesWatched(id.value)
     emailUser.value = await getEmailUser(id.value)
     userName.value = await getNameUser(id.value)
     user.value = useUser(id.value, await emailUser.value, userName.value)
@@ -38,6 +41,14 @@ onMounted(async () => {
     console.log(error)
   }
 })
+async function makeFriend() {
+  try {
+    await addFriend(loginUser.value.id,id.value)
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
 </script>
 
 <template>
@@ -61,25 +72,28 @@ onMounted(async () => {
 
         <p class="font-medium text-center">{{ user.displayName }}</p>
         <div class="flex justify-around">
-          <p class="me-2">Series vistas</p>
+          <p class="me-2">Series vistas <span class="block text-center">{{ seriesWatched.length || 0}}</span></p>
           <p>Amigos</p>
         </div>
         <div class="mt-2 flex flex-wrap justify-around" v-if="user.id !== loginUser.id">
 
 
           <Link :href="`/chatPrivado/${user.id}/${user.email}`"
-            class="text-center text-blue-800 border border-blue-700 hover:bg-gray-200 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
+            class="text-center text-white bg-blue-1000 transition-colors  hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
           Chatear</Link>
+          <button type="button" @click="makeFriend"
+            class="text-center border border-blue-1000  text-blue-1000 hover:bg-blue-0 hover:border-transparent transition-colors focus:ring-4 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
+          Ser amigos</button>
         </div>
         <div class=" flex flex-wrap justify-around" v-else>
           <Link v-if="loginUser.id" href="/perfilinfo/edit"
-            class="text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
+            class="text-center text-white bg-blue-1000 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
           Editar Perfil</Link>
         </div>
-        <p class="border-b text-blue-500 text-center " v-if="user.bio">{{ user.bio }}</p>
+        <p class=" text-blue-500 text-center " v-if="user.bio">{{ user.bio }}</p>
         <div class="flex flex-wrap">
           <ul v-for="genre in user.genres">
-            <li class="rounded-xl bg-opacity-70   bg-blue-950  text-sm  text-white font-medium p-2 m-1 text-center">{{
+            <li class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000 text-sm  font-medium py-1 px-2 m-1 text-center">{{
               genre }}</li>
           </ul>
         </div>

@@ -45,13 +45,13 @@ onMounted(async () => {
         <h1 class="ms-2 text-xl mt-4 mb-4">Chat recientes</h1>
         <span>
             <Link href="/buscadorUsuarios">
-            <img class="h-6 w-6 fill-blue-0 me-2" src="/public/images/plus.svg" alt="Crear un nuevo chat el privado">
+            <img class="h-6 w-6 me-2" src="/public/images/plus.svg" alt="Crear un nuevo chat el privado">
             </Link>
         </span>
     </div>
     <div>
         <div v-if="!loading" v-for="(chat, index) in chats" :key="index"
-            class="flex items-center gap-4  p-4  border-b border-blue-1000">
+            class="flex items-center gap-4  p-4  border-b-[1px]  border-blue-1000">
             <img class="w-10 h-10 rounded-full" :src="chat.photo || '/noimage.png'" :alt="`Foto de perfil del usuario ${chat.userName}`">
             <div class="font-medium ">
                 <div>

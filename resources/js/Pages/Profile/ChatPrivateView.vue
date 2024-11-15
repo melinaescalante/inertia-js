@@ -53,7 +53,8 @@ function handleSubmit() {
                     <div class="flex items-center gap-4 m-4 ms-2">
                         <img class="w-10 h-10 rounded-full" :src="user.photoURL|| '/noimage.png'" :alt="`Imagen de perfil del usuario ${user.displayName}`">
                         <div class="font-medium ">
-                            <div>{{ user.displayName }}</div>
+                            <div><Link :href="`/perfil/${user.id}`">{{ user.displayName }}
+                            </Link></div>
                         </div>
                     </div>
 
@@ -64,7 +65,7 @@ function handleSubmit() {
                                 'bg-blue-0 self-end': loginUser.id === message.user_id
                             }">
                                 <div v-if="message.user_id!==loginUser.id">
-                                    <Link class="font-medium text-cyan-700 underline"
+                                    <Link class="font-medium text-blue-1000 underline"
                                         :href="`/perfil/${message.user_id}`">{{ user.displayName }} </Link>
                                 </div>
                                 <div>{{ message.text }}</div>
@@ -76,7 +77,7 @@ function handleSubmit() {
                     <form @submit.prevent="handleSubmit" action="" class="flex gap-3 items-stretch m-1 mt-2">
                         <label for="text" class="sr-only">Mensaje</label>
                         <textarea required name="text" id="text"
-                            class="resize-none focus:ring-2 focus:ring-blue-300 focus:outline-none w-full min-h-10 p-2 border rounded-xl"
+                            class="resize-none focus:ring-1 focus:ring-blue-300 focus:outline-none w-full min-h-10 p-2 border rounded-xl"
                             v-model="newMessage.text"></textarea>
                         <button type="submit" class="bg-blue-1000 text-white rounded-lg px-1 py-1 m-1">
                             <svg class="w-7 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">

@@ -14,11 +14,11 @@ const props = defineProps({
 </script>
 <template>
 
-    <Link :href="props.route"   :data="{ [props.dataName]: props.data }"
-        class=" m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
+    <Link :href="props.route"   
+        class=" m-2 flex  items-center bg-white border border-orange-0 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
 
     <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1"
-        :src="imgContent || '/public/noimage.png'"
+        :src="imgContent || '/noimage.png'"
         :alt="`Portada de la última serie en la wishlist ${lastSerieName || 'sin título'}`">
     <div class="flex flex-col justify-between p-4 leading-normal">
 
