@@ -30,8 +30,6 @@ onMounted(async () => {
             })
         );
         chats.value = chatsWithUserNames;
-
-        console.log(await chats.value)
         loading.value = false
     }
 

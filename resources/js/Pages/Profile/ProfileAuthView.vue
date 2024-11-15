@@ -8,7 +8,6 @@ import { allSeriesWatched } from '../../../services/series';
 import { useLoginUser } from "../../composables/useLoginUser";
 import { allFriends } from '../../../services/users';
 const { loginUser } = useLoginUser()
-console.log(loginUser.value)
 defineProps({
     userName: String,
     followers: Number,
@@ -37,7 +36,6 @@ onMounted(async () => {
         }, loginUser.value.id)
         
         friends.value=await allFriends(loginUser.value.id)
-        console.log(friends.value)
 
     } catch (error) {
         console.log(error)

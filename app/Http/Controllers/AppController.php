@@ -26,16 +26,16 @@ class AppController extends Controller
     public function profile(Request $request)
     {
         $postId = request('id');
-       
+
         return Inertia::render('Profile/ProfileView', ['id' => $postId]);
-     
+
     }
     public function myProfile(Request $request)
     {
         // $postId = request('id');
-       
+
         return Inertia::render('Profile/ProfileAuthView');
-     
+
     }
     public function chatPrivate($id,$email)
     {
@@ -44,7 +44,7 @@ class AppController extends Controller
             'id' => $id,
             'email' => $email,
         ]);
-     
+
     }
 
     public function profileEdit()
@@ -68,7 +68,7 @@ class AppController extends Controller
     }
     public function signUp()
     {
-        return Inertia::render('SignUpView');
+        return Inertia::render('Profile/Auth/SignUpView');
     }
     public function mySeries()
     {
@@ -82,7 +82,7 @@ class AppController extends Controller
 }
     public function endedSeries()
 {
-   
+
     return Inertia::render('EndedSeriesView');
 }
     public function misSeries()

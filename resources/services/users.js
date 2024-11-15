@@ -162,10 +162,9 @@ export async function allFriends(idUserAuth) {
   friendsSnapshot.forEach(doc => {
     allFriends.push(doc.data());
   });
-  console.log(allFriends)
   return allFriends;
 }
 
 export async function areFriends(idUserAuth, idUser2){
-  
+
 }

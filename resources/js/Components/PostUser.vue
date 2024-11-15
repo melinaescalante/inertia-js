@@ -1,10 +1,9 @@
 <script setup>
-import { router } from '@inertiajs/vue3';
+import { router ,Link } from '@inertiajs/vue3';
 import { like, comment, getComments, isLike } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
 import { getNameUser, getPhotoURL } from '../../services/users';
 import { onMounted, ref } from 'vue';
-import { Link } from '@inertiajs/vue3'
 import BottomSheet from './BottomSheet.vue';
 import { formatDate } from '../helpers/date';
 import ModalComponentDelete from './ModalComponentDelete.vue'
@@ -21,14 +20,13 @@ const props = defineProps({
     serie: String,
     likes: Array,
     comments: Array,
-    liked: Boolean,
+    liked: Function|Boolean,
     created_at: Object,
     photoURL: String
 
 })
-const commentText = ref('')
-const commentsArray = ref([])
 
+const commentText = ref('')
 async function giveComment(id) {
     if (loginUser.value.id === undefined || loginUser.value.id === null) {
         router.replace('/ingresar');
@@ -45,7 +43,7 @@ async function share(id) {
         text: 'TvOn-Post',
         url: 'http://127.0.0.1:8000/post/' + id,
     };
-
+    
     if (!navigator.canShare) {
         console.log('No se puede compartir');
         return;
@@ -55,16 +53,17 @@ async function share(id) {
         return;
     }
     navigator.share(shareData)
-        .then(() =>
-            console.log('Share exitoso')
-        )
-        .catch((e) =>
-            console.log(e)
-        )
+    .then(() =>
+    console.log('Share exitoso')
+)
+.catch((e) =>
+console.log(e)
+)
 
-    console.log(id)
+console.log(id)
 }
 const areCommentsVisible = ref(false);
+const commentsArray = ref([])
 async function seeComments(id) {
     if (areCommentsVisible.value) {
         areCommentsVisible.value = false;

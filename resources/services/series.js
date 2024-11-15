@@ -313,10 +313,7 @@ export async function allSeriesWatched(idUser) {
         const seriesWatchedSnapshot = await getDoc(seriesWatchedRef);
         if (seriesWatchedSnapshot.exists()) {
             let seriesWatchedObtained = seriesWatchedSnapshot.data().watched || [];
-            console.log(seriesWatchedObtained)
-            // Reversamos directamente
             seriesWatchedObtained = seriesWatchedObtained.reverse();
-console.log(seriesWatchedObtained)
             return seriesWatchedObtained;
         } else {
             return false

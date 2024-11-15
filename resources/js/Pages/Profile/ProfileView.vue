@@ -16,7 +16,6 @@ defineProps({
 
 const page = usePage()
 const id = ref(page.props.id)
-console.log(id.value)
 const loading = ref(true)
 const postsById = ref([])
 const emailUser = ref('')
