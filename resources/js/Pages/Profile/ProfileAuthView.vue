@@ -6,7 +6,7 @@ import Spinner from '../../components/Spinner.vue'
 import { readPostsByUser } from '../../../services/posts';
 import { allSeriesWatched } from '../../../services/series';
 import { useLoginUser } from "../../composables/useLoginUser";
-import { allFriends } from '../../../services/users';
+import { allFollowing } from '../../../services/users';
 const { loginUser } = useLoginUser()
 defineProps({
     userName: String,
@@ -23,7 +23,7 @@ const loading = ref(true)
 const postsById = ref([])
 const userData = ref([])
 const seriesWatched=ref([])
-const friends=ref([])
+const following=ref([])
 onMounted(async () => {
 
     try {
@@ -35,7 +35,7 @@ onMounted(async () => {
             loading.value = false;
         }, loginUser.value.id)
         
-        friends.value=await allFriends(loginUser.value.id)
+        following.value=await allFollowing(loginUser.value.id)
 
     } catch (error) {
         console.log(error)
@@ -72,8 +72,8 @@ onMounted(async () => {
                 <p class="font-medium text-center">{{ loginUser.displayName ? loginUser.displayName : loginUser.email }}
                 </p>
                 <div class="flex justify-around">
-                    <p class="me-2">Series vistas <span class="text-center block">{{seriesWatched.length || 0}}</span></p>
-                    <p>Amigos <span class="text-center block">{{friends.length || 0}}</span></p>
+                    <p class="me-2">Series vistas <span class="text-center block">{{seriesWatched?.length || 0}}</span></p>
+                    <p>Seguidos <span class="text-center block">{{following?.length || 0}}</span></p>
                 </div>
                 <div class="mt-2 flex flex-wrap justify-around">
 
@@ -82,11 +82,11 @@ onMounted(async () => {
                     Editar Perfil</Link>
 
                 </div>
-                <p class=" text-blue-1000 text-center " v-if="loginUser.bio">{{ loginUser.bio }}</p>
+                <p class=" text-blue-1000 text-center  font-medium m-2" v-if="loginUser.bio">{{ loginUser.bio }}</p>
                 <div class="flex flex-wrap">
                     <ul v-for="genre in loginUser.genres">
                         <li
-                            class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000  text-sm  font-medium px-2 py-1 m-1 text-center">
+                            class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000  text-sm font-normal px-2 py-1 m-1 text-center">
                             {{
                                 genre }}</li>
                     </ul>

@@ -77,7 +77,7 @@ export default {
       </button>
     </div>
   </form>
-  <div v-if="loading" class="flex flex-col justify-center items-center">
+  <div v-if="loading" class="flex flex-col justify-center items-center mb-2">
 
     <p>{{ answer }}</p>
     <Spinner msg="Buscando series"></Spinner>

@@ -77,6 +77,7 @@ export default {
                 </svg>
 
             </div>
+            <label for="default-search" class="sr-only">Buscá tu serie</label>
             <input type="search" id="default-search"
                 class="block w-full p-4 ps-12  text-gray-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4 "
                 v-model="formInput" @input="getAnswer(formInput)" placeholder="Buscar..." required />

@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import { useLoginUser } from '../composables/useLoginUser';
 import { formatDate } from '../helpers/date';
+import Spinner from './Spinner.vue';
 const props = defineProps({
     comments: Array,
     idSerie: Number
@@ -23,7 +24,7 @@ async function handleComment() {
 </script>
 <template>
     <div class="ms-3 mt-10">
-        <p class="border-b">Comentarios {{ comments?.length|| 0 }}</p>
+        <p class="border-b">Comentarios {{ comments?.length || 0 }}</p>
         <form @submit.prevent="handleComment" action="" class="flex gap-7 items-center ">
 
             <div class="ms-0 m-3 mb-0 flex flex-col gap-3 w-full">
@@ -37,20 +38,30 @@ async function handleComment() {
         </form>
     </div>
     <div>
-        <ul>
-            <li class=" flex flex-col bg-orange-0 bg-opacity-35 m-3 p-3 rounded-lg" v-for="comment in comments">
-                <div class="flex gap-4">
+        <ul class="bg-[url('/public/images/asset.png')] bg-[length:200px] bg-repeat-y bg-right" v-if="comments.length" >
+
+   
+            <li class=" flex flex-col  bg-opacity-35 m-3 p-3 rounded-lg break-words" v-for="comment in comments">
+                
+                <div class="flex gap-4 flex-wrap">
 
                     <Link class="font-medium text-blue-1000" :href="`/perfil/${comment.userId}`">
-                        {{ comment.userName }}
+                    {{ comment.userName }}
                     </Link>
-                   <p>
-                       {{ comment.commentInfo }}
-                </p> 
-                    
+                    <div class="break-all mb-2  ">
+
+                        <p>
+                            {{ comment.commentInfo }}
+                        </p>
+                    </div>
+
                 </div>
-                <span class="text-sm text-blue-1000 self-end">{{ formatDate(comment.created_at) }}</span>
+                <span class="text-sm font-normal text-gray-900 self-end">{{ formatDate(comment.created_at) }}</span>
             </li>
         </ul>
+        <div v-else class="mt-4">
+
+            <Spinner msg="Cargando comentarios"></Spinner>
+        </div>
     </div>
 </template>

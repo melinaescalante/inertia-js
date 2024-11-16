@@ -14,6 +14,13 @@ export async function uploadPost({ text, serie, image, userid }) {
         created_at: serverTimestamp()
     });
 }
+
+/**
+ * 
+ * @param {idUser:String} idUser 
+ * @param {callback:Function} callback 
+ * @returns 
+ */
 export function fetchPosts(idUser, callback) {
     try {
         // Configura la consulta inicial
@@ -91,39 +98,7 @@ export async function uploadPhoto(image) {
         console.error('Error al subir la imagen:', error);
     }
 }
-/**
-*Traemos uTodas las publicaciones.
-* @param {callback:function} data
-* @returns {{Promise}}
-*/
-// export async function readPosts(callback, userid) {
-//     const postsRef = collection(db, 'posts-public')
-//     const postQuery = query(postsRef, orderBy("created_at", "desc"));
-//     onSnapshot(postQuery, async (snapshot) => {
-//         const posts = [];
-//         for (const doc of snapshot.docs) {
-//             const like = await isLike(doc.id, userid)
-//             const post = {
-//                 id: doc.id,
-//                 photoURL: await getPhotoURL(doc.data().userid),
-//                 serie: doc.data().serie,
-//                 text: doc.data().text,
-//                 image: doc.data().image,
-//                 likes: doc.data().likes || [],
-//                 comments: doc.data().comments,
-//                 shares: doc.data().shares,
-//                 user: await getNameUser(doc.data().userid),
-//                 userid: doc.data().userid,
-//                 liked: like,
-//                 created_at: doc.data().created_at
-//             };
-//             posts.push(post);
-//         }
-//         callback(posts)
 
-//     })
-
-// }
 /**
 *Traemos una publicacion en especifico, mediante su id.
 * @param {{callback:function, id: string}} data

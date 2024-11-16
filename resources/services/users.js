@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { doc, getDoc, updateDoc, setDoc, collection, addDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, collection, addDoc, getDocs, query, where, onSnapshot, limit } from "firebase/firestore";
 /**
  * Funcion que en base al id de un usuario nos permite tarer el display name actualizado de cada usuario.
  * @param {id:string} dataUser
@@ -76,8 +76,8 @@ export async function getUserName(id) {
 }
 /**
  * Traemos la informacion del usuario para su vista de perfil, ya sea el logueado o uno de la comunidad ya registrado
- * @param {{id:string, email:string}} data
- * @returns {{id: string, email: string, displayName: string, bio: string, career: string}|{email: string, bio: string, career: string}}
+ * @param {id:string, email:string} data
+ * @returns {id: string, email: string, displayName: string, bio: string, career: string}|{email: string, bio: string, career: string}
  */
 export async function getUsersProfileById(id, email, displayName) {
   try {
@@ -132,30 +132,38 @@ export async function getUsers(searchTerm, callback) {
 
     }
 
-    // return users;
   } catch (error) {
     console.log('Hubo un error al traer el perfil', error);
 
   }
 }
-export async function addFriend(idUserAuth, idFriend) {
-  const friendsCollectionRef = collection(db, `users/${idUserAuth}/friends`);
+export async function addFollow(idUserAuth, idFollow) {
+  const followingCollectionRef = collection(db, `users/${idUserAuth}/following`);
+  const followingQuery = query(followingCollectionRef, where('following', '==', {
+    [idUserAuth]: true,
+    [idFollow]: true,
+  }), limit(1));
+  const followSnapshot = await getDocs(followingQuery);
+  if (followSnapshot.empty) {
+    await addDoc(followingCollectionRef, {
+      following: {
+        [idFollow]: true,
+        [idUserAuth]: true
+      }
+    });
+  } else {
+    return
 
-  await addDoc(friendsCollectionRef, {
-    friends: {
-      [idFriend]: true,
-      [idUserAuth]: true
-    }
-  });
+  }
 }
-export async function allFriends(idUserAuth) {
+export async function allFollowing(idUser) {
   let allFriends = []
 
-  const friendsCollectionRef = collection(db, `users/${idUserAuth}/friends`);
+  const friendsCollectionRef = collection(db, `users/${idUser}/following`);
 
   const friendQuery = query(
     friendsCollectionRef,
-    where("friends." + idUserAuth, "==", true)
+    where("following." + idUser, "==", true)
   );
   const friendsSnapshot = await getDocs(friendQuery);
 
@@ -165,6 +173,22 @@ export async function allFriends(idUserAuth) {
   return allFriends;
 }
 
-export async function areFriends(idUserAuth, idUser2){
 
+export async function isFollowed(idUserAuth, idUser2) {
+  try {
+    const followingCollectionRef = collection(db, `users/${idUserAuth}/following`);
+    const followingQuery = query(followingCollectionRef, where(`following`, "==", {
+      [idUserAuth]: true,
+      [idUser2]: true
+    }));
+    const followingSnapshot = await getDocs(followingQuery);
+    if (!followingSnapshot.empty) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log("Error verificando si está seguido", error);
+    return false;
+  }
 }

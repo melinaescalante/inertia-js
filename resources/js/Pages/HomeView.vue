@@ -3,7 +3,7 @@ import NavBar from '../components/NavBar.vue'
 import PostUser from '../components/PostUser.vue'
 import { onMounted, ref, onUnmounted } from 'vue';
 import Spinner from '../Components/Spinner.vue'
-import { readPosts, fetchPosts, fetchPostsFrom } from '../../services/posts';
+import {  fetchPosts, fetchPostsFrom } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
 const { loginUser } = useLoginUser()
 

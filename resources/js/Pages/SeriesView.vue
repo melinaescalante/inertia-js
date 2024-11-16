@@ -163,7 +163,7 @@ async function next(id, idSerie, nameSerie) {
             seriesWatchingJson.value = seriesWatchingJson.value.filter(serie => serie.id !== idSerie);
             await loadSeriesWatched()
         }
-        // console.log("Updated seriesWatching:", localSeriesWatching.value);
+
     } catch (error) {
         console.error(error);
     }
@@ -218,7 +218,7 @@ async function next(id, idSerie, nameSerie) {
                 </button>
             </div>
 
-            <h2 class="text-xl m-4 ms-2" v-if="!seriesToWatch.length >= 1">Ops, no tienes ni una serie en tu lista!</h2>
+            <h2 class="text-xl m-4 ms-2" v-if="!seriesToWatch.length >= 1">Oops, no tienes ni una serie en tu lista!</h2>
 
             <div class="" v-if="!seriesToWatch.length >= 1">
                 <Link href="/buscador"
@@ -238,7 +238,7 @@ async function next(id, idSerie, nameSerie) {
             <div v-if="seriesWatched.length >= 1 && !loading">
 
                 <h2 class="text-2xl font-medium ms-2 mt-3 mb-3">Series vistas</h2>
-{{ console.log(seriesWatched) }}
+
                 <CardWithData :data=seriesWatched :imgContent="lastSerieWatched?.image?.medium"
                     :altImgContent="lastSerieWatched?.name" text="Tu lista de series vistas" dataName="seriesWatched"
                     :lastSerieName="lastSerieWatched?.name" route="/seriesVistas">

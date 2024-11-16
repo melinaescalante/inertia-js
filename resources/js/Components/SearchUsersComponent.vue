@@ -63,6 +63,7 @@ export default {
             d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
         </svg>
       </div>
+      <label for="default-search" class="sr-only">Buscá a tus amigos</label>
       <input type="search" id="default-search"
         class="block w-full p-4 ps-10 text-sm text-gray-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4"
         placeholder="Busca a tus amigos" required v-model="formInput" @input="answer = ''; getAnswer(formInput)" />

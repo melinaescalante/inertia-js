@@ -6,6 +6,7 @@ import { addSerieToWatch, allSeriesToWatch, startSerie, isStarted, bringComments
 import { ref, onMounted } from 'vue';
 import { useLoginUser } from "../../composables/useLoginUser";
 import CommentSection from '../../Components/CommentSection.vue';
+import Spinner from '../../Components/Spinner.vue';
 
 const { loginUser } = useLoginUser()
 
@@ -17,7 +18,7 @@ const seriesToWatch = ref([])
 const localseries = ref([])
 const loading = ref(true)
 const loadingSeries = ref(true)
-const ini = ref(false)
+const initialValue = ref(false)
 const watching = ref(false)
 onMounted(async () => {
     if (loginUser.value.id !== null && loginUser.value.id !== undefined) {
@@ -39,10 +40,10 @@ async function isInWishlist(id) {
         watching.value = await isStarted(loginUser.value.id, id)
 
         if (localseries.value.some(watchedSerie => Object.keys(watchedSerie).includes(String(id)))) {
-            ini.value = true
+            initialValue.value = true
             return
         } else {
-            ini.value = false
+            initialValue.value = false
         }
     } catch (error) {
         console.log(error)
@@ -96,7 +97,7 @@ async function start(idUser, idSerie) {
         <Link href="#" @click="addSerie(loginUser.id, serie.id, serie.name)" type="button"
             class="border-gray-200 text-blue-1000 hover:text-blue-600 border bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center ">
         <svg class="w-6 h-6 me-1 text-blue-1000" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <path v-if="!ini" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            <path v-if="!initialValue" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 12h14m-7 7V5" />
             <path v-else stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 11.917 9.724 16.5 19 7.5" />
@@ -104,7 +105,7 @@ async function start(idUser, idSerie) {
 
 
 
-        {{ ini ? 'Agregada a mi lista' : 'Agregar a mi lista' }}
+        {{ initialValue ? 'Agregada a mi lista' : 'Agregar a mi lista' }}
         </Link>
         <Link href="#" @click="start(loginUser.id, serie.id, serie.name)" type="button"
             class="h-20 py-2.5 px-5 text-sm font-medium text-white focus:outline-none bg-blue-1000 rounded-lg  hover:bg-blue-500 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 text-center inline-flex items-center ">
@@ -118,9 +119,12 @@ async function start(idUser, idSerie) {
 
 
         </svg>
-        {{ console.log(serie.id) }}
+
         {{ watching ? 'La estas viendo' : 'Comenzar a ver' }}
         </Link>
+    </div>
+    <div v-else class="mt-2">
+        <Spinner msg="Cargando informacion de la serie"></Spinner>
     </div>
     <CommentSection :idSerie="serie.id" :comments="comments"></CommentSection>
 </template>

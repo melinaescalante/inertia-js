@@ -1,5 +1,5 @@
 <script setup>
-import { router ,Link } from '@inertiajs/vue3';
+import { router, Link } from '@inertiajs/vue3';
 import { like, comment, getComments, isLike } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
 import { getNameUser, getPhotoURL } from '../../services/users';
@@ -20,7 +20,7 @@ const props = defineProps({
     serie: String,
     likes: Array,
     comments: Array,
-    liked: Function|Boolean,
+    liked: Function | Boolean,
     created_at: Object,
     photoURL: String
 
@@ -43,7 +43,7 @@ async function share(id) {
         text: 'TvOn-Post',
         url: 'http://127.0.0.1:8000/post/' + id,
     };
-    
+
     if (!navigator.canShare) {
         console.log('No se puede compartir');
         return;
@@ -53,14 +53,14 @@ async function share(id) {
         return;
     }
     navigator.share(shareData)
-    .then(() =>
-    console.log('Share exitoso')
-)
-.catch((e) =>
-console.log(e)
-)
+        .then(() =>
+            console.log('Share exitoso')
+        )
+        .catch((e) =>
+            console.log(e)
+        )
 
-console.log(id)
+    console.log(id)
 }
 const areCommentsVisible = ref(false);
 const commentsArray = ref([])
@@ -124,7 +124,7 @@ function handleClose() {
             </div>
             <div class="flex flex-col mx-2">
 
-                <Link :href="`/perfil/${userId}`" class="text-[1.04rem] font-medium text-center  ">{{ userName }}</Link>
+                <Link :href="`/perfil/${userId}`" class="text-[1.04rem] font-normal text-center  ">{{ userName }}</Link>
                 <Link href="#" class=" text-center decoration-none text-blue-500">{{ serie }}</Link>
             </div>
             <div>
@@ -192,7 +192,7 @@ function handleClose() {
                         <span>{{ comments.length }}</span>
                     </p>
                     <svg @click="seeComments(id)" :id="id" class="w-7 h-7 cursor-pointer" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"  fill="none" viewBox="0 0 24 24">
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <title>Comentar</title>
 
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -221,15 +221,15 @@ function handleClose() {
         </ul>
 
         <p v-else class="text-slate-400 ms-2">¡Se el primero en comentar!</p>
-        <span class="sr-only">Deja tu comentario debajo:</span>
         <div class="relative">
             <form action="" @submit.prevent="giveComment(id)" :id="id">
-
+                <label for="text" class="sr-only">Deja tu comentario debajo:</label>
                 <input type="text" id="comment"
                     class="block w-full p-3 border rounded-3xl focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4"
                     placeholder="Deja tu comentario aquí" required v-model="commentText" />
                 <button type="submit" class="text-white absolute end-2.5 bottom-2.5    rounded-lg  px-1 py-1">
-                    <svg class="w-7 h-6 stroke-blue-1000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <svg class="w-7 h-6 stroke-blue-1000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="currentColor">
                         <path
                             d="M11.5003 12H5.41872M5.24634 12.7972L4.24158 15.7986C3.69128 17.4424 3.41613 18.2643 3.61359 18.7704C3.78506 19.21 4.15335 19.5432 4.6078 19.6701C5.13111 19.8161 5.92151 19.4604 7.50231 18.7491L17.6367 14.1886C19.1797 13.4942 19.9512 13.1471 20.1896 12.6648C20.3968 12.2458 20.3968 11.7541 20.1896 11.3351C19.9512 10.8529 19.1797 10.5057 17.6367 9.81135L7.48483 5.24303C5.90879 4.53382 5.12078 4.17921 4.59799 4.32468C4.14397 4.45101 3.77572 4.78336 3.60365 5.22209C3.40551 5.72728 3.67772 6.54741 4.22215 8.18767L5.24829 11.2793C5.34179 11.561 5.38855 11.7019 5.407 11.8459C5.42338 11.9738 5.42321 12.1032 5.40651 12.231C5.38768 12.375 5.34057 12.5157 5.24634 12.7972Z"
                             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
