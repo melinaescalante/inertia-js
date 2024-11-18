@@ -114,6 +114,7 @@ export async function readPostsById(callback, id, userid) {
                 serie: postSnapshot.data().serie,
                 text: postSnapshot.data().text,
                 image: postSnapshot.data().image,
+                photoURL: await getPhotoURL(postSnapshot.data().userid),
 
                 user: await getNameUser(postSnapshot.data().userid),
                 likes: postSnapshot.data().likes,

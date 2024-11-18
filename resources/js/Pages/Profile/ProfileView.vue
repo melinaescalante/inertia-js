@@ -53,6 +53,7 @@ totalFollowing()
 async function makeFollow() {
   try {
     await addFollow(loginUser.value.id, id.value)
+    await handleFollowed()
   } catch (error) {
     console.log(error)
   }

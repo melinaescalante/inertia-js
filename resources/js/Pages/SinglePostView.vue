@@ -5,45 +5,32 @@ import { usePage } from '@inertiajs/vue3'
 import { suscribeToAuthChanged } from "../../services/auth";
 import { readPostsById } from '../../services/posts';
 import PostUser from '../Components/PostUser.vue';
-
+import { useLoginUser } from '../composables/useLoginUser';
 import Spinner from '../Components/Spinner.vue';
-let unSubscribeFromAuth = () => {};
-
+const { loginUser } = useLoginUser()
 const page = usePage()
 const id = ref(page.props.id)
 const loading = ref(true)
-const loginUser = ref({
-    id: null,
-    email: null,
-    displayName: null,
-    bio: null,
-    photoURL:null,
-    genres: null,
 
-})
 const post = ref([])
 onMounted(async () => {
-    unSubscribeFromAuth=suscribeToAuthChanged(async (newUserData) => {
-        loginUser.value = newUserData
-        if (loginUser.value.id) {
-            try {
-                await readPostsById((posteo) => {
-                    post.value = posteo; 
-                    loading.value = false;
-                    console.log(post.value);
-                }, id.value, loginUser.value.id);
-          
-            } catch (error) {
-                console.error(error)
-            }
+
+    if (loginUser.value.id) {
+        try {
+            await readPostsById((posteo) => {
+                post.value = posteo;
+                loading.value = false;
+                console.log(post.value);
+            }, id.value, loginUser.value.id);
+
+        } catch (error) {
+            console.error(error)
         }
-    })
-
+    }
 })
-onUnmounted( ()=>{
-  unSubscribeFromAuth();
 
-})
+
+
 </script>
 <template>
     <NavBar></NavBar>
@@ -54,18 +41,8 @@ onUnmounted( ()=>{
         </div>
     </template>
     <template v-else>
-        <PostUser 
-    :photoURL="post.photoURL"
-        
-        :id="post.id" 
-        :descriptionUser="post.text" 
-        :img="post.image" 
-        :imgAlt="post.image" 
-        :serie="post.serie"
-            :created_at="post.created_at"
-            :likes="post.likes" 
-            :comments="post.comments" 
-            :userName="post.user" :liked="post.liked"
-            :userId="post.userid"></PostUser>
+        <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"
+            :imgAlt="post.image" :serie="post.serie" :created_at="post.created_at" :likes="post.likes"
+            :comments="post.comments" :userName="post.user" :liked="post.liked" :userId="post.userid"></PostUser>
     </template>
 </template>
