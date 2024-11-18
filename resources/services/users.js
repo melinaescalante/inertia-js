@@ -24,12 +24,22 @@ export async function getNameUser(id) {
  * @param {{displayName: string, bio: string, career: string, photoURL: string}} data
  */
 export async function updateUserProfile(id, data) {
- 
   const profileRef = doc(db, `/users/${id}`);
 
-  await setDoc(profileRef, {
-    ...data,
-  });
+  try {
+    const docSnapshot = await getDoc(profileRef);
+    if (docSnapshot.exists()) {
+      await updateDoc(profileRef, {
+        ...data,
+      });
+    } else {
+      await setDoc(profileRef, {
+        ...data,
+      });
+    }
+  } catch (error) {
+    console.error("Error actualizando el perfil:", error);
+  }
 }
 export async function getEmailUser(id) {
   try {

@@ -87,8 +87,7 @@ onMounted(async () => {
                     <ul v-for="genre in loginUser.genres">
                         <li
                             class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000  text-sm font-normal px-2 py-1 m-1 text-center">
-                            {{
-                                genre }}</li>
+                            {{Object.values(genre)[0]}}</li>
                     </ul>
                 </div>
             </div>

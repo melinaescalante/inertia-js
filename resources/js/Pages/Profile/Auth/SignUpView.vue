@@ -45,18 +45,18 @@ async function handleSubmit() {
             <form action="" @submit.prevent="handleSubmit" class="p-3">
                 <div class="mb-5">
                     <label for="email" class="block mb-2 ">Email</label>
-                    <input type="email" id="email" class=" p-2 mb-2 w-full border rounded-md  bg-slate-100 "
+                    <input type="email" id="email" class=" p-2 mb-2 w-full border rounded-md  bg-slate-100 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                         v-model="user.email" required placeholder="nombre@gmail.com">
                 </div>
                 <div class="mb-5">
                     <label for="username" class="block mb-2 ">Nombre de usuario</label>
-                    <input type="text" id="username" class=" p-2 mb-2 w-full border rounded-md  bg-slate-100 "
-                        v-model="user.userName" required placeholder="@melina2">
+                    <input type="text" id="username" class=" p-2 mb-2 w-full border rounded-md  bg-slate-100 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                        v-model="user.userName" required placeholder="melina2">
                 </div>
                 <div class="mb-6">
                     <label for="text" class="block mb-2">Constraseña</label>
                     <input @input="passwordIsValid" id="password" type="password"
-                        class=" p-2 w-full border rounded-md bg-slate-100" v-model="user.password" required
+                        class=" p-2 w-full border rounded-md bg-slate-100 focus:ring-blue-500 focus:border-blue-500 focus:outline-none" v-model="user.password" required
                         placeholder="Contraseña" />
                     <p v-if="!isValid" class="text-slate-500 mt-3">Su contraseña debe tener un mínimo de 6 caracteres.
                     </p>

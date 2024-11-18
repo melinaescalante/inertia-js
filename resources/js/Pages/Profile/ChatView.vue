@@ -9,7 +9,6 @@ import Spinner from '../../components/Spinner.vue';
 const { loginUser } = useLoginUser()
 const chats = ref([])
 const loading = ref(true)
-const chatsNames = ref([])
 onMounted(async () => {
     if (loginUser.value.id) {
 
@@ -25,7 +24,6 @@ onMounted(async () => {
                 console.log(userName)
                 const email = await getEmailUser(userIdFound);
                 const photo = await getPhotoURL(userIdFound);
-                console.log(userName)
                 return { ...chat, userName, email, photo };
             })
         );
@@ -40,7 +38,7 @@ onMounted(async () => {
     <NavBar></NavBar>
     <div class="flex items-center justify-between">
 
-        <h1 class="ms-2 text-xl mt-4 mb-4">Chat recientes</h1>
+        <h1 class="ms-2 text-xl mt-4 mb-4 font-medium">Chat recientes</h1>
         <span>
             <Link href="/buscadorUsuarios">
             <img class="h-6 w-6 me-2" src="/public/images/plus.svg" alt="Crear un nuevo chat el privado">
@@ -62,6 +60,9 @@ onMounted(async () => {
         <div  v-else>
 
             <Spinner class="mx-auto" msg="Cargando chats"></Spinner>
+        </div>
+        <div v-if="!chats.length">
+<p class="m-3">¡Sin chats recientes!</p>
         </div>
     </div>
 </template>

@@ -1,36 +1,22 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
 import DiscoverFeature from '../components/DiscoverFeature.vue'
-import { login, suscribeToAuthChanged } from "../../services/auth";
 import Spinner from '../Components/Spinner.vue'
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useLoginUser } from '../composables/useLoginUser';
 let serie = ref([]);
-const loginUser = ref({
-    id: null,
-    email: null,
-    displayName: null,
-    bio: null,
-    photoURL:null,
-    genres: null
-
-})
+const {loginUser}= useLoginUser()
 const loading = ref(true);
-
-let unSubscribeFromAuth = () => { };
 onMounted(async () => {
     try {
-        unSubscribeFromAuth = await suscribeToAuthChanged(async newUserData => {
-            loginUser.value = newUserData;
-            serie.value = [];
-            if (loginUser.value.genres) {
+       
+            if (loginUser.value.genres.length>=1) {
                 await loadSeriesByUsersGenres();
-                loading.value = false;
             } else {
                 await loadSeriesByDefault();
-                loading.value = false;
 
             }
-        });
+  
     } catch (error) {
         console.error('Error fetching posts:', error.message);
     }
@@ -38,8 +24,11 @@ onMounted(async () => {
 async function loadSeriesByUsersGenres() {
     if (loginUser.value.genres !== undefined && loginUser.value.genres !== null) {
         let idShows = [];
+        console.log('tengo generos')
 
-        loginUser.value.genres.forEach(async (genre) => {
+      loginUser.value.genres.forEach(async (genre,index) => {
+        genre= Object.keys(genre)[0]
+        console.log(genre)
             let genreArray = []
             const limit = 10
             const response = await fetch('https://api.tvmaze.com/shows');
@@ -52,24 +41,27 @@ async function loadSeriesByUsersGenres() {
                         idShows.push(show.id);
                         idShows[show.id] = show.id
                         genreArray.push(show);
+                        console.log(genre)
                     }
                 }
             });
 
             serie.value.push(genreArray)
-            loading.value=false
         });
+        loading.value = false;
+
     }
 }
+let genresStaticCopy=[]
 async function loadSeriesByDefault() {
+    let genresStatic=[]
     let idShows = [];
-
-    let genresStatic = new Map
+console.log('no tengo generos')
+genresStatic = new Map
     genresStatic.set("Comedia", "Comedy");
     genresStatic.set("Romance", "Romance");
     genresStatic.set("Drama", "Drama");
-
-    console.log(loginUser.value.genres, genresStatic, 'generos')
+genresStaticCopy= Array.from(genresStatic.keys())
         genresStatic.forEach(async (genre) => {
             let genreArray = []
             const limit = 10
@@ -90,9 +82,7 @@ async function loadSeriesByDefault() {
         });
 
 }
-onUnmounted(() => {
-    unSubscribeFromAuth();
-})
+
 defineProps({ genres: Array })
 </script>
 <template>
@@ -102,7 +92,8 @@ defineProps({ genres: Array })
         <div v-for="(genero,key)  in serie" :key="key" class="flex  flex-col ">
             <div>
 
-                <!-- <p class="m-3 mt-4 ms-5 font-medium">Segun tus generos favoritos: {{ loginUser.genres[key] }}</p> -->
+                <p class="m-3  mt-4 ms-5 font-medium">Según tus géneros favoritos: <span class="text-blue-1000">{{ loginUser.genres.length? Object.values(loginUser.genres[key])[0]: genresStaticCopy[key]
+                }}</span></p>
             </div>
             <div class="flex overflow-x-auto scroll overflow-scroll ">
                 <DiscoverFeature v-for="show in genero" :id="show.id" :genres="show.genres" :titleSerie="show.name"

@@ -1,30 +1,31 @@
 <script setup>
-import { Link, router, usePage } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 import { ref, onMounted, onUnmounted } from 'vue';
 import ButtonGoBack from '../components/ButtonGoBack.vue'
 import NavItem from './NavItem.vue';
 import { useLoginUser } from '../composables/useLoginUser';
-import { suscribeToAuthChanged } from "../../services/auth";
+
 
 const loading = ref(true);
 
-const {loginUser} = useLoginUser()
+const { loginUser } = useLoginUser()
 const page = usePage()
 const currentPage = page.component
-const currentUrl = router.page.url
+
+console.log(currentPage)
 const userUrl = ref('')
 onMounted(async () => {
 
-        if (loginUser.value.id !== null) {
+    if (loginUser.value.id !== null) {
 
-            userUrl.value = `/perfil/${loginUser.value.id}`
-            loading.value = false;
-        }else{
-            loading.value = false;
+        userUrl.value = `/perfil/${loginUser.value.id}`
+        loading.value = false;
+    } else {
+        loading.value = false;
 
-        }
+    }
 
-    
+
 })
 
 
@@ -32,7 +33,7 @@ const excludedPages = [
     'HomeView',
     'DiscoverView',
     'SeriesView',
-    'ConfigView',
+
     'SearchView',
     'SearchUsersView',
     'Profile/ProfileAuthView'
@@ -46,17 +47,18 @@ const excludedPages = [
 
             <ButtonGoBack v-if="!excludedPages.includes(currentPage)">
             </ButtonGoBack>
-            <Link href="/" class="text-xl"><img src="/public/images/ImagotipoEspesorApilado.svg" type="image/svg+xml" alt="Isotipo-TVON" class="block h-16 w-16"></Link>
+            <Link href="/" class="text-xl"><img src="/public/images/ImagotipoEspesorApilado.svg" type="image/svg+xml"
+                alt="Isotipo-TVON" class="block h-16 w-16"></Link>
         </div>
 
         <ul class="flex items-center">
-            <template v-if="currentPage !== 'Profile/ProfileAuthView' && currentPage !== 'Profile/ChatView'">
+            <template v-if="currentPage !== 'Profile/ProfileAuthView' && currentPage !== 'Profile/ChatView' && currentPage!=='ConfigView'">
                 <li>
                     <Link data-tooltip-target="tooltip-search" href="/buscador"
                         class="block px-4 rounded-s-full  group m-auto">
 
-                    <svg class="w-7 h-6  text-gray-600 group-hover:text-blue-1000 "
-                        aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <svg class="w-7 h-6  group-hover:text-blue-1000 " aria-hidden="true" :class="currentPage === 'SearchView' || 'SearchUsersView' ? 'text-blue-1000' : 'text-gray-500'"
+                        fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <title>Búsqueda</title>
 
                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -72,8 +74,8 @@ const excludedPages = [
 
 
 
-                    <svg class="w-6 h-6  text-gray-600 group-hover:text-blue-1000  rotate-[270]"
-                        aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <svg class="w-6 h-6  text-gray-600 group-hover:text-blue-1000  rotate-[270]" aria-hidden="true"
+                        fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <title>Chat</title>
                         <path
                             d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z" />
@@ -81,7 +83,7 @@ const excludedPages = [
                     <span class="sr-only">Chat</span>
                     </Link>
                 </li>
-                <!-- </ul> -->
+         
             </template>
             <template v-if="loginUser.id !== null && currentPage === 'Profile/ProfileAuthView'">
                 <li>
@@ -110,9 +112,11 @@ const excludedPages = [
     <div
         class="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-blue-0 rounded-full bottom-4 left-1/2 ">
         <div class="grid h-full max-w-lg grid-cols-[repeat(auto-fit,_minmax(60px,_1fr))] mx-auto">
-            <NavItem titleLink="Inicio" route="/" roundedClass="rounded-s-full hover:bg-gray-50">
-                <svg class="w-5 h-5 mb-1 text-gray-500 0 group-hover:text-blue-1000 " aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <NavItem  titleLink="Inicio" route="/"
+                roundedClass="rounded-s-full hover:bg-gray-50">
+                <svg class="w-5 h-5 mb-1  group-hover:text-blue-1000 " aria-hidden="true"
+                    :class="currentPage === 'HomeView' ? 'text-blue-1000' : 'text-gray-500'" xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor" viewBox="0 0 20 20">
                     <title>Inicio</title>
                     <path
                         d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
@@ -120,7 +124,7 @@ const excludedPages = [
             </NavItem>
 
             <NavItem titleLink="Descubrir" route="/descubrir" roundedClass="hover:bg-gray-50 ">
-                <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-blue-1000 " fill="currentColor"
+                <svg class="w-5 h-5 mb-1group-hover:text-blue-1000 " fill="currentColor" :class="currentPage === 'DiscoverView' ? 'text-blue-1000' : 'text-gray-500'" 
                     xmlns="http://www.w3.org/2000/svg" version="1.1" id="Layer_1" viewBox="0 0 511.995 511.995"
                     xml:space="preserve">
                     <title>Descubrir</title>
@@ -167,10 +171,10 @@ const excludedPages = [
 
             </NavItem>
 
-            <div v-if="loginUser.id!==null" class="flex items-center justify-center">
+            <div v-if="loginUser.id !== null" class="flex items-center justify-center">
 
-                <NavItem    titleLink="Nuevo Posteo" route="/subirPublicacion"
-                    roundedClass=" w-10 h-10 font-medium bg-blue-800 rounded-full hover:bg-blue-1000 group focus:ring-4 focus:ring-blue-300 focus:outline-none ">
+                <NavItem titleLink="Nuevo Posteo" route="/subirPublicacion"
+                    roundedClass=" w-10 h-10 font-medium bg-blue-500 rounded-full hover:bg-blue-1000 group focus:ring-4 focus:ring-blue-300 focus:outline-none ">
                     <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 18 18">
                         <title>Nuevo Posteo</title>
@@ -181,8 +185,9 @@ const excludedPages = [
 
                 </NavItem>
             </div>
-            <NavItem v-if="loginUser.id!==null"  titleLink="Mis Series" route="/misSeries" roundedClass=" hover:bg-gray-50">
-                <svg class="w-7 h-7 mb-1 text-gray-500  group-hover:text-blue-1000 " aria-hidden="true"
+            <NavItem v-if="loginUser.id !== null" titleLink="Mis Series" route="/misSeries"
+                roundedClass=" hover:bg-gray-50">
+                <svg class="w-7 h-7 mb-1 group-hover:text-blue-1000 " aria-hidden="true" :class="currentPage === 'SeriesView' ? 'text-blue-1000' : 'text-gray-500'" 
                     fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <title>Mis Series</title>
 
@@ -192,10 +197,9 @@ const excludedPages = [
                 </svg>
                 <span class="sr-only">Mis Series</span>
             </NavItem>
-            <NavItem titleLink="Mi Perfil" :route="`/miPerfil`"
-                roundedClass=" rounded-e-full hover:bg-gray-50 ">
+            <NavItem titleLink="Mi Perfil" :route="`/miPerfil`" roundedClass=" rounded-e-full hover:bg-gray-50 ">
 
-                <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-blue-1000 " aria-hidden="true"
+                <svg class="w-5 h-5 mb-1   group-hover:text-blue-1000 " :class="currentPage === 'Profile/ProfileAuthView' ? 'text-blue-1000' : 'text-gray-500'"  aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <title>Perfil</title>
 

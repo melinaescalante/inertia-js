@@ -110,7 +110,7 @@ async function handleFollowed() {
             <li
               class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000 text-sm  font-normal py-1 px-2 m-1 text-center">
               {{
-                genre }}</li>
+                Object.values(genre)[0] }}</li>
           </ul>
         </div>
       </div>

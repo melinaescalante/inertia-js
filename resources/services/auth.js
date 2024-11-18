@@ -41,7 +41,7 @@ onAuthStateChanged(auth, user => {
       displayName: null,
       bio: null,
       genres: null,
-      photoURL:null
+      photoURL: null
     })
     localStorage.removeItem("user")
   }
@@ -55,7 +55,7 @@ export async function editMyProfilePhoto(photo) {
     await uploadFile(filePath, photo);
 
     const photoURL = await getFileURL(filePath);
-    console.log("New photo URL:", photoURL); 
+    console.log("New photo URL:", photoURL);
     const promiseAuth = updateProfile(auth.currentUser, { photoURL });
 
     const promiseFirestore = updateUserProfile(loginUser.id, { photoURL });
@@ -77,11 +77,10 @@ export async function editProfile({ displayName, bio, genres }) {
 
   try {
     const promiseAuth = updateProfile(auth.currentUser, { displayName })
-    const promiseProfile =await updateUserProfile(loginUser.id, { displayName, bio, genres })
+    const promiseProfile = await updateUserProfile(loginUser.id, { displayName, bio, genres })
     await Promise.all([promiseAuth, promiseProfile])
 
-    // await updateProfile(auth.currentUser, { displayName })
-    // await updateUserProfile(loginUser.id, { displayName, bio, genres })
+   
     updateLoginUser({
       ...loginUser,
       displayName,
@@ -144,21 +143,33 @@ export async function login({ email, password }) {
 
 export async function signUp({ email, password, userName }) {
   try {
+    // Crear un nuevo usuario
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(userCredential.user, { displayName: userName })
+
+    // Actualizar el perfil del usuario en Firebase Authentication
+    await updateProfile(userCredential.user, { displayName: userName });
+
+    // Construir los datos del usuario para guardar en Firestore
+    const userData = {
+      displayName: userName || "Usuario sin nombre", // 
+      email:email,
+      bio: null,
+      genres: null,
+      photoURL: null,
+    };
+
+    // Guardar los datos del usuario en Firestore
+    await updateUserProfile(userCredential.user.uid, userData);
 
     updateLoginUser({
       id: userCredential.user.uid,
       email: userCredential.user.email,
-      displayName: userCredential.user.displayName,
-      bio: null,
-      genres: null,
-      photoURL:null
+      ...userData,
     });
-      
-      await updateUserProfile(userCredential.user.uid, { displayName: userName, bio: null, genres: null,photoURL:null })
+
+    console.log("Usuario creado y datos guardados en Firestore correctamente");
   } catch (error) {
-    console.log(error)
+    console.error("Error en el registro del usuario:", error);
     throw error;
   }
 }
