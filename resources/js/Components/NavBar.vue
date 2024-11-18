@@ -57,7 +57,7 @@ const excludedPages = [
                     <Link data-tooltip-target="tooltip-search" href="/buscador"
                         class="block px-4 rounded-s-full  group m-auto">
 
-                    <svg class="w-7 h-6  group-hover:text-blue-1000 " aria-hidden="true" :class="currentPage === 'SearchView' || 'SearchUsersView' ? 'text-blue-1000' : 'text-gray-500'"
+                    <svg class="w-7 h-6  group-hover:text-blue-1000 " aria-hidden="true" :class="currentPage === 'SearchView' || currentPage === 'SearchUsersView' ? 'text-blue-1000' : 'text-gray-500'"
                         fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <title>Búsqueda</title>
 
