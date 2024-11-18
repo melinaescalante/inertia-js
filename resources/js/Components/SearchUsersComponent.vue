@@ -20,7 +20,7 @@ export default {
     async getAnswer(value) {
       if (value) {
         this.loading = true;
-        this.answer = ''; 
+        this.answer = 'Buscando usuarios...'; 
         this.users = [];  
         try {
           
@@ -82,7 +82,7 @@ export default {
   <div v-if="!loading && answer === 'No se encontraron usuarios.'" class="p-4 m-2 bg-red-200 rounded-md">
     <p>{{ answer }}</p>
   </div>
-  <ul v-if="!loading && users?.length">
+  <ul class="mb-2" v-if="!loading && users?.length">
 
     <li class="p-2 ps-6 border flex items-center" v-for="user in users">
       <img class="h-[100%] w-12" :src="user.photoURL ? user.photoURL : 'noimage.png'" :alt="user.displayName">

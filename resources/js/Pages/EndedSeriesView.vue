@@ -50,10 +50,10 @@ onMounted(async () => {
                     :alt="`Portada de la serie en la wishlist ${serie.name}`">
                 <div class="flex flex-col justify-between p-4 leading-normal">
                     <p class="mb-3 font-medium text-gray-700 ">Has visto </p>
-                    <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">{{ serie.name }}
+                    <h2 class="mb-2 text-2xl font-medium tracking-tight text-gray-900 ">{{ serie.name }}
                     </h2>
                     <div class="flex flex-wrap gap-4 ">
-                        <p class="border rounded-md px-2 text-blue-1000 border-orange-0" v-for="genre in serie.genres">
+                        <p class="border rounded-md px-2 text-blue-1000 border-orange-0 font-normal " v-for="genre in serie.genres">
                             {{ genre }}</p>
                     </div>
                     <div class="flex flex-col gap-2 mt-2">

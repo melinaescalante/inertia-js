@@ -81,7 +81,7 @@ function handleImageChange(e) {
     <form action="" enctype="multipart/form-data" @submit.prevent="handlePost">
         <div class="flex flex-col mb-3">
             <span class="sr-only">Escribe la serie con la que te quieres referir</span>
-            <label class="m-2 mb-0" for="serie">¿Sobre qué serie estas pensando?</label>
+            <label class="m-2 mb-0" for="serie">¿Sobre qué serie estás pensando?</label>
 
             <SearchComponentPost @serie-seleccionada="setSerieSeleccionada" :series="series"
                 :refreshCount="refreshCount"></SearchComponentPost>
@@ -90,8 +90,10 @@ function handleImageChange(e) {
         <div class="flex flex-col mb-3">
             <span class="sr-only">Escribe lo que quieras</span>
             <label for="description"></label>
-            <textarea :readonly="loading" class="focus:ring-blue-500 focus:border-blue-500 focus:outline-none  p-2 m-2 border rounded-md" name="description" id="description"
-                placeholder="Escribe lo que quieras" v-model="newPost.text"></textarea>
+            <textarea :readonly="loading"
+                class="focus:ring-blue-500 focus:border-blue-500 focus:outline-none  p-2 m-2 border rounded-md"
+                name="description" id="description" placeholder="Escribe lo que quieras"
+                v-model="newPost.text"></textarea>
         </div>
         <div class="m-2 mb-4 mt-3">
             <label class="block">
@@ -106,12 +108,12 @@ function handleImageChange(e) {
             class="m-2  rounded-lg py-2 px-4 bg-blue-1000 text-white hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-900 transition-colors">
             {{ !loading ? "Publicar" : "Publicando.." }}
         </button>
-        <div v-if="msg !== 'Se ha publicado correctamente' && msg !== ''" class="bg-red-200 p-4 m-2 rounded-md">
-            {{ msg }}
-        </div>
-
-        <div v-if="msg == 'Se ha publicado correctamente'" class="bg-green-200 p-4 m-2 rounded-md">
-            <p>{{ msg }}</p>
-        </div>
     </form>
+    <div v-if="msg !== 'Se ha publicado correctamente' && msg !== ''" class="bg-red-200 p-4 m-2 rounded-md">
+        {{ msg }}
+    </div>
+
+    <div v-if="msg == 'Se ha publicado correctamente'" class="bg-green-200 p-4 m-2 rounded-md">
+        <p>{{ msg }}</p>
+    </div>
 </template>

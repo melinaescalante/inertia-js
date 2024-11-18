@@ -83,7 +83,7 @@ async function start(idUser, idSerie) {
             <p>Estreno: {{ serie.premiered }}</p>
         </div>
     </div>
-    <div class="flex m-2 mt-3 justify-between  ">
+    <div class="flex m-2 mt-3 gap-1 justify-between  ">
         <ButtonBase :href="serie.id" :name="serie.name" param="episodios">Episodios</ButtonBase>
         <ButtonBase :href="serie.name" :name="serie.id" param="temporadas">Temporadas</ButtonBase>
         <ButtonBase :href="serie.id" :name="serie.name" param="galeria">Galeria</ButtonBase>
@@ -126,5 +126,5 @@ async function start(idUser, idSerie) {
     <div v-else class="mt-2">
         <Spinner msg="Cargando informacion de la serie"></Spinner>
     </div>
-    <CommentSection :idSerie="serie.id" :comments="comments"></CommentSection>
+    <CommentSection :loading="loading" :idSerie="serie.id" :comments="comments"></CommentSection>
 </template>

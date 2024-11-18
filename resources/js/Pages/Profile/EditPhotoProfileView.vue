@@ -9,7 +9,7 @@ const editData = ref({
     photoPreview: null,
 });
 const loading = ref(false);
-
+const msg=ref('')
 async function handleSubmit(e) {
     if (loading.value) return;
     loading.value = true;
@@ -17,6 +17,10 @@ async function handleSubmit(e) {
       
         e.preventDefault();
         await editMyProfilePhoto(editData.value.photo);
+        msg.value = 'Se ha actualizado la foto de perfil correctamente.';
+        setTimeout(() => {
+            msg.value = '';
+        }, 2000);
     } catch (error) {
         console.log("Error en handleSubmit:", error);
     }
@@ -28,11 +32,11 @@ async function handleFileSelection(e) {
     editData.value.photo = e.target.files[0]
     console.log('Imagen seleccionada', editData.value.photo)
 
-    //Funcion dejs me permite leer archivos
+    //Funcion deja me permite leer archivos
     const reader = new FileReader()
     reader.addEventListener('load', function () {
         editData.value.photoPreview = reader.result
-        console.log(editData.value.photoPreview, 'preview')
+
     })
     //Una data url es una url que utiliza el protocolo data y contiene un archivo codificado como string en base64
     reader.readAsDataURL(editData.value.photo)
@@ -55,7 +59,10 @@ async function handleFileSelection(e) {
         </form>
         <div class="w-1/2 mt-4">
             <h2>Imagen seleccionada</h2>
-            <img v-if="editData.photo" :src="editData.photoPreview" alt="" />
+            <img v-if="editData.photo" :src="editData.photoPreview" :alt="`Preview de imagen seleccionada para ${editData.photoPreview}`"  />
         </div>
+    </div>
+    <div v-if="!loading && msg==='Se ha actualizado la foto de perfil correctamente.'" class="bg-green-200 p-4 m-2 rounded-md">
+        <p>{{ msg }}</p>
     </div>
 </template>

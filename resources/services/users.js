@@ -24,14 +24,10 @@ export async function getNameUser(id) {
  * @param {{displayName: string, bio: string, career: string, photoURL: string}} data
  */
 export async function updateUserProfile(id, data) {
-  // En esta ocasión, nosotros queremos modificar un documento en
-  // específico.
-  // Esto requeire que usemos la función doc() de Firestore para crear
-  // la referencia a un documento.
+ 
   const profileRef = doc(db, `/users/${id}`);
 
-  // Editamos el documento usando la función updateDoc().
-  await updateDoc(profileRef, {
+  await setDoc(profileRef, {
     ...data,
   });
 }

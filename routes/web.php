@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\FirebaseController;
-use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SerieController;
 use App\Http\Middleware\CheckAuthSession;

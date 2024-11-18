@@ -34,7 +34,6 @@ export function fetchPosts(idUser, callback) {
         const unsubscribe = onSnapshot(queryPost, async (snapshot) => {
             const posts = snapshot.docs.map(async (post) => {
                 const like = await isLike(post.id, idUser);
-                console.log(post.data().comments?.length)
                 return {
                     id: post.id,
                     photoURL: await getPhotoURL(post.data().userid),
@@ -70,7 +69,6 @@ export async function fetchPostsFrom(created_at) {
         )
     );
     const promises= posts.docs.map(async post => {
-        console.log(post.data())
         return {
             id: post.id,
             photoURL: await getPhotoURL(post.data().userid),
@@ -205,7 +203,6 @@ export async function like(id, operador, userid) {
                 await updateDoc(postRef, {
                     likes: newArray
                 });
-                console.log("Menos.", newArray);
             }
         }
     } catch (error) {
@@ -229,7 +226,6 @@ export async function comment(id, comment, iduser) {
                 comments: currentComments
             });
 
-            console.log("Comentario agregado exitosamente.");
         } else {
             console.log("El post no existe.");
         }

@@ -16,11 +16,13 @@ async function handleSubmit() {
         console.log("Sesion iniciada")
         msg.value = "Se ha ingresado correctamente"
         router.replace('/')
-
-
+        
     } catch (error) {
         console.log("Login error ", error)
         msg.value = "No se ha podido ingresar. Intente de nuevo por favor."
+        setTimeout(() => {
+            msg.value = '';
+        }, 3000);
     }
 }
 </script>
@@ -34,24 +36,24 @@ async function handleSubmit() {
         <form action="" @submit.prevent="handleSubmit" class="p-3">
             <div class="mb-6">
                 <label for="email" class="block mb-2">Email</label>
-                <input type="email" id="email" class=" p-2 mb-2 w-full border rounded-md bg-slate-100"
+                <input type="email" id="email" class=" p-2 mb-2 w-full border rounded-md bg-slate-100   focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                     v-model="user.email" placeholder="nombre@gmail.com" required>
             </div>
 
             <div class="mb-6">
                 <label for="text" class="block mb-2">Constraseña</label>
-                <input id="password" type="password" class="p-2 w-full border rounded-md bg-slate-100"
-                    v-model="user.password" required placeholder="Contraseña" />
+                <input id="password" type="password" class="p-2 w-full border rounded-md bg-slate-100 
+                focus:ring-blue-500 focus:border-blue-500 focus:outline-none"                    v-model="user.password" required placeholder="Contraseña" />
             </div>
 
             <input type="submit" value="Ingresar"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-3xl text-sm px-5 py-2.5 w-full" />
+                class="text-white bg-blue-1000 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-3xl text-sm px-5 py-2.5 w-full" />
 
         </form>
     </NavBarSecondary>
     <div class="flex flex-col  items-center justify-center">
         <p class="mt-7">¿No tienes una cuenta?</p>
-        <Link class="mt-2 text-blue-600 font-medium " href="/registrarme">Registrarme</Link>
+        <Link class="mt-2 text-blue-1000 font-medium " href="/registrarme">Registrarme</Link>
     </div>
     <div v-if="msg !== 'Se ha ingresado correctamente' && msg !== ''" class="bg-red-200 p-4 m-2 rounded-md">
         <p>{{ msg }}</p>
@@ -60,25 +62,3 @@ async function handleSubmit() {
         <p>{{ msg }}</p>
     </div>
 </template>
-
-<style>
-.cls-1 {
-    fill: #06c;
-}
-
-.cls-2 {
-    fill: #fff;
-}
-
-.cls-3 {
-    fill: #06c;
-}
-
-.cls-4 {
-    fill: #06c !important;
-}
-
-.cls-5 {
-    fill: #06c !important;
-}
-</style>

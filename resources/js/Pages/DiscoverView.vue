@@ -99,10 +99,10 @@ defineProps({ genres: Array })
     <NavBar></NavBar>
     <section v-if="!loading">
 
-        <div v-for="genero in serie" class="flex  flex-col ">
+        <div v-for="(genero,key)  in serie" :key="key" class="flex  flex-col ">
             <div>
 
-                <p class="m-3 mt-4 ms-5 font-medium">Segun tus generos favoritos:</p>
+                <!-- <p class="m-3 mt-4 ms-5 font-medium">Segun tus generos favoritos: {{ loginUser.genres[key] }}</p> -->
             </div>
             <div class="flex overflow-x-auto scroll overflow-scroll ">
                 <DiscoverFeature v-for="show in genero" :id="show.id" :genres="show.genres" :titleSerie="show.name"

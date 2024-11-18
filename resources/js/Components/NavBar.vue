@@ -41,12 +41,12 @@ const excludedPages = [
 </script>
 <template>
 
-    <nav class="flex justify-between items-center p-4 border-blue-0 border rounded-full  text-slate-800">
+    <nav class="flex justify-between items-center p-4 py-2 ps-5 border-blue-0 border rounded-lg  text-slate-800">
         <div v-if="!loading" class="flex items-center gap-6">
 
             <ButtonGoBack v-if="!excludedPages.includes(currentPage)">
             </ButtonGoBack>
-            <Link href="/" class="text-xl"><img src="/public/Isotipo-TVON.svg" type="image/svg+xml" alt="Isotipo-TVON" class="block h-8 w-8"></Link>
+            <Link href="/" class="text-xl"><img src="/public/images/ImagotipoEspesorApilado.svg" type="image/svg+xml" alt="Isotipo-TVON" class="block h-16 w-16"></Link>
         </div>
 
         <ul class="flex items-center">

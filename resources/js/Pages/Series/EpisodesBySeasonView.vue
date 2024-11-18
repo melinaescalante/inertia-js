@@ -25,7 +25,7 @@ defineProps({
                 <p>Temporada {{ episodes.season }} <span v-if="episodes.number !== null">episodio {{ episodes.number
                         }}</span> </p>
                 <p class="mb-3 font-normal text-gray-700 "
-                    v-html="episodes.summary.length > 200 ? `${episodes.summary.slice(0, 200)}...` : episodes.summary"></p>
+                    v-html="episodes.summary"></p>
                 <p class="mb-3 font-normal text-gray-700 ">{{ episodes.airdate }} </p>
             </div>
 

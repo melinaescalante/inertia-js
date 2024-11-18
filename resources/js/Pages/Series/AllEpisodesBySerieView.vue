@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import NavBar from '../../components/NavBar.vue'
 
 defineProps({
-    seasons: Array,
+    seasons: Object,
     name:String,
     ids:Array
 })

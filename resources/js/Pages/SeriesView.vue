@@ -182,9 +182,9 @@ async function next(id, idSerie, nameSerie) {
             Oops, no tienes ni una serie empezada!
 
         </h1>
-        <h1 v-else class="text-2xl font-medium ms-2 mt-3 mb-3">Series empezadas</h1>
+        <h1 v-else class="text-2xl font-medium ms-7 mt-3">Series empezadas</h1>
 
-        <div class="flex flex-col gap-3 m-4">
+        <div class="flex flex-col gap-3 m-4 mt-1">
             <Link href="/buscador" v-if="!seriesWatching"
                 class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
             Empezar

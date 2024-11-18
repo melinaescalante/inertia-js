@@ -8,10 +8,7 @@ defineProps({
 </script>
 <template>
     <NavBar></NavBar>
-    <!-- <div class="flex gap-4 flex-wrap justify-center">
-        <Link href="/buscador" class="border  rounded-lg border-blue-500 px-2 py-1">Series</Link>
-        <Link href="/buscadorUsuarios" class="border rounded-lg border-blue-500 px-2 py-1">Personas</Link>
-    </div> -->
+   
     <SearchComponent :series="series"></SearchComponent>
 
 </template>

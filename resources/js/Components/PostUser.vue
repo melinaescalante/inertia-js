@@ -64,24 +64,31 @@ async function share(id) {
 }
 const areCommentsVisible = ref(false);
 const commentsArray = ref([])
+const loadingComments = ref(true)
+// async function seeComments(id) {
+// areCommentsVisible.value = !areCommentsVisible.value;
+// || []
+
+// }
 async function seeComments(id) {
+    areCommentsVisible.value = !areCommentsVisible.value;
     if (areCommentsVisible.value) {
-        areCommentsVisible.value = false;
-        commentsArray.value = [];
-    } else {
-        commentsArray.value = await getComments(async (newComments) => {
-            commentsArray.value = newComments
-            areCommentsVisible.value = true;
-
-        }, id);
-        if (!commentsArray.value) {
-            commentsArray.value = []
-            areCommentsVisible.value = false;
-
+        loadingComments.value = true; 
+        try {
+            commentsArray.value = await getComments((newComments) => {
+                commentsArray.value = newComments
+                loadingComments.value = false
+            }, id)
+          
+        } catch (error) {
+            console.error("Error al cargar comentarios:", error);
+            commentsArray.value = []; // Manejar caso de error
+        } finally {
+            loadingComments.value = false; // Finalizar la carga
         }
     }
-
 }
+
 async function giveLike(e) {
     const heart = e.target
     if (loginUser.value.id === undefined || loginUser.value.id === null) {
@@ -119,7 +126,7 @@ function handleClose() {
     <div class="m-2 shadow-[inset_0_1px_18px_-10px_rgba(0,0,0,0.15)] shadow-orange-0 rounded-2xl p-4 mb-[2rem]">
         <div class="flex flex-row justify-between  items-center">
             <div>
-                <img :src="photoURL || '/noimage.png'" class="border rounded-md  w-10 h-10 " alt="">
+                <img :src="photoURL || '/noimage.png'" class=" border rounded-md  w-10 h-10 " alt="">
 
             </div>
             <div class="flex flex-col mx-2">
@@ -170,7 +177,7 @@ function handleClose() {
 
                     <span class="sr-only">Like</span>
                     <p v-if="likes !== undefined && likes != 0">
-                        <span>{{ likes.length }}</span>
+                        <span class="m-1">{{ likes.length }}</span>
                     </p>
                     <div @click="giveLike" :id="id" :liked="liked">
 
@@ -211,16 +218,19 @@ function handleClose() {
 
             </div>
         </div>
-        <ul id="commentsArray" open="false" v-if="commentsArray">
-            <li v-for="comment in commentsArray" class="border-b-2 ms-2 mt-3 mb-3">
-                {{ console.log(comment) }}
+        <ul v-if="areCommentsVisible && !loadingComments">
+
+            <li v-for="comment in commentsArray"  class="border-b-2 ms-2 mt-3 mb-3">
                 <strong>
                     <Link class="text-blue-1000" :href="`/perfil/${comment.userId}`">{{ comment.userName }}</Link>
                 </strong>: {{ comment.commentInfo }}
             </li>
+            <p v-if="!comments" class="text-slate-400 ms-2">¡Sé el primero en comentar!</p>
+
         </ul>
 
-        <p v-else class="text-slate-400 ms-2">¡Se el primero en comentar!</p>
+
+
         <div class="relative">
             <form action="" @submit.prevent="giveComment(id)" :id="id">
                 <label for="text" class="sr-only">Deja tu comentario debajo:</label>

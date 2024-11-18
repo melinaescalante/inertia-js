@@ -77,7 +77,7 @@ export async function editProfile({ displayName, bio, genres }) {
 
   try {
     const promiseAuth = updateProfile(auth.currentUser, { displayName })
-    const promiseProfile = updateUserProfile(loginUser.id, { displayName, bio, genres })
+    const promiseProfile =await updateUserProfile(loginUser.id, { displayName, bio, genres })
     await Promise.all([promiseAuth, promiseProfile])
 
     // await updateProfile(auth.currentUser, { displayName })
@@ -158,6 +158,7 @@ export async function signUp({ email, password, userName }) {
       
       await updateUserProfile(userCredential.user.uid, { displayName: userName, bio: null, genres: null,photoURL:null })
   } catch (error) {
+    console.log(error)
     throw error;
   }
 }

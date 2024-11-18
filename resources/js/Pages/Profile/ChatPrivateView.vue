@@ -61,7 +61,7 @@ function handleSubmit() {
                     <div class="p-4 m-1 min-h-[65vh] border rounded">
                         <ul v-if="!loadingMessages" class="flex flex-col items-start">
                             <li v-for="message in messages" class="my-2 rounded p-2" :class="{
-                                'bg-gray-200': loginUser.id !== message.user_id,
+                                'bg-orange-0/30': loginUser.id !== message.user_id,
                                 'bg-blue-0 self-end': loginUser.id === message.user_id
                             }">
                                 <div v-if="message.user_id!==loginUser.id">

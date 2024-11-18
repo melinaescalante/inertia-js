@@ -62,7 +62,7 @@ onUnmounted( ()=>{
         :img="post.image" 
         :imgAlt="post.image" 
         :serie="post.serie"
-            :date="post.date" 
+            :created_at="post.created_at"
             :likes="post.likes" 
             :comments="post.comments" 
             :userName="post.user" :liked="post.liked"

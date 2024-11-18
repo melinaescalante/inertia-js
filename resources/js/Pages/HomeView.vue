@@ -130,13 +130,12 @@ console.log(loadingMore.value)
           :userName="post.user" :liked="post.liked" :userId="post.userid" :created_at="post.created_at" />
       </div>
     </div>
+<div v-else class="mt-[70%]">
 
-    <Spinner v-else msg="Cargando más posteos" />
+  <Spinner msg="Cargando más posteos" />
+</div>
 
-{{ console.log(loadingMorePosts, 'loadingmore') }}
-    <!-- <div  class="flex justify-center "> -->
     <Spinner v-if="loadingMorePosts===true" msg="Cargando más posteos" />
-    <!-- </div> -->
     <div ref="newPostLoaderSign"></div>
   </section>
 </template>

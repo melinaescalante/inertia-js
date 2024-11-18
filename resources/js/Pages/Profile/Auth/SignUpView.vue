@@ -77,55 +77,6 @@ async function handleSubmit() {
     </NavBarSecondary>
     <div class="flex flex-col  items-center justify-center">
         <p class="mt-7">¿Ya tienes una cuenta?</p>
-        <Link class="mt-2 text-blue-600 font-medium " href="/ingresar">Ingresar</Link>
+        <Link class="mt-2 text-blue-1000 font-medium " href="/ingresar">Ingresar</Link>
     </div>
 </template>
-<style>
-.cls-1 {
-    fill: #2f2e41;
-}
-
-.cls-2 {
-    fill: #fff;
-}
-
-.cls-3 {
-    fill: #ffb6b6;
-}
-
-.cls-4 {
-    fill: #3f3d56;
-}
-
-.cls-5 {
-    fill: #f2f2f2;
-}
-
-.cls-6 {
-    fill: #ffb8b8;
-}
-
-.cls-7 {
-    fill: #ccc;
-}
-
-.cls-8 {
-    fill: #0054b9;
-}
-
-.cls-9 {
-    fill: #170000;
-}
-
-.cls-10 {
-    fill: #f1ff89;
-}
-
-.cls-11 {
-    fill: #0d78d0;
-}
-
-.cls-12 {
-    fill: #e6e6e6;
-}
-</style>

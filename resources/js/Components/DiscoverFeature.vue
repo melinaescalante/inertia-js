@@ -32,7 +32,7 @@ const imgDefault = '/noimage.png'
     </div>
     <div class="flex
     ">
-      <p v-for="genre in genres" class="m-2">{{ genre }}</p>
+      <p v-for="genre in genres" class=" rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000  text-sm font-normal px-2 py-1 m-1 text-center">{{ genre }}</p>
     </div>
   </div>
 </template>

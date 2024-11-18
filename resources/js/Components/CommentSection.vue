@@ -7,7 +7,8 @@ import { formatDate } from '../helpers/date';
 import Spinner from './Spinner.vue';
 const props = defineProps({
     comments: Array,
-    idSerie: Number
+    idSerie: Number,
+    loading:Boolean
 })
 const { loginUser } = useLoginUser()
 const commentSerie = ref('')
@@ -38,7 +39,7 @@ async function handleComment() {
         </form>
     </div>
     <div>
-        <ul class="bg-[url('/public/images/asset.png')] bg-[length:200px] bg-repeat-y bg-right" v-if="comments.length" >
+        <ul class="bg-[url('/public/images/asset.png')] bg-[length:200px] bg-repeat-y bg-right" v-if="comments?.length" >
 
    
             <li class=" flex flex-col  bg-opacity-35 m-3 p-3 rounded-lg break-words" v-for="comment in comments">
@@ -59,7 +60,7 @@ async function handleComment() {
                 <span class="text-sm font-normal text-gray-900 self-end">{{ formatDate(comment.created_at) }}</span>
             </li>
         </ul>
-        <div v-else class="mt-4">
+        <div v-if="!comments && loading"class="mt-4">
 
             <Spinner msg="Cargando comentarios"></Spinner>
         </div>
