@@ -59,6 +59,7 @@ export default {
         selectResult(item) {
             this.formInput = item.show.name;
             this.localSeries = [];
+            this.$emit("id-serie-seleccionada", item.show.id)
             this.$emit("serie-seleccionada", item.show.name);
         },
     },

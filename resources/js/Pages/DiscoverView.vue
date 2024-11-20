@@ -9,8 +9,7 @@ const {loginUser}= useLoginUser()
 const loading = ref(true);
 onMounted(async () => {
     try {
-       
-            if (loginUser.value.genres.length>=1) {
+        if (loginUser.value.genres && loginUser.value.genres.length>=1) {
                 await loadSeriesByUsersGenres();
             } else {
                 await loadSeriesByDefault();
@@ -92,7 +91,7 @@ defineProps({ genres: Array })
         <div v-for="(genero,key)  in serie" :key="key" class="flex  flex-col ">
             <div>
 
-                <p class="m-3  mt-4 ms-5 font-medium">Según tus géneros favoritos: <span class="text-blue-1000">{{ loginUser.genres.length? Object.values(loginUser.genres[key])[0]: genresStaticCopy[key]
+                <p class="m-3  mt-4 ms-5 font-medium">Según tus géneros favoritos: <span class="text-blue-1000">{{ loginUser.genres?.length? Object.values(loginUser.genres[key])[0]: genresStaticCopy[key]
                 }}</span></p>
             </div>
             <div class="flex overflow-x-auto scroll overflow-scroll ">

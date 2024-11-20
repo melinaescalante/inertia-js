@@ -3,7 +3,7 @@ import NavBar from '../../components/NavBar.vue'
 import { useLoginUser } from "../../composables/useLoginUser";
 import { allChats } from '../../../services/private-chat'
 import { ref, onMounted } from 'vue'
-import { getUserName, getEmailUser, getPhotoURL } from "../../../services/users";
+import { getUserName, getEmailUser, getPhotoURL, getNameUser } from "../../../services/users";
 import { Link } from '@inertiajs/vue3';
 import Spinner from '../../components/Spinner.vue';
 const { loginUser } = useLoginUser()
@@ -21,11 +21,12 @@ onMounted(async () => {
                 const userId = Object.keys(chat.users);
                 const userIdFound = userId.find((id) => id !== loginUser.value.id)
                 const userName = await getUserName(userIdFound);
+                // const userName = await getUserName(userIdFound);
                 console.log(userName)
                 const email = await getEmailUser(userIdFound);
                 const photo = await getPhotoURL(userIdFound);
                 return { ...chat, userName, email, photo };
-            })
+            }),
         );
         chats.value = chatsWithUserNames;
         loading.value = false
@@ -61,7 +62,7 @@ onMounted(async () => {
 
             <Spinner class="mx-auto" msg="Cargando chats"></Spinner>
         </div>
-        <div v-if="!chats.length">
+        <div v-if="!chats.length && !loading">
 <p class="m-3">¡Sin chats recientes!</p>
         </div>
     </div>

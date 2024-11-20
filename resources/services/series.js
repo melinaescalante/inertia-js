@@ -1,8 +1,15 @@
 import { error } from "laravel-mix/src/Log";
 import { db } from "./firebase";
 import { doc, getDoc, updateDoc, setDoc, deleteField, FieldValue, onSnapshot, serverTimestamp, Timestamp } from "firebase/firestore";
-import { getNameUser } from "./users";
+import { getNameUser, getUserName } from "./users";
 
+/**
+ * Agregamos serie a nuestra lista para ver
+ * @param {String} idUser 
+ * @param {Number} idSerie 
+ * @param {String} nameSerie 
+ * @returns {Promise}
+ */
 export async function addSerieToWatch(idUser, idSerie, nameSerie) {
     try {
         const userDocRef = doc(db, "users", idUser);
@@ -41,7 +48,11 @@ export async function addSerieToWatch(idUser, idSerie, nameSerie) {
         console.error("Error al agregar la serie:", error);
     }
 }
-
+/**
+ * Devolvemos las series que el usuario tiene en su lista para ver
+ * @param {String} idUser 
+ * @returns {Array}
+ */
 export async function allSeriesToWatch(idUser) {
     try {
         const seriesToWatchRef = doc(db, `users/${idUser}/series/toWatch`);
@@ -53,6 +64,12 @@ export async function allSeriesToWatch(idUser) {
         console.error(error)
     }
 }
+/**
+ * Preguntamos si el usuario esta viendo esta serie para saber si marcar como viendo o no
+ * @param {String} idUser 
+ * @param {Number} idSerie 
+ * @returns {Boolean}
+ */
 export async function isStarted(idUser, idSerie) {
 
     try {
@@ -73,7 +90,11 @@ export async function isStarted(idUser, idSerie) {
         console.error(error)
     }
 }
-
+/**
+ * Devolvemos todas las series que el usuario esta viendo en el momento
+ * @param {String} idUser 
+ * @returns {Array | false}
+ */
 export async function allSeriesWatching(idUser) {
     try {
         const seriesWatchingRef = doc(db, `users/${idUser}/series/watching`);
@@ -82,11 +103,11 @@ export async function allSeriesWatching(idUser) {
         if (watchedSnapshot.exists()) {
             console.log(watchedSnapshot.data())
             let seriesWatching = watchedSnapshot.data()
-            if (seriesWatching) {
-
-                seriesWatching = [seriesWatching]
-                console.log(seriesWatching)
-                return seriesWatching
+            //Verificamos todo el documento y si hay al menos un objeto para evitar mandar un array vacio
+            if (seriesWatching && Object.keys(seriesWatching).length > 0) {
+                return [seriesWatching]; 
+            } else {
+                return false; 
             }
         } else {
             return false
@@ -95,7 +116,13 @@ export async function allSeriesWatching(idUser) {
         console.error(error)
     }
 }
-
+/**
+ * Empezamos a ver una serie nueva
+ * @param {String} idUser 
+ * @param {Number} idSerie 
+ * @param {Number} idSeason 
+ * @returns {Promise}
+ */
 export async function startSerie(idUser, idSerie, idSeason) {
     const userDocRef = doc(db, "users", idUser);
     const toWatchDocRef = doc(userDocRef, `series/watching`);
@@ -140,7 +167,13 @@ export async function startSerie(idUser, idSerie, idSeason) {
 
     }
 
-}
+}/**
+ * Verificamos si hay un capítulo luego del actualmente mirando
+ * @param {Number} idSeason 
+ * @param {Number} temporada 
+ * @param {Number} capitulo 
+ * @returns {Boolean}
+ */
 async function verifyChapter(idSeason, temporada, capitulo) {
     try {
         const response = await fetch(`https://api.tvmaze.com/seasons/${idSeason}/episodes`);
@@ -157,7 +190,12 @@ async function verifyChapter(idSeason, temporada, capitulo) {
         return false;
     }
 }
-
+/**
+ * Verificamos si hay un capítulo luego del actualmente mirando
+ * @param {Number} idSerie 
+ * @param {Number} temporada 
+ * @returns {{seasonExists:Boolean, nextSeasonId:Number}}
+ */
 async function verifySeason(idSerie, temporada) {
     const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
     const seasons = await response.json();
@@ -175,6 +213,12 @@ async function verifySeason(idSerie, temporada) {
     }
 
 }
+/**
+ * Devuelve informacion de serie actualmente viendo
+ * @param {String} idUser 
+ * @param {Number} idSerie 
+ * @returns {{currentEpisode:Number, currentSeason:Number, currentIdSeason:Number}}
+ */
 export async function currentInformation(idUser, idSerie) {
     const userDocRef = doc(db, "users", idUser);
     const currentEpisodeRef = doc(userDocRef, `series/watching`);
@@ -195,21 +239,27 @@ export async function currentInformation(idUser, idSerie) {
 
 
 }
+/**
+ * 
+ * @param {String} idUser 
+ * @param {Number} idSerie 
+ * @param {Number} idSeason 
+ * @param {Number} temporada 
+ * @param {Number} capitulo 
+ * @param {String} nameSerie 
+ * @returns 
+ */
 export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo, nameSerie) {
     const userDocRef = doc(db, "users", idUser);
     const toWatchDocRef = doc(userDocRef, `series/watching`);
     const toWatchSnapshot = await getDoc(toWatchDocRef);
-    const prueba = await verifyChapter(idSeason, temporada, capitulo)
-    let data
-    if (toWatchSnapshot.exists()) {
-        data = toWatchSnapshot.data()
-        console.log(data)
-    }
+    const thereIsNextEpisode = await verifyChapter(idSeason, temporada, capitulo)
+    
     console.log(toWatchSnapshot.data().created_at)
-    if (prueba !== false && prueba !== undefined) {
+    if (thereIsNextEpisode !== false && thereIsNextEpisode !== undefined) {
 
-        // if (toWatchSnapshot.exists()) {
-        //     const data = toWatchSnapshot.data();
+        if (toWatchSnapshot.exists()) {
+            const data = toWatchSnapshot.data();
         if (data[idSerie]?.current !== undefined) {
             let watching = data[idSerie].current + 1;
             await updateDoc(toWatchDocRef, {
@@ -220,10 +270,8 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
             return false
         }
         return 'episode'
-        // }
-        // else {
-        //     console.log('no se puede pasar de capitulo', error)
-        // }
+        }
+      
     } else {
         let season, idCurrentSeason;
         try {
@@ -234,7 +282,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
             } else {
                 const data = toWatchSnapshot.data();
                 if (data[idSerie] !== undefined) {
-                    await addSerieEnded(idUser, idSerie, nameSerie,data[idSerie].created_at)
+                    await addSerieEnded(idUser, idSerie, nameSerie, data[idSerie].created_at)
                     await updateDoc(toWatchDocRef, {
                         [idSerie]: deleteField()
                     });
@@ -258,8 +306,8 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
         }
 
         if (season) {
-            // if (toWatchSnapshot.exists()) {
-            // const data = toWatchSnapshot.data();
+            if (toWatchSnapshot.exists()) {
+            const data = toWatchSnapshot.data();
             if (data[idSerie]?.currentSeason !== undefined) {
 
                 let watchingSeason = data[idSerie].currentSeason + 1;
@@ -269,6 +317,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                         current: 1,
                         currentSeason: watchingSeason,
                         currentIdSeason: idCurrentSeason,
+                        created_at:data[idSerie].created_at
                     }
                 });
             } else {
@@ -276,7 +325,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
             }
             return 'season'
         }
-        // }
+        }
     }
 }
 
@@ -285,16 +334,25 @@ export async function addSerieEnded(idUser, idSerie, nameSerie, created) {
     const watchedDocRef = doc(userDocRef, `series/watched`);
     const watchedSnapshot = await getDoc(watchedDocRef);
 
-    const newWatchedSerie = {['ended_at']:Timestamp.now() , ['created_at']:created,['nameSerie']:nameSerie,['idSerie']:idSerie
+    const newWatchedSerie = {
+        ['ended_at']: Timestamp.now(), ['created_at']: created, ['nameSerie']: nameSerie, ['idSerie']: idSerie
     };
     if (watchedSnapshot.exists()) {
+
+        // Si spamea el botón, no permite que se agregue más de una vez.
+        let foundSerie = watchedSnapshot.data().watched.find(serie => serie.idSerie === idSerie);
+        if (foundSerie) {
+            console.log("la siere ya tiene id");
+            return;        
+        }
+
         const alreadyWatched = watchedSnapshot.data().watched || [];
+        
         alreadyWatched.push(newWatchedSerie);
 
         await updateDoc(watchedDocRef, {
             watched: alreadyWatched
         });
-
     } else {
 
         await setDoc(watchedDocRef, { watched: [newWatchedSerie] });
@@ -304,8 +362,8 @@ export async function addSerieEnded(idUser, idSerie, nameSerie, created) {
 
 /**
  * 
- * @param {*} idUser 
- * @returns 
+ * @param {String} idUser 
+ * @returns {Array|false}
  */
 export async function allSeriesWatched(idUser) {
     try {
@@ -322,6 +380,12 @@ export async function allSeriesWatched(idUser) {
         console.error(error);
     }
 }
+/**
+ * Dejamos comentarios para una determinada serie
+ * @param {String} comment 
+ * @param {String} idUser 
+ * @param {Number} idSerie 
+ */
 export async function addCommentToSerie(comment, idUser, idSerie) {
     try {
         debugger
@@ -329,9 +393,9 @@ export async function addCommentToSerie(comment, idUser, idSerie) {
         const seriesInfoRef = doc(db, 'series', String(idSerie));
         const seriesInfoSnapshot = await getDoc(seriesInfoRef);
         const newComment={
-            userId: idUser,  // ID del usuario
-            comment: comment,  // Comentario
-            created_at: Timestamp.now()// 
+            userId: idUser,  
+            comment: comment, 
+            created_at: Timestamp.now()
         }
         if (seriesInfoSnapshot.exists()) {
             currentComments = seriesInfoSnapshot.data().comments || [];
@@ -349,7 +413,12 @@ export async function addCommentToSerie(comment, idUser, idSerie) {
     }
 }
 
-
+/**
+ * Traemos todos los comentarios que haya por serie
+ * @param {Function} callback 
+ * @param {Number} idSerie 
+ * @returns {Function}
+ */
 export async function bringCommentsFromSeries(callback, idSerie) {
     const seriesInfoRef = doc(db, 'series', String(idSerie));
     
@@ -358,7 +427,7 @@ export async function bringCommentsFromSeries(callback, idSerie) {
         if (commentsData) {
             let commentsArray = [];
             const promises = commentsData.map(async (comment) => {
-                const userName = await getNameUser(comment.userId);
+                const userName = await getUserName(comment.userId);
                 const commentInfo = comment.comment;
                 const commentFull = {
                     userName,

@@ -16,6 +16,8 @@ const imageInput = ref(null);
 const newPost = ref({
     userid: null,
     serie: null,
+    idSerie:null,
+
     text: "",
     image: null,
 });
@@ -24,6 +26,14 @@ const refreshCount = ref(0);
 function setSerieSeleccionada(serieSeleccionada) {
     newPost.value.serie = serieSeleccionada;
     if (newPost.value.serie !== null) {
+        msg.value = '';
+        return;
+    }
+}
+function setIdSerieSelecionada(idSerieSeleccionada){
+    newPost.value.idSerie = idSerieSeleccionada;
+    console.log(idSerieSeleccionada)
+    if (newPost.value.idSerie !== null) {
         msg.value = '';
         return;
     }
@@ -83,7 +93,7 @@ function handleImageChange(e) {
             <span class="sr-only">Escribe la serie con la que te quieres referir</span>
             <label class="m-2 mb-0" for="serie">¿Sobre qué serie estás pensando?</label>
 
-            <SearchComponentPost @serie-seleccionada="setSerieSeleccionada" :series="series"
+            <SearchComponentPost @serie-seleccionada="setSerieSeleccionada" :series="series" @id-serie-seleccionada="setIdSerieSelecionada" 
                 :refreshCount="refreshCount"></SearchComponentPost>
 
         </div>

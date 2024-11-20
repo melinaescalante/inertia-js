@@ -31,6 +31,10 @@ export default {
             if (this.users.length === 0) {
               this.answer = "No se encontraron usuarios.";
             }
+            if (this.formInput.length===0) {
+                            this.answer = "";
+
+                        }
           });
         } catch (error) {
           this.answer = 'Error al buscar usuarios.';

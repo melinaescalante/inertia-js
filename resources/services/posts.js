@@ -1,13 +1,18 @@
 import { db, storage } from './firebase'
-import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, updateDoc, doc, getDoc, where, deleteDoc, getDocs, limit, startAfter } from 'firebase/firestore'
+import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, updateDoc, doc, getDoc, where, deleteDoc, getDocs, limit, startAfter, Timestamp } from 'firebase/firestore'
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { getNameUser, getPhotoURL } from './users';
-
-export async function uploadPost({ text, serie, image, userid }) {
+import { getNameUser, getPhotoURL, getUserName } from './users';
+/**
+ * 
+ * @param {{text:String, serie:String, image:String, userid:String,}}
+ * @returns {Promise} 
+ */
+export async function uploadPost({ text, serie, idSerie, image, userid }) {
     const postRef = collection(db, 'posts-public')
     await addDoc(postRef, {
         text,
         serie,
+        idSerie,
         image,
         userid,
         likes: [],
@@ -16,10 +21,10 @@ export async function uploadPost({ text, serie, image, userid }) {
 }
 
 /**
- * 
- * @param {idUser:String} idUser 
- * @param {callback:Function} callback 
- * @returns 
+ * Cargamos los últimos 4 posteos
+ * @param {String} idUser 
+ * @param {Function} callback 
+ * @returns {Function}
  */
 export function fetchPosts(idUser, callback) {
     try {
@@ -29,8 +34,7 @@ export function fetchPosts(idUser, callback) {
             orderBy('created_at', 'desc'),
             limit(4)
         );
-
-        // Usar onSnapshot para escuchar los cambios en tiempo real
+        //Usamos onsnapshot para ver los cambios como likes y comentarios
         const unsubscribe = onSnapshot(queryPost, async (snapshot) => {
             const posts = snapshot.docs.map(async (post) => {
                 const like = await isLike(post.id, idUser);
@@ -38,12 +42,14 @@ export function fetchPosts(idUser, callback) {
                     id: post.id,
                     photoURL: await getPhotoURL(post.data().userid),
                     serie: post.data().serie,
+                    idSerie: post.data().idSerie,
+
                     text: post.data().text,
                     image: post.data().image,
                     likes: post.data().likes || [],
                     comments: post.data().comments || [],
                     shares: post.data().shares,
-                    user: await getNameUser(post.data().userid),
+                    user: await getUserName(post.data().userid),
                     userid: post.data().userid,
                     liked: like,
                     created_at: post.data().created_at,
@@ -57,8 +63,11 @@ export function fetchPosts(idUser, callback) {
         console.log(error);
     }
 }
-
-
+/**
+ * 
+ * @param {Timestamp} created_at 
+ * @returns {Promise}
+ */
 export async function fetchPostsFrom(created_at) {
     const posts = await getDocs(
         query(
@@ -68,24 +77,31 @@ export async function fetchPostsFrom(created_at) {
             startAfter(created_at),
         )
     );
-    const promises= posts.docs.map(async post => {
+    const promises = posts.docs.map(async post => {
         return {
             id: post.id,
             photoURL: await getPhotoURL(post.data().userid),
             serie: post.data().serie,
+            idSerie: post.data().idSerie,
+
             text: post.data().text,
             image: post.data().image,
             likes: post.data().likes || [],
             comments: post.data().comments,
             shares: post.data().shares,
-            user: await getNameUser(post.data().userid),
+            user: await getUserName(post.data().userid),
             userid: post.data().userid,
             liked: like,
             created_at: post.data().created_at,
         }
     });
-    return await Promise.all(promises) 
+    return await Promise.all(promises)
 }
+/**
+ * 
+ * @param {String} image 
+ * @returns {String} downloadUrl
+ */
 export async function uploadPhoto(image) {
     try {
         const storageRefe = storageRef(storage, `posts/${image.name}`);
@@ -99,10 +115,10 @@ export async function uploadPhoto(image) {
 
 /**
 *Traemos una publicacion en especifico, mediante su id.
-* @param {{callback:function, id: string}} data
-* @returns {{Promise}}
+* @param {Function} callback
+* @param {String} id
+* @returns {Promise}
 */
-
 export async function readPostsById(callback, id, userid) {
     const postRef = doc(db, "posts-public", id);
 
@@ -112,11 +128,13 @@ export async function readPostsById(callback, id, userid) {
             const postFound = {
                 id: postSnapshot.id,
                 serie: postSnapshot.data().serie,
+                idSerie: postSnapshot.data().idSerie,
+
                 text: postSnapshot.data().text,
                 image: postSnapshot.data().image,
                 photoURL: await getPhotoURL(postSnapshot.data().userid),
 
-                user: await getNameUser(postSnapshot.data().userid),
+                user: await getUserName(postSnapshot.data().userid),
                 likes: postSnapshot.data().likes,
                 comments: postSnapshot.data().comments,
                 shares: postSnapshot.data().shares,
@@ -132,8 +150,8 @@ export async function readPostsById(callback, id, userid) {
 }
 /**
 *Traemos los posteos de un usuario específico, mediante su id.
-* @param {{callback:function, userid: string}} data
-* @returns {{Promise}}
+* @param {callback:function, userid: string} 
+* @returns {Promise}
 */
 export async function readPostsByUser(callback, userid) {
     const postQuery = query(collection(db, "posts-public"), where("userid", "==", userid));
@@ -146,10 +164,12 @@ export async function readPostsByUser(callback, userid) {
             const post = {
                 id: doc.id,
                 serie: doc.data().serie,
+                idSerie: doc.data().idSerie,
+
                 text: doc.data().text,
                 image: doc.data().image,
                 date: doc.data().date,
-                user: await getNameUser(doc.data().userid),
+                user: await getUserName(doc.data().userid),
                 likes: doc.data().likes,
                 userid: doc.data().userid,
                 comments: doc.data().comments,
@@ -165,7 +185,12 @@ export async function readPostsByUser(callback, userid) {
         callback(posts);
     });
 }
-
+/**
+ * Funcion que consulta si el usuario le ha dado like a la publicacion y así colorea el ícono
+ * @param {String} id 
+ * @param {String} userid 
+ * @returns {Boolean}
+ */
 export async function isLike(id, userid) {
     const postRef = doc(db, 'posts-public', id);
     const postSnapshot = await getDoc(postRef);
@@ -173,12 +198,15 @@ export async function isLike(id, userid) {
     const userFound = currentLikes.find(user => {
         return Object.keys(user)[0] === userid;
     });
-    if (userFound) {
-        return true;
-    } else {
-        return false;
-    }
+    return userFound ? true : false;
 }
+/**
+ * Permite darle likes a las publicaciones y almacenar en firebase
+ * @param {String} id 
+ * @param {String} operador 
+ * @param {String} userid 
+ * @returns {Promise}
+ */
 export async function like(id, operador, userid) {
     try {
 
@@ -213,6 +241,13 @@ export async function like(id, operador, userid) {
 
 }
 
+/**
+ * Permite comentar en las publicaciones
+ * @param {String} id 
+ * @param {String} comment 
+ * @param {String} iduser 
+ * @returns {Promise}
+ */
 export async function comment(id, comment, iduser) {
     try {
 
@@ -234,6 +269,12 @@ export async function comment(id, comment, iduser) {
         console.log("Error al agregar el comentario:", error);
     }
 }
+/**
+ * Traemos comentarios de cada publicación
+ * @param {Function} callback 
+ * @param {String} id 
+ * @returns {Function}
+ */
 export async function getComments(callback, id) {
     try {
         const postRef = doc(db, 'posts-public', id);
@@ -242,7 +283,7 @@ export async function getComments(callback, id) {
             if (commentsData) {
                 let commentsArray = [];
                 const promises = commentsData.map(async (comment) => {
-                    const userName = await getNameUser(Object.keys(comment)[0]);
+                    const userName = await getUserName(Object.keys(comment)[0]);
                     const commentInfo = Object.values(comment)[0];
                     const commentFull = {
                         userName,
@@ -262,7 +303,11 @@ export async function getComments(callback, id) {
         console.log(error);
     }
 }
-
+/**
+ * Permite eliminar posteos
+ * @param {String} id 
+ * @returns {Promise}
+ */
 export async function deletePost(id) {
     try {
 

@@ -8,9 +8,9 @@ const privateChatCache = {
 
 }
 /**
- * 
- * @param {*} senderId 
- * @param {*} receiverId 
+ * Traemos de cache los mensajes
+ * @param {String} senderId 
+ * @param {String} receiverId 
  * @returns 
  */
 function getCacheKey(senderId, receiverId) {
@@ -76,6 +76,12 @@ export async function savePrivateChatMessage(senderId, receiverId, text) {
     });
 }
 
+/**
+ * 
+ * @param {String} senderId 
+ * @param {String} receiverId 
+ * @param {String} callback 
+ */
 export async function subscribeToPrivateChatMessages(senderId, receiverId, callback) {
     const chatDoc = await privateChatDocument(senderId, receiverId);
     const queryMessages = query(
@@ -94,7 +100,11 @@ export async function subscribeToPrivateChatMessages(senderId, receiverId, callb
         callback(messages)
     })
 }
-
+/**
+ * Devolvemos todos los chats activos del usuario
+ * @param {String} idUser 
+ * @returns {Array}
+ */
 export async function allChats(idUser) {
     let allChats = []
     const messagesRef = collection(db, `private-chats`);

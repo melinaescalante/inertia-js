@@ -2,8 +2,8 @@
 import { router, Link } from '@inertiajs/vue3';
 import { like, comment, getComments, isLike } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
-import { getNameUser, getPhotoURL } from '../../services/users';
-import { onMounted, ref } from 'vue';
+// import { getNameUser } from '../../services/users';
+import { ref } from 'vue';
 import BottomSheet from './BottomSheet.vue';
 import { formatDate } from '../helpers/date';
 import ModalComponentDelete from './ModalComponentDelete.vue'
@@ -18,6 +18,8 @@ const props = defineProps({
     img: String,
     imgAlt: String,
     serie: String,
+    idSerie:Number,
+
     likes: Array,
     comments: Array,
     liked: Function | Boolean,
@@ -26,7 +28,7 @@ const props = defineProps({
 
 })
 
-const commentText = ref('')
+const commentText = ref("")
 async function giveComment(id) {
     if (loginUser.value.id === undefined || loginUser.value.id === null) {
         router.replace('/ingresar');
@@ -132,7 +134,7 @@ function handleClose() {
             <div class="flex flex-col mx-2">
 
                 <Link :href="`/perfil/${userId}`" class="text-[1.04rem] font-normal text-center  ">{{ userName }}</Link>
-                <Link href="#" class=" text-center decoration-none text-blue-500">{{ serie }}</Link>
+                <Link :href="`/show/${idSerie}`" class=" text-center decoration-none text-blue-500">{{ serie }}</Link>
             </div>
             <div>
                 <BottomSheet :isclosed="isBottomSheetOpen">
@@ -195,7 +197,7 @@ function handleClose() {
             <div>
                 <div class="flex">
                     <span class="sr-only">Comentar</span>
-                    <p v-if="comments != undefined">
+                    <p v-if="comments != undefined && comments.length>0">
                         <span>{{ comments.length }}</span>
                     </p>
                     <svg @click="seeComments(id)" :id="id" class="w-7 h-7 cursor-pointer" aria-hidden="true"
@@ -225,7 +227,7 @@ function handleClose() {
                     <Link class="text-blue-1000" :href="`/perfil/${comment.userId}`">{{ comment.userName }}</Link>
                 </strong>: {{ comment.commentInfo }}
             </li>
-            <p v-if="!comments" class="text-slate-400 ms-2">¡Sé el primero en comentar!</p>
+            <p v-if="!comments.length" class="text-slate-400 ms-2">¡Sé el primero en comentar!</p>
 
         </ul>
 

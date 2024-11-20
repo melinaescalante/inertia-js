@@ -17,8 +17,7 @@ const loadingMessages = ref(true);
 const messages = ref([]);
 const newMessage = ref({ text: null });
 const userName = ref(getUserName(page.props.id));
-const { user } = useUser(page.props.id, page.props.email, userName.value); // Mover fuera de onMounted
-
+const { user } = useUser(page.props.id, page.props.email, userName.value); 
 onMounted(() => {
     subscribeToPrivateChatMessages(
         loginUser.value.id,

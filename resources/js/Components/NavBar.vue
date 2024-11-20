@@ -22,10 +22,7 @@ onMounted(async () => {
         loading.value = false;
     } else {
         loading.value = false;
-
     }
-
-
 })
 
 
@@ -33,7 +30,6 @@ const excludedPages = [
     'HomeView',
     'DiscoverView',
     'SeriesView',
-
     'SearchView',
     'SearchUsersView',
     'Profile/ProfileAuthView'
@@ -42,7 +38,7 @@ const excludedPages = [
 </script>
 <template>
 
-    <nav class="flex justify-between items-center p-4 py-2 ps-5 border-blue-0 border rounded-lg  text-slate-800">
+    <nav class="flex justify-between items-center p-2 py-1 ps-5 border-blue-0 border rounded-lg  text-slate-800">
         <div v-if="!loading" class="flex items-center gap-6">
 
             <ButtonGoBack v-if="!excludedPages.includes(currentPage)">
@@ -74,7 +70,7 @@ const excludedPages = [
 
 
 
-                    <svg class="w-6 h-6  text-gray-600 group-hover:text-blue-1000  rotate-[270]" aria-hidden="true"
+                    <svg class="w-6 h-6  text-gray-500 group-hover:text-blue-1000  rotate-[270]" aria-hidden="true"
                         fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <title>Chat</title>
                         <path
