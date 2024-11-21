@@ -21,7 +21,6 @@ function usePosts() {
   let unsubscribe = null;
 
   const observer = new IntersectionObserver(entries => {
-
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         loadMorePosts();
@@ -83,7 +82,6 @@ function usePosts() {
     }
 
     loadingMore.value = false;
-console.log(loadingMore.value)
 
   }
 

@@ -3,7 +3,7 @@ import NavBar from '../../components/NavBar.vue'
 import { useLoginUser } from "../../composables/useLoginUser";
 import { allChats } from '../../../services/private-chat'
 import { ref, onMounted } from 'vue'
-import { getUserName, getEmailUser, getPhotoURL, getNameUser } from "../../../services/users";
+import { getUserName, getEmailUser, getPhotoURL } from "../../../services/users";
 import { Link } from '@inertiajs/vue3';
 import Spinner from '../../components/Spinner.vue';
 const { loginUser } = useLoginUser()
@@ -13,16 +13,12 @@ onMounted(async () => {
     if (loginUser.value.id) {
 
         chats.value = await allChats(loginUser.value.id)
-        console.log(chats.value)
         const chatsWithUserNames = await Promise.all(
 
             chats.value.map(async (chat) => {
-                console.log(chat)
                 const userId = Object.keys(chat.users);
                 const userIdFound = userId.find((id) => id !== loginUser.value.id)
                 const userName = await getUserName(userIdFound);
-                // const userName = await getUserName(userIdFound);
-                console.log(userName)
                 const email = await getEmailUser(userIdFound);
                 const photo = await getPhotoURL(userIdFound);
                 return { ...chat, userName, email, photo };

@@ -6,9 +6,7 @@ import { formatDate } from '../helpers/date';
 import { allSeriesWatched } from '../../services/series';
 import Spinner from '../Components/Spinner.vue';
 import { useLoginUser } from '../composables/useLoginUser';
-// const props = defineProps({
-//     seriesWatched: String
-// });
+
 const { loginUser } = useLoginUser()
 const loading = ref(true)
 
@@ -17,7 +15,6 @@ const series = ref([])
 onMounted(async () => {
     try {
         series.value = await allSeriesWatched(loginUser.value.id)
-        console.log(series.value)
         const promises = series.value.map(async (serie) => {
             const response = await fetch('https://api.tvmaze.com/singlesearch/shows?q=' + serie.nameSerie);
             const json = await response.json();
@@ -36,9 +33,9 @@ onMounted(async () => {
 <template>
     <NavBar></NavBar>
     <h1 class="font-medium text-2xl m-2 mt-3 mb-3">Series vistas</h1>
+    <section id="ended-series">
+
     <div v-if="!loading">
-
-
         <ul v-if="arrayFetch.length >= 1">
             <li v-for="(serie, index) in arrayFetch" :key="index">
 
@@ -68,4 +65,5 @@ onMounted(async () => {
         <p class="m-2" v-else>No tienes nada en tu lista!</p>
     </div>
     <Spinner v-else msg="Cargando series vistas"></Spinner>
+    </section>
 </template>

@@ -1,8 +1,7 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { usePage } from '@inertiajs/vue3'
-import { suscribeToAuthChanged } from "../../services/auth";
 import { readPostsById } from '../../services/posts';
 import PostUser from '../Components/PostUser.vue';
 import { useLoginUser } from '../composables/useLoginUser';
@@ -20,7 +19,6 @@ onMounted(async () => {
             await readPostsById((posteo) => {
                 post.value = posteo;
                 loading.value = false;
-                console.log(post.value);
             }, id.value, loginUser.value.id);
 
         } catch (error) {
@@ -34,6 +32,7 @@ onMounted(async () => {
 </script>
 <template>
     <NavBar></NavBar>
+    
     <template v-if="loading">
 
         <div class="flex justify-center mt-80">
@@ -41,8 +40,11 @@ onMounted(async () => {
         </div>
     </template>
     <template v-else>
-        <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"
+        <section id="my-post">
+
+            <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"
             :imgAlt="post.image" :serie="post.serie" :idSerie="post.idSerie" :created_at="post.created_at" :likes="post.likes"
             :comments="post.comments" :userName="post.user" :liked="post.liked" :userId="post.userid"></PostUser>
+        </section>
     </template>
 </template>

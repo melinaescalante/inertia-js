@@ -93,9 +93,9 @@ export default {
       <div class="flex flex-col">
 
         <Link :href="`/perfil/${user.id}`" class="ms-3 font-medium block"> {{ user.displayName }}</Link>
-        <div class="flex">
+        <div class="flex ms-2">
 
-          <p v-for="genre in user.genres" class="ms-3 text-blue-400 "> {{Object.values(genre)[0]}}</p>
+          <p v-for="genre in user.genres"  class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000 text-sm  font-normal py-0 px-1 m-1 text-center"> {{Object.values(genre)[0]}}</p>
         </div>
       </div>
     </li>

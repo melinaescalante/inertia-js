@@ -78,7 +78,6 @@ export async function isStarted(idUser, idSerie) {
         if (watchingSnapshot.exists()) {
             const data = watchingSnapshot.data()
             if (data[idSerie]) {
-                console.log(data[idSerie])
                 return true
             } else {
                 return false
@@ -101,11 +100,10 @@ export async function allSeriesWatching(idUser) {
         const watchedSnapshot = await getDoc(seriesWatchingRef);
 
         if (watchedSnapshot.exists()) {
-            console.log(watchedSnapshot.data())
             let seriesWatching = watchedSnapshot.data()
-            //Verificamos todo el documento y si hay al menos un objeto para evitar mandar un array vacio
             if (seriesWatching && Object.keys(seriesWatching).length > 0) {
-                return [seriesWatching]; 
+              
+                return [seriesWatching];  // seriesWatching
             } else {
                 return false; 
             }
@@ -137,12 +135,9 @@ export async function startSerie(idUser, idSerie, idSeason) {
     };
     if (toWatchSnapshot.exists()) {
         const currentsWatching = toWatchSnapshot.data();
-        console.log(Object.keys(currentsWatching))
         const exists = Object.keys(currentsWatching).some(serie => {
-            console.log(serie)
             return serie === idSerie.toString();
         });
-        console.log(exists);
         //Elimino serie si ya esta en el documento
         if (exists) {
             await updateDoc(toWatchDocRef, {
@@ -254,8 +249,6 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
     const toWatchDocRef = doc(userDocRef, `series/watching`);
     const toWatchSnapshot = await getDoc(toWatchDocRef);
     const thereIsNextEpisode = await verifyChapter(idSeason, temporada, capitulo)
-    
-    console.log(toWatchSnapshot.data().created_at)
     if (thereIsNextEpisode !== false && thereIsNextEpisode !== undefined) {
 
         if (toWatchSnapshot.exists()) {
@@ -342,7 +335,6 @@ export async function addSerieEnded(idUser, idSerie, nameSerie, created) {
         // Si spamea el botón, no permite que se agregue más de una vez.
         let foundSerie = watchedSnapshot.data().watched.find(serie => serie.idSerie === idSerie);
         if (foundSerie) {
-            console.log("la siere ya tiene id");
             return;        
         }
 
@@ -388,7 +380,6 @@ export async function allSeriesWatched(idUser) {
  */
 export async function addCommentToSerie(comment, idUser, idSerie) {
     try {
-        debugger
         let currentComments
         const seriesInfoRef = doc(db, 'series', String(idSerie));
         const seriesInfoSnapshot = await getDoc(seriesInfoRef);

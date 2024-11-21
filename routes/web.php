@@ -23,6 +23,7 @@ Route::get('/configuraciones', [AppController::class,"configuraciones"])
 Route::get('/perfil/{id}', [AppController::class,"profile"])
 ->name('profile')
 ->whereAlphaNumeric('id');
+
 Route::get('/miPerfil', [AppController::class,"myProfile"])
 ->name('myProfile')
 ->middleware(CheckAuthSession::class);
@@ -42,19 +43,19 @@ Route::get('/misSeries', [AppController::class,"mySeries"])
 ->name('mySeries')
 ->middleware(CheckAuthSession::class);
 
-//SubViews de las series del usuario
-Route::get('/wishlist', [AppController::class,"myWishlist"])
-->middleware(CheckAuthSession::class);
-
-Route::get('/seriesVistas', [AppController::class,"endedSeries"])
-->middleware(CheckAuthSession::class);
-
 Route::get('/descubrir', [AppController::class,"discover"])
 ->name('discover');
 
 Route::get('/buscador', [SerieController::class, 'buscador']);
 
 Route::get('/buscadorUsuarios', [SerieController::class, 'buscadorUsuarios']);
+
+//SubViews de las series del usuario
+Route::get('/wishlist', [AppController::class,"myWishlist"])
+->middleware(CheckAuthSession::class);
+
+Route::get('/seriesVistas', [AppController::class,"endedSeries"])
+->middleware(CheckAuthSession::class);
 
 //Rutas especificas de series con respecto a peticiones a la api
 Route::get('/show/{id}', [SerieController::class, 'getSerieById'])
@@ -89,4 +90,5 @@ Route::get('/registrarme', [AppController::class,"signUp"])
 ->name('signUp');
 
 Route::post('/asignarAuth', [AuthController::class, 'setAuth']);
+
 Route::post('/cerrarSesion', [AuthController::class, 'logout']);

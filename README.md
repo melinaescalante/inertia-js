@@ -1,43 +1,44 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="/public/images/tvon-logo.svg" width="400" alt="TVON Logo"></a></p>
 
+# TVON
+
+**[TVON](https://tvonlandingpage.netlify.app/)** está desarrollado y sumamente pensados para aquellas personas fanáticas de las series. Aquellas personas que no coinciden con sus amigos en mirar las series.
+**[TVON](https://tvonlandingpage.netlify.app)** es el lugar en donde toda la comunidad se une a debatir, opinar, subir pensamientos, compartir momentos, generar vínculos, y también acompañado de una buena serie.
 
 
-## About Tv On of Series
+## ¿En qué lenguaje está desarrolado?
 
+**[TVON](https://tvonlandingpage.netlify.app)** está desarrollado en el framework de javaScript, **[Inertia.js](https://inertiajs.com)**. Utilizando laravel y vue.
 
-- 
-- 
-- 
+### Funcionalidades
 
+- Subir posteos, eliminar posteo, comentar, dar like y compartir.
 
-## Learning Laravel
+- Personalizar tu perfil: géneros preferidos,nombre de usuario.
+- Chat en privado.
+- Recomendaciones según géneros favoritos
+- Buscador de series y usuarios.
+- Seguimiento de series: series viendo, vistas y en tu lista.
+- Vista de cada serie con información de elenco, galería, episodios totales y sus temporadas.
+- Reviews disponibles para cada serie.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- ****
-- ****
-- ****
-- ****
-- ****
-- ****
-- ****
-- ****
-- ****
-- ****
-- ****
-- ****
-
+#### ¿Cómo abrirlo?
+1. Habilitar extension "sodium" en el archivo de php.ini
+``` env
+extension= sodium
+```
+2. Descargar extension grpc y colocarla dentro de nuestra carpeta /php/ext, y luego habilitarla
+``` env
+extension= grpc
+```
+3. Descargar dependecias de node.js
+``` bash
+npm i
+```
+4. Descargar depencias para PHP
+``` bash
+composer i
+```
 ## Contributing
 
  [Laravel documentation](https://laravel.com/docs/contributions).

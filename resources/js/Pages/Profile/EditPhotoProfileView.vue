@@ -1,7 +1,6 @@
 <script setup>
 import NavBar from "../../components/NavBar.vue";
 import { ref } from "vue";
-// import BaseButton from "../components/BaseButton.vue";
 import { editMyProfilePhoto } from '../../../services/auth'
 
 const editData = ref({
@@ -22,6 +21,7 @@ async function handleSubmit(e) {
             msg.value = '';
         }, 2000);
     } catch (error) {
+        msg.value = 'No ha actualizado la foto de perfil correctamente.';
         console.log("Error en handleSubmit:", error);
     }
     loading.value = false;
@@ -30,13 +30,10 @@ async function handleSubmit(e) {
 
 async function handleFileSelection(e) {
     editData.value.photo = e.target.files[0]
-    console.log('Imagen seleccionada', editData.value.photo)
-
     //Funcion deja me permite leer archivos
     const reader = new FileReader()
     reader.addEventListener('load', function () {
         editData.value.photoPreview = reader.result
-
     })
     //Una data url es una url que utiliza el protocolo data y contiene un archivo codificado como string en base64
     reader.readAsDataURL(editData.value.photo)
@@ -63,6 +60,9 @@ async function handleFileSelection(e) {
         </div>
     </div>
     <div v-if="!loading && msg==='Se ha actualizado la foto de perfil correctamente.'" class="bg-green-200 p-4 m-2 rounded-md">
+        <p>{{ msg }}</p>
+    </div>
+    <div v-if="!loading && msg==='No ha actualizado la foto de perfil correctamente.'" class="bg-red-200 p-4 m-2 rounded-md">
         <p>{{ msg }}</p>
     </div>
 </template>

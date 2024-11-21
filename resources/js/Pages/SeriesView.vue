@@ -27,7 +27,6 @@ onMounted(async () => {
 
     }
 
-
 })
 
 async function loadSeriesWatched() {
@@ -40,7 +39,6 @@ async function loadSeriesWatched() {
                 const response = await fetch('https://api.tvmaze.com/singlesearch/shows?q=' +lastWatchedSerie.nameSerie)
                 if (response) {
                     const json = await response.json();
-                    // console.log(json )
                     lastSerieWatched.value = json
 
                 }
@@ -59,7 +57,6 @@ async function loadSeriesToWatch() {
         if (seriesToWatch === false) return
         if (seriesToWatch) {
             const lastSeries = seriesToWatch.value.at(seriesToWatch.value.lastIndexOf);
-            console.log(seriesToWatch.value.length)
             if (lastSeries) {
                 const response = await fetch('https://api.tvmaze.com/shows/' + Object.keys(lastSeries)[0] + '')
                 if (response) {
@@ -81,7 +78,6 @@ async function loadSeriesWatching() {
     seriesWatching.value = await allSeriesWatching(loginUser.value.id)
  
     if (seriesWatching === false) return
-console.log(seriesWatching.value)
     localSeriesWatching.value = seriesWatching.value;
     try {
         if (seriesWatching.value?.length) {
@@ -91,14 +87,15 @@ console.log(seriesWatching.value)
                     if (response.ok) {
                         const json = await response.json();
                         seriesWatchingJson.value.push(json);  // 
-                        // console.log(seriesWatchingJson.value)
                     }
                 })
             }
             );
             await Promise.all(promises);
         } else {
-            console.log('El array seriesToWatch está vacío.');
+            console.log(localSeriesWatching.value, seriesWatchingJson.value, seriesWatching.value)
+            localSeriesWatching.value = seriesWatching.value;
+            localSeriesWatching.value = seriesWatchingJson.value;
         }
 
     } catch (error) {
@@ -107,11 +104,12 @@ console.log(seriesWatching.value)
 }
 async function next(id, idSerie, nameSerie) {
     let seasons
+    console.log(localSeriesWatching, seriesWatchingJson.value, seriesWatching.value)
+
     try {
         const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
         if (response.status == 200) {
             seasons = await response.json();
-            // console.log(seasons)
         }
         const { currentEpisode: episode, currentSeason: season, currentIdSeason: idSeason } = await currentInformation(loginUser.value.id, idSerie)
  
@@ -170,39 +168,40 @@ async function next(id, idSerie, nameSerie) {
 </script>
 <template>
     <NavBar></NavBar>
-    <div v-if="loading" class="flex justify-center mt-[50%]">
+    <section id="mis-series">
+    <div v-if="loading" class="flex justify-center mt-[40vh]">
         <Spinner>
 
         </Spinner>
     </div>
     <template v-else>
 
-        <h1 class="text-xl m-4" v-if="!seriesWatching">
+        <h1 class="text-xl m-4" v-if="!seriesWatching || seriesWatchingJson.length===0">
             Oops, no tienes ni una serie empezada!
 
         </h1>
         <h1 v-else class="text-2xl font-medium ms-7 mt-3">Series empezadas</h1>
 
         <div class="flex flex-col gap-3 m-4 mt-1">
-            <Link href="/buscador" v-if="!seriesWatching"
+            <Link href="/buscador" v-if="!seriesWatching || seriesWatchingJson.length===0"
                 class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
             Empezar
             nueva serie
             
 
             </Link>
-            <div v-for="(serie, index) in seriesWatchingJson" class="md:m-2 m-1 grid items-center bg-white border border-orange-0 rounded-lg shadow hover:bg-gray-100 
+            <div v-for="(serie) in seriesWatchingJson" class="md:m-2 m-1 grid items-center bg-white border border-orange-0 rounded-lg shadow hover:bg-gray-100 
            sm:grid-cols-1 md:grid-cols-3 md:max-w-xl md:gap-5">
                 <Link :href="`/show/${serie.id}`" class="col-span-2 flex-wrap flex items-center p-2   md:p-1">
                     <div class="flex flex-col md:flex-row justify-center md:items-center">
-                        <!-- Imagen -->
+                    
                 <img class="object-cover w-28 h-auto rounded-lg"
                     :src="serie.image ? serie.image.medium : '/public/noimage.png'"
                     :alt="`Portada de la última serie en la wishlist ${serie.name}`">
-                <div class="flex flex-col sm:flex-wrap mx-1">
-                    <h2 class="text-2xl font-medium  tracking-tight text-gray-900">{{ serie.name }}</h2>
+                <div class="flex flex-col sm:flex-wrap mx-1 md:mx-2">
+                    <h2 class="text-2xl font-normal  tracking-tight text-gray-900">{{ serie.name }}</h2>
                     <p v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
-                        class="text-gray-700 font-medium ">
+                        class=" ">
                         Estas viendo de la temporada {{ localSeriesWatching.find(series =>
                             series[serie.id])?.[serie.id].currentSeason }}
                         capítulo {{ localSeriesWatching.find(series => series[serie.id])?.[serie.id].current }}
@@ -248,4 +247,5 @@ async function next(id, idSerie, nameSerie) {
             </div>
         </div>
     </template>
+</section>
 </template>

@@ -13,12 +13,10 @@ async function handleSubmit() {
     loading.value = true
     try {
         await login({ ...user.value })
-        console.log("Sesion iniciada")
         msg.value = "Se ha ingresado correctamente"
         router.replace('/')
         
     } catch (error) {
-        console.log("Login error ", error)
         msg.value = "No se ha podido ingresar. Intente de nuevo por favor."
         setTimeout(() => {
             msg.value = '';

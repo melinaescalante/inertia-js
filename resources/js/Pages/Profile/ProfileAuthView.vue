@@ -14,14 +14,7 @@ defineProps({
 
 })
 const loading = ref(true)
-// {
-//   "src": "/path/to/desktop-screenshot.png",
-//   "sizes": "1280x720",
-//   "type": "image/png",
-//   "form_factor": "wide"
-// },
 const postsById = ref([])
-const userData = ref([])
 const seriesWatched=ref([])
 const following=ref([])
 onMounted(async () => {
@@ -30,11 +23,8 @@ onMounted(async () => {
         seriesWatched.value=await allSeriesWatched(loginUser.value.id)
         await readPostsByUser(async (newPosts) => {
             postsById.value = newPosts
-            
-            //                 // }
             loading.value = false;
         }, loginUser.value.id)
-        
         following.value=await allFollowing(loginUser.value.id)
 
     } catch (error) {

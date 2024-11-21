@@ -4,7 +4,7 @@ import { Link, usePage } from '@inertiajs/vue3'
 import { ref, onMounted } from 'vue'
 import Spinner from '../../components/Spinner.vue'
 import { readPostsByUser } from '../../../services/posts';
-import { allFollowing, isFollowed, getEmailUser, getNameUser,  getUsersProfileById,addFollow, getUserName } from '../../../services/users';
+import { allFollowing, isFollowed, getEmailUser,addFollow, getUserName } from '../../../services/users';
 import { useUser } from "../../composables/useUser";
 import { useLoginUser } from '../../composables/useLoginUser';
 import { allSeriesWatched } from '../../../services/series';
@@ -14,8 +14,6 @@ const id = ref(page.props.id)
 const loading = ref(true)
 const postsById = ref([])
 const emailUser = ref(getEmailUser(id.value))
-// const userName = ref('')
-// const user = ref(null)
 const { loginUser } = useLoginUser()
 const userName = ref(getUserName(page.props.id));
 const { user } = useUser(id.value, emailUser.value, userName.value); 
@@ -23,19 +21,16 @@ const seriesWatched = ref([])
 onMounted(async () => {
   try {
     seriesWatched.value = await allSeriesWatched(id.value)
-    // emailUser.value = await getEmailUser(id.value)
-    // userName.value = await getNameUser(id.value)
-    // user.value = useUser(id.value, await emailUser.value, userName.value)
     if (loginUser.value.id) {
       handleFollowed()
     }
     await readPostsByUser(async (newPosts) => {
       loading.value = true
       postsById.value = newPosts
-      console.log(user.value)
-      // user.value = await getUsersProfileById(id.value, await emailUser.value, userName.value)
       loading.value = false
     }, id.value)
+   
+
   } catch (error) {
     console.log(error)
   }
@@ -44,11 +39,9 @@ const following = ref([])
 const isFollow = ref()
 async function totalFollowing() {
   try {
-
     following.value = await allFollowing(id.value)
-    console.log(following.value)
   } catch (error) {
-
+console.log(error)
   }
 }
 totalFollowing()
@@ -59,12 +52,10 @@ async function makeFollow() {
   } catch (error) {
     console.log(error)
   }
-
 }
 async function handleFollowed() {
   isFollow.value = await isFollowed(loginUser.value.id, id.value);
-  console.log(loginUser.value.id)
-  console.log(isFollow.value)
+
 }
 </script>
 

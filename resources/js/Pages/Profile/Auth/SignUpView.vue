@@ -18,21 +18,18 @@ const loading = ref(false)
 function passwordIsValid(e) {
     if (user.value.password.length >= 6) {
         isValid.value = true
-        console.log(e)
     }
 }
 async function handleSubmit() {
     loading.value = true
     try {
         await signUp({ ...user.value })
-        console.log("Usuario registrado")
         msg.value = "Su usuario se ha registrado correctamente"
 
         router.replace('/')
     } catch (error) {
         console.log( error)
         msg.value = "Su usuario no se ha registrado"
-        //Manjera error e interfaz amigable
     }
 }
 </script>

@@ -129,11 +129,9 @@ export async function readPostsById(callback, id, userid) {
                 id: postSnapshot.id,
                 serie: postSnapshot.data().serie,
                 idSerie: postSnapshot.data().idSerie,
-
                 text: postSnapshot.data().text,
                 image: postSnapshot.data().image,
                 photoURL: await getPhotoURL(postSnapshot.data().userid),
-
                 user: await getUserName(postSnapshot.data().userid),
                 likes: postSnapshot.data().likes,
                 comments: postSnapshot.data().comments,
@@ -154,9 +152,14 @@ export async function readPostsById(callback, id, userid) {
 * @returns {Promise}
 */
 export async function readPostsByUser(callback, userid) {
-    const postQuery = query(collection(db, "posts-public"), where("userid", "==", userid));
+    const postQuery = query(
+        collection(db, "posts-public"),
+        where("userid", "==", userid),
+        orderBy("created_at", "desc")
+    );
 
     onSnapshot(postQuery, async (snapshot) => {
+
         const posts = [];
 
         const promises = snapshot.docs.map(async (doc) => {
@@ -165,10 +168,8 @@ export async function readPostsByUser(callback, userid) {
                 id: doc.id,
                 serie: doc.data().serie,
                 idSerie: doc.data().idSerie,
-
                 text: doc.data().text,
                 image: doc.data().image,
-                date: doc.data().date,
                 user: await getUserName(doc.data().userid),
                 likes: doc.data().likes,
                 userid: doc.data().userid,
@@ -179,7 +180,6 @@ export async function readPostsByUser(callback, userid) {
             };
             posts.push(post);
         });
-
         await Promise.all(promises);
 
         callback(posts);

@@ -68,6 +68,8 @@ async function start(idUser, idSerie) {
 <template>
     <NavBar></NavBar>
     <h1 class="text-2xl font-medium ms-2 mt-3 mb-3">{{ serie.name }}</h1>
+    <article>
+        
     <div class="flex gap-3 m-2">
         <img class="h-64 md:h-72" :src="serie.image?.medium ? serie.image.medium : '/noimage.png'"
             :alt="`Imagen de portada de la serie de ${serie.name}`">
@@ -127,4 +129,6 @@ async function start(idUser, idSerie) {
         <Spinner msg="Cargando informacion de la serie"></Spinner>
     </div>
     <CommentSection :loading="loading" :idSerie="serie.id" :comments="comments"></CommentSection>
+    
+</article>
 </template>

@@ -13,10 +13,13 @@ defineProps({
 </script>
 <template>
     <NavBar></NavBar>
+    <article>
     <div class="m-2">
-
+        
         <h1 class="text-xl font-medium  mt-3 mb-3">{{ name }}</h1>
         <img class="border rounded-lg" v-if="imageUrl" :src="foundImage.resolutions.original.url" :alt="`Imagen número ${idimage} de la serie de ${name}`"/>
         <p class="text-gray-500 mt-2">Tipo: {{ foundImage.type }}</p>
     </div>
+
+    </article>
     </template>

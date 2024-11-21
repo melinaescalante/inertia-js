@@ -1,12 +1,16 @@
 <script setup>
+import { router, usePage } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import { deletePost } from '../../services/posts'
+import { defineEmits } from 'vue';
+import { useLoginUser } from '../composables/useLoginUser';
+const page = usePage()
+const currentPage = page.component
 defineProps({
     id: String
 })
-import { ref } from 'vue';
-import { deletePost } from '../../services/posts'
 
 const showModal = ref(false);
-import { defineEmits } from 'vue';
 const emit = defineEmits(['closeModal']);
 
 function openModal() {
@@ -22,6 +26,9 @@ async function handleDeletePost(id) {
         await deletePost(id)
         emit('closeModal',false);
         showModal.value = false;
+        if (currentPage==='SinglePostView') {
+            router.replace('/miPerfil')
+        }
     } catch (error) {
 
     }

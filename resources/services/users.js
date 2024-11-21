@@ -2,8 +2,8 @@ import { db } from "./firebase";
 import { doc, getDoc, updateDoc, setDoc, collection, addDoc, getDocs, query, where, onSnapshot, limit } from "firebase/firestore";
 /**
  * Funcion que en base al id de un usuario nos permite tarer el display name actualizado de cada usuario.
- * @param {id:string} dataUser
- * @returns { displayName: string}
+ * @param {String} id
+ * @returns { String}
  */
 export async function getNameUser(id) {
   try {
@@ -22,6 +22,7 @@ export async function getNameUser(id) {
  * 
  * @param {string} id 
  * @param {{displayName: string, bio: string, career: string, photoURL: string}} data
+ * @returns {Promise}
  */
 export async function updateUserProfile(id, data) {
   const profileRef = doc(db, `/users/${id}`);
@@ -41,6 +42,11 @@ export async function updateUserProfile(id, data) {
     console.error("Error actualizando el perfil:", error);
   }
 }
+/**
+ * Traemos email del usuario según id
+ * @param {String} id 
+ * @returns {String}
+ */
 export async function getEmailUser(id) {
   try {
 
@@ -54,6 +60,11 @@ export async function getEmailUser(id) {
     console.log('Hubo un error al traer el perfil', error)
   }
 }
+/**
+ * Traemos foto de perfil de usuario según id
+ * @param {String} id 
+ * @returns {String}
+ */
 export async function getPhotoURL(id) {
   try {
 
@@ -67,6 +78,11 @@ export async function getPhotoURL(id) {
     console.log('Hubo un error al traer el perfil', error)
   }
 }
+/**
+ * Traeemos un nombre de usuario según id
+ * @param {String} id 
+ * @returns {String}
+ */
 export async function getUserName(id) {
   try {
 
@@ -114,11 +130,15 @@ export async function getUsersProfileById(id, email, displayName) {
   }
 }
 
-
+/**
+ * Traemos resultados por coincidencias de display name
+ * @param {String} searchTerm 
+ * @param {Function} callback 
+ * @returns {Function} callback
+ */
 export async function getUsers(searchTerm, callback) {
   try {
     const usersRef = collection(db, "users");
-    // const users = [];
 
     if (searchTerm) {
       const q = query(usersRef, where('displayName', '>=', searchTerm), where('displayName', '<=', searchTerm + '\uf8ff'));
@@ -143,6 +163,12 @@ export async function getUsers(searchTerm, callback) {
 
   }
 }
+/**
+ * Seguimos a un usuario
+ * @param {String} idUserAuth 
+ * @param {String} idFollow 
+ * @returns {Promise}
+ */
 export async function addFollow(idUserAuth, idFollow) {
   const followingCollectionRef = collection(db, `users/${idUserAuth}/following`);
   const followingQuery = query(followingCollectionRef, where('following', '==', {
@@ -162,6 +188,11 @@ export async function addFollow(idUserAuth, idFollow) {
 
   }
 }
+/**
+ * Retornamos la cantidad de usuarios seguidos
+ * @param {String} idUser 
+ * @returns {Array}
+ */
 export async function allFollowing(idUser) {
   let allFriends = []
 
@@ -179,7 +210,12 @@ export async function allFollowing(idUser) {
   return allFriends;
 }
 
-
+/**
+ * Consultamos si un usuario es seguido por otro
+ * @param {String} idUserAuth 
+ * @param {String} idUser2 
+ * @returns {Boolean}
+ */
 export async function isFollowed(idUserAuth, idUser2) {
   try {
     const followingCollectionRef = collection(db, `users/${idUserAuth}/following`);

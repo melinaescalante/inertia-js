@@ -11,6 +11,6 @@ function goBack() {
       height="24" fill="none" viewBox="0 0 24 24">
       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14 8-4 4 4 4" />
     </svg>
-    <span class="sr-only">Volver atras</span>
+    <span class="sr-only">Volver atrás</span>
   </button>
 </template>

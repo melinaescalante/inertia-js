@@ -59,7 +59,7 @@ class AppController extends Controller
     {
 
         $postId = request('id');
-        // echo $postId;
+  
         return Inertia::render('SinglePostView', ['id' => $postId]);
     }
     public function login()
@@ -77,7 +77,6 @@ class AppController extends Controller
     public function myWishlist(Request $request)
 {
 
-    // Renderiza la vista con Inertia
     return Inertia::render('WishlistView');
 }
     public function endedSeries()

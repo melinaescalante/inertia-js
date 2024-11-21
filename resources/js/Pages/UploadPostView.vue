@@ -1,8 +1,7 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import {  router } from "@inertiajs/vue3";
 import { uploadPost, uploadPhoto } from "../../services/posts";
-import { suscribeToAuthChanged } from "../../services/auth";
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref} from "vue";
 import SearchComponentPost from "../Components/SearchComponentPost.vue";
 import NavBarSecondary from '../Components/NavBarSecondary.vue'
 import { useLoginUser } from "../composables/useLoginUser";
@@ -17,7 +16,6 @@ const newPost = ref({
     userid: null,
     serie: null,
     idSerie:null,
-
     text: "",
     image: null,
 });
@@ -32,14 +30,12 @@ function setSerieSeleccionada(serieSeleccionada) {
 }
 function setIdSerieSelecionada(idSerieSeleccionada){
     newPost.value.idSerie = idSerieSeleccionada;
-    console.log(idSerieSeleccionada)
     if (newPost.value.idSerie !== null) {
         msg.value = '';
         return;
     }
 }
 async function handlePost() {
-    console.log("Serie seleccionada:", newPost.value.serie);
 
     // Verifica si ya se está cargando o si falta información
     if (loading.value) return;
@@ -66,9 +62,11 @@ async function handlePost() {
         msg.value = 'Se ha publicado correctamente';
         setTimeout(() => {
             msg.value = '';
-        }, 3000);
+            router.replace('/')
+        }, 2000);
     } catch (error) {
-        console.log("Error al publicar:", error);
+        msg.value = 'Ha ocurrido un error';
+
     } finally {
         newPost.value.text = "";
         newPost.value.serie = null;
@@ -87,6 +85,13 @@ function handleImageChange(e) {
 </script>
 <template>
     <NavBarSecondary></NavBarSecondary>
+     <div v-if="msg !== 'Se ha publicado correctamente' && msg !== ''" class="bg-red-200 p-4 m-2 rounded-md">
+        {{ msg }}
+    </div>
+
+    <div v-if="msg == 'Se ha publicado correctamente'" class="bg-green-200 p-4 m-2 rounded-md">
+        <p>{{ msg }}</p>
+    </div>
     <h1 class="text-2xl m-2">Subir publicación</h1>
     <form action="" enctype="multipart/form-data" @submit.prevent="handlePost">
         <div class="flex flex-col mb-3">
@@ -119,11 +124,5 @@ function handleImageChange(e) {
             {{ !loading ? "Publicar" : "Publicando.." }}
         </button>
     </form>
-    <div v-if="msg !== 'Se ha publicado correctamente' && msg !== ''" class="bg-red-200 p-4 m-2 rounded-md">
-        {{ msg }}
-    </div>
-
-    <div v-if="msg == 'Se ha publicado correctamente'" class="bg-green-200 p-4 m-2 rounded-md">
-        <p>{{ msg }}</p>
-    </div>
+   
 </template>

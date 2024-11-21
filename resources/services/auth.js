@@ -143,13 +143,10 @@ export async function login({ email, password }) {
 
 export async function signUp({ email, password, userName }) {
   try {
-    // Crear un nuevo usuario
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-    // Actualizar el perfil del usuario en Firebase Authentication
     await updateProfile(userCredential.user, { displayName: userName });
 
-    // Construir los datos del usuario para guardar en Firestore
     const userData = {
       displayName: userName || "Usuario sin nombre", // 
       email:email,
@@ -167,7 +164,6 @@ export async function signUp({ email, password, userName }) {
       ...userData,
     });
 
-    console.log("Usuario creado y datos guardados en Firestore correctamente");
   } catch (error) {
     console.error("Error en el registro del usuario:", error);
     throw error;

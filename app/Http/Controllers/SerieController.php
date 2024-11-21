@@ -111,7 +111,6 @@ class SerieController extends Controller
             $images = $response->json();
 
             array_filter($images, function ($image) use ($idimage, &$foundImage) {
-                // var_dump($image['id']==$idimage);
                 if ($image['id'] == $idimage) {
 
                     $foundImage = $image;
@@ -119,7 +118,6 @@ class SerieController extends Controller
                 }
                 return false;
             });
-            // var_dump($foundImage);
         }
         return Inertia::render('Series/SingleImageGalleryView', [
             'imageUrl' => $imageUrl,
@@ -168,7 +166,7 @@ class SerieController extends Controller
     public function buscador(Request $request)
     {
         $seriesArray = [];
-        // ; // Obtener la URL actual
+
         
         if ($request->has('name')) {
             
@@ -197,7 +195,6 @@ class SerieController extends Controller
         }
         $seriesArrayLimit = array_slice($seriesArray, 0, 4);
         
-        // var_dump($seriesArray);
         return Inertia::render('UploadPostView', [
             'series' => $seriesArrayLimit
         ]);

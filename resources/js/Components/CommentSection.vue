@@ -24,6 +24,8 @@ async function handleComment() {
 }
 </script>
 <template>
+    <section id="comments">
+        
     <div class="ms-3 mt-10">
         <p class="border-b">Comentarios {{ comments?.length || 0 }}</p>
         <form @submit.prevent="handleComment" action="" class="flex gap-7 items-center ">
@@ -65,4 +67,6 @@ async function handleComment() {
             <Spinner msg="Cargando comentarios"></Spinner>
         </div>
     </div>
+    
+</section>
 </template>

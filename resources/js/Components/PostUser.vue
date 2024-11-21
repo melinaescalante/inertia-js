@@ -2,7 +2,6 @@
 import { router, Link } from '@inertiajs/vue3';
 import { like, comment, getComments, isLike } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
-// import { getNameUser } from '../../services/users';
 import { ref } from 'vue';
 import BottomSheet from './BottomSheet.vue';
 import { formatDate } from '../helpers/date';
@@ -19,7 +18,6 @@ const props = defineProps({
     imgAlt: String,
     serie: String,
     idSerie:Number,
-
     likes: Array,
     comments: Array,
     liked: Function | Boolean,
@@ -62,16 +60,11 @@ async function share(id) {
             console.log(e)
         )
 
-    console.log(id)
 }
 const areCommentsVisible = ref(false);
 const commentsArray = ref([])
 const loadingComments = ref(true)
-// async function seeComments(id) {
-// areCommentsVisible.value = !areCommentsVisible.value;
-// || []
 
-// }
 async function seeComments(id) {
     areCommentsVisible.value = !areCommentsVisible.value;
     if (areCommentsVisible.value) {
@@ -84,9 +77,9 @@ async function seeComments(id) {
           
         } catch (error) {
             console.error("Error al cargar comentarios:", error);
-            commentsArray.value = []; // Manejar caso de error
+            commentsArray.value = []; 
         } finally {
-            loadingComments.value = false; // Finalizar la carga
+            loadingComments.value = false; 
         }
     }
 }
@@ -125,6 +118,7 @@ function handleClose() {
 
 </script>
 <template>
+    <article>
     <div class="m-2 shadow-[inset_0_1px_18px_-10px_rgba(0,0,0,0.15)] shadow-orange-0 rounded-2xl p-4 mb-[2rem]">
         <div class="flex flex-row justify-between  items-center">
             <div>
@@ -253,4 +247,5 @@ function handleClose() {
 
         </div>
     </div>
+</article>
 </template>
