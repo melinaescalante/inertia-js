@@ -1,6 +1,8 @@
 <script>
 import Spinner from './Spinner.vue'
 import { router } from "@inertiajs/vue3";
+let debounceTimeout;
+
 export default {
     components: {
         Spinner
@@ -35,27 +37,40 @@ export default {
         }
     },
     methods: {
-        async getAnswer(value) {
-            if (this.loading ) return;
-            if (value.length % 2 == 0) {
-                this.loading = true;
-                try {
-                    router.reload({
-                        data: { name: value },
-                        onSuccess: (page) => {
-                            if (!this.series.length > 0) {
-                                this.answer = "No se encontraron series.";
-                            }
-                            if (this.series.length === 0) {
-                                this.answer = "";
-                            }
-                            this.loading = false;
-                        },
-                    });
-                } catch (error) {
-                    this.answer = "Error al buscar series.";
-                    this.loading = false;
-                }
+        //Nos permite realizar bsuqueda cuando el usuario deja de escribir, y si sigue escribiendo se anula la anterior petición y sigue con la más nueva
+        debounce(fn, delay) {
+            return (...args) => {
+                clearTimeout(debounceTimeout);
+                debounceTimeout = setTimeout(() => fn(...args), delay);
+            };
+        },
+        async fetchSeries(value) {
+            if (this.loading) return;
+            //Si sacamos espacios en blanco y no tiene valor retornamos
+            if (!value.trim()) {
+                this.answer = '';
+                return;
+            }
+
+            this.loading = true;
+            this.answer = 'Buscando usuarios...';
+
+            try {
+                router.reload({
+                    data: { name: value },
+                    onSuccess: (page) => {
+                        if (!this.series.length > 0) {
+                            this.answer = "No se encontraron series.";
+                        }
+                        if (this.series.length === 0) {
+                            this.answer = "";
+                        }
+                        this.loading = false;
+                    },
+                });
+            } catch (error) {
+                this.answer = "Error al buscar series.";
+                this.loading = false;
             }
         },
         selectResult(item) {
@@ -63,6 +78,10 @@ export default {
             this.localSeries = [];
             this.$emit("id-serie-seleccionada", item.show.id)
             this.$emit("serie-seleccionada", item.show.name);
+        },
+        handleInput(value) {
+            this.debounce(this.fetchSeries, 500)(value);
+            // Delay de medio segundo
         },
     },
 };
@@ -83,7 +102,7 @@ export default {
             <label for="default-search" class="sr-only">Buscá tu serie</label>
             <input type="search" id="default-search"
                 class="block w-full p-4 ps-12  text-gray-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4 "
-                v-model="formInput" @input="getAnswer(formInput)" placeholder="Buscar..." required />
+                v-model="formInput" @input="handleInput(formInput)" placeholder="Buscar serie..." required />
 
 
         </div>

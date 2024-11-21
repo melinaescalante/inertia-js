@@ -1,7 +1,9 @@
 <script>
 import { router } from '@inertiajs/vue3';
-import Spinner from './Spinner.vue'
-import { Link } from '@inertiajs/vue3'
+import Spinner from './Spinner.vue';
+import { Link } from '@inertiajs/vue3';
+
+let debounceTimeout;
 
 export default {
   components: {
@@ -22,41 +24,48 @@ export default {
     };
   },
   methods: {
-    async getAnswer(value) {
-      if (this.loading ) return;
-      if (value.length % 2 == 0) {
-        this.loading = true;
-        this.answer = 'Buscando series...';
-        try {
-          // Usamos el método "reload" del router para refrescar la ruta de la vista "/buscador".
-          // https://inertiajs.com/manual-visits
-          router.reload({
-            // Le pasamos los datos que queremos que tenga en el query string.
-            data: { name: value },
-            // Manejamos los resultados en caso de éxito. Faltaría manejar en caso de error.
-            onSuccess: (page) => {
-              if (!this.series.length > 0) {
-                this.answer = "No se encontraron series.";
-              }
-              if (this.series.length === 0) {
-                this.answer = "";
-              }
-              this.loading = false;
-            },
+    debounce(fn, delay) {
+      return (...args) => {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => fn(...args), delay);
+      };
+    },
+    async fetchSeries(value) {
+      if (this.loading) return;
 
-          });
-        } catch (error) {
-          this.answer = 'Error al buscar series.';
-          this.loading = false;
-        }
-      
+      if (!value.trim()) {
+        this.answer = '';
+        return;
+      }
+
+      this.loading = true;
+      this.answer = 'Buscando series...';
+      try {
+        router.reload({
+          data: { name: value },
+          onSuccess: (page) => {
+            if (!this.series.length) {
+              this.answer = 'No se encontraron series.';
+            } else {
+              this.answer = '';
+            }
+            this.loading = false;
+          },
+        });
+      } catch (error) {
+        this.answer = 'Error al buscar series.';
+        this.loading = false;
       }
     },
+    handleInput(value) {
+      this.debounce(this.fetchSeries, 500)(value); 
+      // Delay de medio segundo
+    },
     handleSubmit() {
-      this.getAnswer(this.formInput);
+      this.fetchSeries(this.formInput);
     }
   }
-}
+};
 </script>
 <template>
   <form @submit.prevent="handleSubmit" class="max-w-2xl m-4 mt-5" method="get">
@@ -71,9 +80,15 @@ export default {
             d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
         </svg>
       </div>
-      <input type="search" id="default-search"
+      <input
+        type="search"
+        id="default-search"
         class="block w-full p-4 ps-10 text-sm text-gray-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4"
-        placeholder="Busca tu serie" required v-model="formInput" @input="getAnswer(formInput)" />
+        placeholder="Busca tu serie"
+        required
+        v-model="formInput"
+        @input="handleInput(formInput)"
+      />
 
       <button type="submit"
         class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
