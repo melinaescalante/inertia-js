@@ -15,10 +15,10 @@ const imgDefault = '/noimage.png'
 </script>
 <template>
   <div class="flex flex-col justify-center bg-white border-gray-200 m-4 mt-0 border rounded-lg min-w-[92%]">
-    <div >
+    <div class="">
 
-      <Link class="flex" :href="`/show/${id}`" >
-      <img class="h-[40%] lg:h-[100%] w-auto max-w-[15rem] rounded-l-lg object-cover" :src="cover?.medium || imgDefault"
+      <Link class="grid justify-items-center md:justify-items-start grid-cols-1 md:grid-cols-2" :href="`/show/${id}`" >
+      <img class=" lg:h-[100%] w-auto max-w-[15rem] md:rounded-lg  object-cover" :src="cover?.medium || imgDefault"
         :alt="text">
       <div class="flex flex-wrap ms-4 mt-4 me-4">
         <p class="text-2xl font-medium mb-2">{{ titleSerie }}</p>

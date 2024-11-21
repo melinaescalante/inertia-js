@@ -36,17 +36,19 @@ export default {
     },
     methods: {
         async getAnswer(value) {
+            if (this.loading ) return;
             if (value.length % 2 == 0) {
                 this.loading = true;
                 try {
                     router.reload({
                         data: { name: value },
                         onSuccess: (page) => {
-                            if (this.series.length === 0) {
+                            if (!this.series.length > 0) {
                                 this.answer = "No se encontraron series.";
-                            } else
-                            {this.answer=""}
-                            // }
+                            }
+                            if (this.series.length === 0) {
+                                this.answer = "";
+                            }
                             this.loading = false;
                         },
                     });
@@ -70,8 +72,8 @@ export default {
         <div class="relative">
             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                 <Spinner v-if="loading"></Spinner>
-                <svg v-else class="w-6 h-6 text-gray-600 " aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg" fill="#ffcc99" viewBox="0 0 24 24">
+                <svg v-else class="w-6 h-6 text-gray-600 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    fill="#ffcc99" viewBox="0 0 24 24">
                     <path fill-rule="evenodd"
                         d="M19.003 3A2 2 0 0 1 21 5v2h-2V5.414L17.414 7h-2.828l2-2h-2.172l-2 2H9.586l2-2H9.414l-2 2H3V5a2 2 0 0 1 2-2h14.003ZM3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9H3Zm2-2.414L6.586 5H5v1.586Zm4.553 4.52a1 1 0 0 1 1.047.094l4 3a1 1 0 0 1 0 1.6l-4 3A1 1 0 0 1 9 18v-6a1 1 0 0 1 .553-.894Z"
                         clip-rule="evenodd" />
@@ -94,7 +96,8 @@ export default {
             </div>
         </ul>
 
-        <div v-if="answer==='No se encontraron series.'" class="flex flex-col justify-center items-center bg-red-200 p-4 m-2 rounded-md">
+        <div v-if="answer === 'No se encontraron series.'"
+            class="flex flex-col justify-center items-center bg-red-200 p-4 m-2 rounded-md">
 
             <p>{{ answer }}</p>
         </div>

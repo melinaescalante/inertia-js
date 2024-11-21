@@ -12,7 +12,6 @@ const {
   posts,
   newPostLoaderSign,
   loadingMore: loadingMorePosts,
-  handleDeletePost,
 } = usePosts();
 function usePosts() {
   const loading = ref(true);
@@ -74,8 +73,6 @@ function usePosts() {
           return
         }
       }
-
-
       posts.value = [
         ...posts.value,
         ...newPosts,
@@ -90,19 +87,6 @@ console.log(loadingMore.value)
 
   }
 
-  /**
-   * 
-   * @param {string} id 
-   */
-  async function handleDeletePost(id) {
-    try {
-      await deletePost(id);
-
-      posts.value = posts.value.filter(post => post.id !== id);
-    } catch (error) {
-      console.error('[Posts.vue] Error al eliminar el post ', id, error);
-    }
-  }
   onUnmounted(() => {
     if (unsubscribe) {
       unsubscribe();
@@ -114,7 +98,6 @@ console.log(loadingMore.value)
     loadingMore,
     posts,
     newPostLoaderSign,
-    handleDeletePost,
   }
 }
 

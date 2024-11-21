@@ -35,7 +35,7 @@ async function loadSeriesWatched() {
     try {
         if (seriesWatched.value === false) return;
         if (seriesWatched) {
-            const lastWatchedSerie = seriesWatched.value.at(-1);
+            const lastWatchedSerie = seriesWatched.value.at(seriesWatched.value.lastIndexOf);
             if (lastWatchedSerie) {
                 const response = await fetch('https://api.tvmaze.com/singlesearch/shows?q=' +lastWatchedSerie.nameSerie)
                 if (response) {
@@ -58,8 +58,8 @@ async function loadSeriesToWatch() {
     try {
         if (seriesToWatch === false) return
         if (seriesToWatch) {
-            const lastSeries = seriesToWatch.value.at(-1);
-            console.log(lastSeries)
+            const lastSeries = seriesToWatch.value.at(seriesToWatch.value.lastIndexOf);
+            console.log(seriesToWatch.value.length)
             if (lastSeries) {
                 const response = await fetch('https://api.tvmaze.com/shows/' + Object.keys(lastSeries)[0] + '')
                 if (response) {
@@ -79,14 +79,14 @@ async function loadSeriesToWatch() {
 
 async function loadSeriesWatching() {
     seriesWatching.value = await allSeriesWatching(loginUser.value.id)
-
+ 
     if (seriesWatching === false) return
-
+console.log(seriesWatching.value)
     localSeriesWatching.value = seriesWatching.value;
     try {
         if (seriesWatching.value?.length) {
-            const promises = seriesWatching.value.map((serie) => {
-                Object.keys(serie).map(async (showId) => {  // Itera sobre cada ID en el objeto `serie`
+            let promises = seriesWatching.value.map((serie) => {
+                Object.keys(serie).map(async (showId) => {  // 
                     const response = await fetch(`https://api.tvmaze.com/shows/${showId}`);
                     if (response.ok) {
                         const json = await response.json();
@@ -96,7 +96,6 @@ async function loadSeriesWatching() {
                 })
             }
             );
-
             await Promise.all(promises);
         } else {
             console.log('El array seriesToWatch está vacío.');
@@ -192,16 +191,18 @@ async function next(id, idSerie, nameSerie) {
             
 
             </Link>
-            <div v-for="(serie, index) in seriesWatchingJson" class="m-2 grid items-center bg-white border border-orange-0 rounded-lg shadow hover:bg-gray-100 
+            <div v-for="(serie, index) in seriesWatchingJson" class="md:m-2 m-1 grid items-center bg-white border border-orange-0 rounded-lg shadow hover:bg-gray-100 
            sm:grid-cols-1 md:grid-cols-3 md:max-w-xl md:gap-5">
-                <Link :href="`/show/${serie.id}`" class="col-span-2 flex items-center space-x-4 p-1">
+                <Link :href="`/show/${serie.id}`" class="col-span-2 flex-wrap flex items-center p-2   md:p-1">
+                    <div class="flex flex-col md:flex-row justify-center md:items-center">
+                        <!-- Imagen -->
                 <img class="object-cover w-28 h-auto rounded-lg"
                     :src="serie.image ? serie.image.medium : '/public/noimage.png'"
                     :alt="`Portada de la última serie en la wishlist ${serie.name}`">
-                <div class="flex flex-col justify-center">
-                    <h2 class="text-2xl font-bold tracking-tight text-gray-900">{{ serie.name }}</h2>
+                <div class="flex flex-col sm:flex-wrap mx-1">
+                    <h2 class="text-2xl font-medium  tracking-tight text-gray-900">{{ serie.name }}</h2>
                     <p v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
-                        class="text-gray-700 font-medium">
+                        class="text-gray-700 font-medium ">
                         Estas viendo de la temporada {{ localSeriesWatching.find(series =>
                             series[serie.id])?.[serie.id].currentSeason }}
                         capítulo {{ localSeriesWatching.find(series => series[serie.id])?.[serie.id].current }}
@@ -209,11 +210,12 @@ async function next(id, idSerie, nameSerie) {
                 
                     
                 </div>
+                </div>
                 </Link>
                 <button v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
                     @click.stop="next(loginUser.id, serie.id, serie.name)" type="button" class="text-blue-1000 hover:text-white border border-blue-0 hover:bg-blue-1000  focus:outline-none focus:border-0
                    focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
-                   md:col-span-1 lg:justify-self-center lg:self-center  md:ms-0 md:self-center sm:items-start md:m-2 mb-2 ms-3 self-end sm:m-2 ">
+                   md:col-span-1 lg:justify-self-center lg:self-center   md:self-center sm:items-start md:m-2 mb-2 ms-2 self-end sm:m-2 ">
                     Siguiente
                 </button>
             </div>

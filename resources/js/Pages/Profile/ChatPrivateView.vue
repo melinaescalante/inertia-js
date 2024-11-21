@@ -67,7 +67,7 @@ function handleSubmit() {
                                     <Link class="font-medium text-blue-1000 underline"
                                         :href="`/perfil/${message.user_id}`">{{ user.displayName }} </Link>
                                 </div>
-                                <div>{{ message.text }}</div>
+                                <div class="break-all ">{{ message.text }}</div>
                                 <div class="text-sm text-gray-700">{{ formatDate(message.created_at) || 'Enviando' }}</div>
                             </li>
                         </ul>

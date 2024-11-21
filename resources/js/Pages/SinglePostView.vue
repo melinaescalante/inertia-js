@@ -42,7 +42,7 @@ onMounted(async () => {
     </template>
     <template v-else>
         <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"
-            :imgAlt="post.image" :serie="post.serie" :created_at="post.created_at" :likes="post.likes"
+            :imgAlt="post.image" :serie="post.serie" :idSerie="post.idSerie" :created_at="post.created_at" :likes="post.likes"
             :comments="post.comments" :userName="post.user" :liked="post.liked" :userId="post.userid"></PostUser>
     </template>
 </template>

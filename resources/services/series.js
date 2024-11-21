@@ -59,7 +59,7 @@ export async function allSeriesToWatch(idUser) {
         const seriesToWatchSnapshot = await getDoc(seriesToWatchRef);
         const seriesToWatchObtained = await seriesToWatchSnapshot.data()?.seriesData || []
 
-        return seriesToWatchObtained;
+        return seriesToWatchObtained.reverse();
     } catch (error) {
         console.error(error)
     }

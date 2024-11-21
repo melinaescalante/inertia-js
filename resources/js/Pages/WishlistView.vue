@@ -15,7 +15,6 @@ const series = ref([])
     onMounted(async () => {
     try {
         series.value = await allSeriesToWatch(loginUser.value.id)
-        console.log(series.value)
         const promises = series.value.map(async (serie) => {
             const response = await fetch('https://api.tvmaze.com/singlesearch/shows?q=' + Object.values(serie)[0]);
             const json = await response.json();

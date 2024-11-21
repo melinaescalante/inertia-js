@@ -23,6 +23,7 @@ export default {
   },
   methods: {
     async getAnswer(value) {
+      if (this.loading ) return;
       if (value.length % 2 == 0) {
         this.loading = true;
         this.answer = 'Buscando series...';
@@ -48,13 +49,7 @@ export default {
           this.answer = 'Error al buscar series.';
           this.loading = false;
         }
-        if (value.length === 0) {
-          this.formInput = "";
-          this.loading = false;
-
-          this.answer = "";
-
-        }
+      
       }
     },
     handleSubmit() {
