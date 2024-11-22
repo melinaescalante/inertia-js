@@ -1,7 +1,7 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="/public/images/tvon-logo.svg" width="400" alt="TVON Logo"></a></p>
 
 # TVON
 ## Creadora: Melina Escalante
+<p align="center"><a href="https://tvonlandingpage.netlify.app" target="_blank"><img src="/public/images/ImagotipoEspesorFinalSinApilar.png" width="400" alt="TVON Logo"></a></p>
 
 
 **[TVON](https://tvonlandingpage.netlify.app/)** está desarrollado y sumamente pensados para aquellas personas fanáticas de las series. Aquellas personas que no coinciden con sus amigos en mirar las series.
