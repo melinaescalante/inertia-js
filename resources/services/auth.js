@@ -80,7 +80,7 @@ export async function editProfile({ displayName, bio, genres }) {
     const promiseProfile = await updateUserProfile(loginUser.id, { displayName, bio, genres })
     await Promise.all([promiseAuth, promiseProfile])
 
-   
+
     updateLoginUser({
       ...loginUser,
       displayName,
@@ -149,7 +149,7 @@ export async function signUp({ email, password, userName }) {
 
     const userData = {
       displayName: userName || "Usuario sin nombre", // 
-      email:email,
+      email: email,
       bio: null,
       genres: null,
       photoURL: null,

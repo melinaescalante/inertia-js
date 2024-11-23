@@ -31,7 +31,7 @@ async function handleComment() {
         <form @submit.prevent="handleComment" action="" class="flex gap-7 items-center ">
 
             <div class="ms-0 m-3 mb-0 flex flex-col gap-3 w-full">
-                <label for="comment" class="">Deja tu comentario</label>
+                <label for="comment" >Dejá tu comentario</label>
                 <textarea
                     class="border ps-1 rounded-md border-blue-0 resize-none w-full focus:ring-2 focus:ring-blue-0 focus:outline-none"
                     id="comment" v-model="commentSerie"></textarea>

@@ -51,7 +51,7 @@ async function handleSubmit() {
                         v-model="user.userName" required placeholder="melina2">
                 </div>
                 <div class="mb-6">
-                    <label for="text" class="block mb-2">Constraseña</label>
+                    <label for="password" class="block mb-2">Constraseña</label>
                     <input @input="passwordIsValid" id="password" type="password"
                         class=" p-2 w-full border rounded-md bg-slate-100 focus:ring-blue-500 focus:border-blue-500 focus:outline-none" v-model="user.password" required
                         placeholder="Contraseña" />

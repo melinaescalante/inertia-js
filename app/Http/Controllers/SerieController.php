@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 
 
@@ -41,7 +42,7 @@ class SerieController extends Controller
     public function getAllEpisodes($name, $id)
     {
         $episodes = [];
-        $cantSeason=[];
+        $cantSeason = [];
         $response = Http::get("https://api.tvmaze.com/shows/" . $id . '/episodes');
         if ($response->successful()) {
             $episodes = $response->json();
@@ -49,10 +50,10 @@ class SerieController extends Controller
                 $seasonId = $episode['season'];
                 $seasonNum = $episode['season'];
                 // dd($seasonNum);
-                
+
                 if (!isset($seasons[$seasonId])) {
                     $seasons[$seasonId] = [];
-                    array_push($cantSeason,$seasonId);
+                    array_push($cantSeason, $seasonId);
                 }
                 $seasons[$seasonId][] = $episode;
 
@@ -63,7 +64,7 @@ class SerieController extends Controller
         return Inertia::render('Series/AllEpisodesBySerieView', [
             'seasons' => $seasons,
             'name' => $name,
-            'ids'=>array_reverse($cantSeason)
+            'ids' => array_reverse($cantSeason)
 
         ]);
     }
@@ -147,7 +148,22 @@ class SerieController extends Controller
         $response = Http::get("https://api.tvmaze.com/shows/" . $id);
         if ($response->successful()) {
             $serie = $response->json();
+            $tr = new GoogleTranslate('es');
+            if (isset($serie['summary'])) { // Verifica que la clave exista
+                $serie['summary'] = $tr->translate($serie['summary']);
+            }
+            if (isset($serie['genres'])) {
+                $genres = [];
+                foreach ($serie['genres'] as $genre) {
+                    $genre = ucwords($tr->translate($genre));
+                    array_push($genres, $genre);
+                }
+                $serie['genres']= $genres;
+            }
+
         }
+
+
         return Inertia::render('Series/SingleSerieResultView', [
             'serie' => $serie
         ]);
@@ -162,18 +178,19 @@ class SerieController extends Controller
             return [];
         }
     }
-    
+
     public function buscador(Request $request)
     {
         $seriesArray = [];
 
-        
+
         if ($request->has('name')) {
-            
+
             $seriesArray = $this->getSeriesByName($request->input('name'));
-            
+
         }
         $seriesArrayLimit = array_slice($seriesArray, 0, 7);
+
         return Inertia::render('SearchView', [
             'series' => $seriesArrayLimit
         ]);
@@ -181,7 +198,7 @@ class SerieController extends Controller
     public function buscadorUsuarios(Request $request)
     {
         $usersArray = [];
-     
+
         return Inertia::render('SearchUsersView', [
             'users' => $usersArray
         ]);
@@ -191,10 +208,10 @@ class SerieController extends Controller
         $seriesArray = [];
         if ($request->has('name')) {
             $seriesArray = $this->getSeriesByName($request->input('name'));
-            
+
         }
         $seriesArrayLimit = array_slice($seriesArray, 0, 4);
-        
+
         return Inertia::render('UploadPostView', [
             'series' => $seriesArrayLimit
         ]);

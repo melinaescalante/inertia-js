@@ -14,7 +14,7 @@ defineProps({
 const imgDefault = '/noimage.png'
 </script>
 <template>
-  <div class="flex flex-col justify-center bg-white border-gray-200 m-4 mt-0 border rounded-lg min-w-[92%]">
+  <div class="flex flex-col justify-center bg-white border-gray-200 m-4 me-2 mt-0 border rounded-lg min-w-[83%]">
     <div class="">
 
       <Link class="grid justify-items-center md:justify-items-start grid-cols-1 md:grid-cols-2" :href="`/show/${id}`" >

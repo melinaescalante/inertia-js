@@ -1,6 +1,6 @@
 <script setup>
 import { router, Link } from '@inertiajs/vue3';
-import { like, comment, getComments, isLike } from '../../services/posts';
+import { like, comment, getComments, isLiked } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
 import { ref } from 'vue';
 import BottomSheet from './BottomSheet.vue';
@@ -91,7 +91,7 @@ async function giveLike(e) {
         return
     }
     try {
-        const alreadyLiked = await isLike(heart.id, loginUser.value.id);
+        const alreadyLiked = await isLiked(heart.id, loginUser.value.id);
         if (!alreadyLiked) {
             await like(e.target.id, 'plus', loginUser.value.id);
             heart.style.fill = 'red';
@@ -131,7 +131,7 @@ function handleClose() {
                 <Link :href="`/show/${idSerie}`" class=" text-center decoration-none text-blue-500">{{ serie }}</Link>
             </div>
             <div>
-                <BottomSheet :isclosed="isBottomSheetOpen">
+                <BottomSheet v-if="userId===loginUser.id" :isclosed="isBottomSheetOpen">
                     <div class="flex flex-col">
                         <div class="flex">
                             <div>
@@ -229,8 +229,8 @@ function handleClose() {
 
         <div class="relative">
             <form action="" @submit.prevent="giveComment(id)" :id="id">
-                <label for="text" class="sr-only">Deja tu comentario debajo:</label>
-                <input type="text" id="comment"
+                <label for="comment" class="sr-only">Deja tu comentario debajo:</label>
+                <input type="text" aria-label="comment"
                     class="block w-full p-3 border rounded-3xl focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4"
                     placeholder="Deja tu comentario aquí" required v-model="commentText" />
                 <button type="submit" class="text-white absolute end-2.5 bottom-2.5    rounded-lg  px-1 py-1">

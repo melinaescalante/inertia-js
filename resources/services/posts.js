@@ -37,7 +37,7 @@ export function fetchPosts(idUser, callback) {
         //Usamos onsnapshot para ver los cambios como likes y comentarios
         const unsubscribe = onSnapshot(queryPost, async (snapshot) => {
             const posts = snapshot.docs.map(async (post) => {
-                const like = await isLike(post.id, idUser);
+                const like = await isLiked(post.id, idUser);
                 return {
                     id: post.id,
                     photoURL: await getPhotoURL(post.data().userid),
@@ -124,7 +124,7 @@ export async function readPostsById(callback, id, userid) {
 
     onSnapshot(postRef, async (postSnapshot) => {
         if (postSnapshot.exists()) {
-            const like = await isLike(postSnapshot.id, userid);
+            const like = await isLiked(postSnapshot.id, userid);
             const postFound = {
                 id: postSnapshot.id,
                 serie: postSnapshot.data().serie,
@@ -163,7 +163,7 @@ export async function readPostsByUser(callback, userid) {
         const posts = [];
 
         const promises = snapshot.docs.map(async (doc) => {
-            const like = await isLike(doc.id, userid);
+            const like = await isLiked(doc.id, userid);
             const post = {
                 id: doc.id,
                 serie: doc.data().serie,
@@ -191,7 +191,7 @@ export async function readPostsByUser(callback, userid) {
  * @param {String} userid 
  * @returns {Boolean}
  */
-export async function isLike(id, userid) {
+export async function isLiked(id, userid) {
     const postRef = doc(db, 'posts-public', id);
     const postSnapshot = await getDoc(postRef);
     const currentLikes = postSnapshot.data().likes || [];

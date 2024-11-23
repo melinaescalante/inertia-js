@@ -6,11 +6,11 @@ import { storage } from "./firebase";
  * @param {string} path 
  * @param {File} file 
  */
-export async function uploadFile(path,file) {
+export async function uploadFile(path, file) {
   const fileRef = ref(storage, path);
 
   await uploadBytes(fileRef, file);
-} 
+}
 
 /**
  * 

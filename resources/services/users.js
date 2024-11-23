@@ -225,11 +225,11 @@ export async function isFollowed(idUserAuth, idUser2) {
     }));
     const followingSnapshot = await getDocs(followingQuery);
 
-      if (!followingSnapshot.empty) {
-        return true;
-      } else {
-        return false;
-      }
+    if (!followingSnapshot.empty) {
+      return true;
+    } else {
+      return false;
+    }
   } catch (error) {
     console.log("Error verificando si está seguido", error);
     return false;

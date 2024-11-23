@@ -23,8 +23,8 @@ function retrieveFromCache(key) {
     return privateChatCache[key] || null
 }
 async function privateChatDocument(senderId, receiverId) {
-    const cacheKey=getCacheKey(senderId,receiverId)
-    const cacheDoc=retrieveFromCache(cacheKey)
+    const cacheKey = getCacheKey(senderId, receiverId)
+    const cacheDoc = retrieveFromCache(cacheKey)
     if (cacheDoc) {
 
         return cacheDoc
@@ -48,7 +48,7 @@ async function privateChatDocument(senderId, receiverId) {
                 [senderId]: true,
                 [receiverId]: true,
             },
-            userId:senderId
+            userId: senderId
         });
     } else {
         chatDoc = chatSnapshot.docs[0];
@@ -108,14 +108,14 @@ export async function subscribeToPrivateChatMessages(senderId, receiverId, callb
 export async function allChats(idUser) {
     let allChats = []
     const messagesRef = collection(db, `private-chats`);
-    
+
     const chatQuery = query(
-        messagesRef, 
+        messagesRef,
         where("users." + idUser, "==", true)
     );
 
     const chatSnapshot = await getDocs(chatQuery);
-    
+
     chatSnapshot.forEach(doc => {
         allChats.push(doc.data());
     });

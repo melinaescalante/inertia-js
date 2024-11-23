@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use URL;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
 
 class AppController extends Controller
 {
     public function home()
     {
-
+       
         return Inertia::render('HomeView');
     }
 
@@ -37,10 +38,10 @@ class AppController extends Controller
         return Inertia::render('Profile/ProfileAuthView');
 
     }
-    public function chatPrivate($id,$email)
+    public function chatPrivate($id, $email)
     {
 
-        return Inertia::render('Profile/ChatPrivateView',[
+        return Inertia::render('Profile/ChatPrivateView', [
             'id' => $id,
             'email' => $email,
         ]);
@@ -51,7 +52,8 @@ class AppController extends Controller
     {
         return Inertia::render('Profile/EditProfileView');
     }
-    public function editPhotoProfile(){
+    public function editPhotoProfile()
+    {
         return Inertia::render('Profile/EditPhotoProfileView');
 
     }
@@ -59,7 +61,7 @@ class AppController extends Controller
     {
 
         $postId = request('id');
-  
+
         return Inertia::render('SinglePostView', ['id' => $postId]);
     }
     public function login()
@@ -75,15 +77,15 @@ class AppController extends Controller
         return Inertia::render('SeriesView');
     }
     public function myWishlist(Request $request)
-{
+    {
 
-    return Inertia::render('WishlistView');
-}
+        return Inertia::render('WishlistView');
+    }
     public function endedSeries()
-{
+    {
 
-    return Inertia::render('EndedSeriesView');
-}
+        return Inertia::render('EndedSeriesView');
+    }
     public function misSeries()
     {
         return Inertia::render('SeriesView');
@@ -92,7 +94,7 @@ class AppController extends Controller
     {
         return Inertia::render('ConfigView');
     }
-    public function uploadPost( Request $request)
+    public function uploadPost(Request $request)
     {
         return Inertia::render('UploadPostView');
     }
