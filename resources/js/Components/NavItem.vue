@@ -8,12 +8,18 @@ defineProps({
 })
 </script>
 <template>
+    <div class="flex flex-col justify-end items-center mt-2">
 
-    <Link :title="titleLink" :href="`${route}`"
-        :class="`flex flex-col items-center justify-center group ${roundedClass} px-0 py-2`">
-    <slot></slot>
+        
+        <Link :title="titleLink" :href="`${route}`"
+        :class="`flex flex-col items-center justify-center group ${roundedClass} `">
+        <slot></slot>
+        
+        <span class="text-center text-sm">{{ titleLink!=='Postear'? titleLink: '' }}</span>
+        <!-- <span class="text-center text-sm m-1">{{ titleLink }}</span> -->
 
-<span class="text-center text-sm">{{ titleLink!=='Nuevo Posteo'? titleLink: '' }}</span>
-<!-- <span class="text-center text-sm m-1">{{  titleLink }}</span> -->
-</Link>
+
+    </Link>
+    <span class="text-center text-sm m-1">{{   titleLink==='Postear'? titleLink: '' }}</span>
+</div>
 </template>

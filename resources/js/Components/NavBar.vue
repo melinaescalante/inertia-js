@@ -106,7 +106,7 @@ const excludedPages = [
         class="fixed z-50 w-full h-18 max-w-lg -translate-x-1/2 bg-white border border-blue-0 rounded-full bottom-4 left-1/2 ">
         <div class="grid h-full max-w-lg grid-cols-[repeat(auto-fit,_minmax(60px,_1fr))] mx-auto">
             <NavItem  titleLink="Inicio" route="/"
-                roundedClass="rounded-s-full hover:bg-gray-50">
+                roundedClass="rounded-s-full ">
                 <svg class="w-5 h-5 mb-1  group-hover:text-blue-1000 " aria-hidden="true"
                     :class="currentPage === 'HomeView' ? 'text-blue-1000' : 'text-gray-500'" xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor" viewBox="0 0 20 20">
@@ -116,7 +116,7 @@ const excludedPages = [
                 </svg>
             </NavItem>
 
-            <NavItem titleLink="Descubrir" route="/descubrir" roundedClass="hover:bg-gray-50 ">
+            <NavItem titleLink="Descubrir" route="/descubrir" roundedClass=" ">
                 <svg class="w-5 h-5 mb-1 group-hover:text-blue-1000 " fill="currentColor" :class="currentPage === 'DiscoverView' ? 'text-blue-1000' : 'text-gray-500'" 
                     xmlns="http://www.w3.org/2000/svg" version="1.1" id="Layer_1" viewBox="0 0 511.995 511.995"
                     xml:space="preserve">
@@ -166,12 +166,12 @@ const excludedPages = [
 
             <div v-if="loginUser.id !== null" class="flex items-center justify-center">
 
-                <NavItem titleLink="Nuevo Posteo" route="/subirPublicacion"
-                    roundedClass="w-10 h-10 bg-blue-500 rounded-full hover:bg-blue-1000 group focus:ring-4 focus:ring-blue-300 focus:outline-none text-white  ">
+                <NavItem titleLink="Postear" route="/subirPublicacion"
+                    roundedClass="w-8 h-8 bg-blue-500 rounded-full hover:bg-blue-1000 group focus:ring-4 focus:ring-blue-300 focus:outline-none text-white  ">
                     <!--h-auto w-auto  -->
                     <svg class="w-[1.3rem] h-[1.3rem] text-white " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 18 18">
-                        <title>Nuevo Posteo</title>
+                        <title>Postear</title>
 
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 1v16M1 9h16" />
@@ -180,7 +180,7 @@ const excludedPages = [
                 </NavItem>
             </div>
             <NavItem v-if="loginUser.id !== null" titleLink="Mis Series" route="/misSeries"
-                roundedClass=" hover:bg-gray-50">
+                roundedClass=" ">
                 <svg class="w-6 h-6 mb-1 group-hover:text-blue-1000 " aria-hidden="true" :class="currentPage === 'SeriesView' ? 'text-blue-1000' : 'text-gray-500'" 
                     fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <title>Mis Series</title>
@@ -191,7 +191,7 @@ const excludedPages = [
                 </svg>
                 <span class="sr-only">Mis Series</span>
             </NavItem>
-            <NavItem titleLink="Mi Perfil" :route="`/miPerfil`" roundedClass=" rounded-e-full hover:bg-gray-50 ">
+            <NavItem titleLink="Mi Perfil" :route="`/miPerfil`" roundedClass=" rounded-e-full ">
 
                 <svg class="w-5 h-5 mb-1   group-hover:text-blue-1000 " :class="currentPage === 'Profile/ProfileAuthView' ? 'text-blue-1000' : 'text-gray-500'"  aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
