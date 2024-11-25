@@ -45,18 +45,25 @@ class SerieController extends Controller
         $cantSeason = [];
         $response = Http::get("https://api.tvmaze.com/shows/" . $id . '/episodes');
         if ($response->successful()) {
+            $tr = new GoogleTranslate('es');
             $episodes = $response->json();
-            foreach ($episodes as $episode) {
+            foreach ($episodes as &$episode) {
                 $seasonId = $episode['season'];
                 $seasonNum = $episode['season'];
-                // dd($seasonNum);
+         
 
                 if (!isset($seasons[$seasonId])) {
                     $seasons[$seasonId] = [];
                     array_push($cantSeason, $seasonId);
                 }
+                // if (isset($episode['summary'])) {
+                //     $episode['summary'] = $tr->translate($episode['summary']);
+                // }
+                // if (isset($episode['name'])) {
+                //     $episode['name'] = ucfirst($tr->translate($episode['name']));
+                // }
                 $seasons[$seasonId][] = $episode;
-
+              
 
             }
         }
@@ -134,6 +141,16 @@ class SerieController extends Controller
         $response = Http::get("https://api.tvmaze.com/seasons/" . $id . '/episodes');
         if ($response->successful()) {
             $episodes = $response->json();
+            $tr = new GoogleTranslate('es');
+            foreach ($episodes as &$episode) {
+
+                if (isset($episode['summary'])) {
+                    $episode['summary'] = $tr->translate($episode['summary']);
+                }
+                if (isset($episode['name'])) {
+                    $episode['name'] = ucfirst($tr->translate($episode['name']));
+                }
+            }
         }
         return Inertia::render('Series/EpisodesBySeasonView', [
             'episodesBySeason' => $episodes,
@@ -149,7 +166,7 @@ class SerieController extends Controller
         if ($response->successful()) {
             $serie = $response->json();
             $tr = new GoogleTranslate('es');
-            if (isset($serie['summary'])) { // Verifica que la clave exista
+            if (isset($serie['summary'])) {
                 $serie['summary'] = $tr->translate($serie['summary']);
             }
             if (isset($serie['genres'])) {
@@ -158,7 +175,7 @@ class SerieController extends Controller
                     $genre = ucwords($tr->translate($genre));
                     array_push($genres, $genre);
                 }
-                $serie['genres']= $genres;
+                $serie['genres'] = $genres;
             }
 
         }
@@ -188,6 +205,20 @@ class SerieController extends Controller
 
             $seriesArray = $this->getSeriesByName($request->input('name'));
 
+            $tr = new GoogleTranslate('es');
+            foreach ($seriesArray as &$serie) {
+
+                if (isset($serie['show']['genres'])) {
+                    $genres = [];
+                    foreach ($serie['show']['genres'] as $genre) {
+
+                        $genre = ucwords($tr->translate($genre));
+                        array_push($genres, $genre);
+                    }
+
+                    $serie['show']['genres'] = $genres;
+                }
+            }
         }
         $seriesArrayLimit = array_slice($seriesArray, 0, 7);
 
