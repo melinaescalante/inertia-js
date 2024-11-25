@@ -71,12 +71,12 @@ async function start(idUser, idSerie) {
     <h1 class="text-2xl font-medium ms-2 mt-3 mb-3">{{ serie.name }}</h1>
     <article>
 
-        <div class="flex gap-3 m-2">
-            <img class="h-64 md:h-72" :src="serie.image?.medium ? serie.image.medium : '/noimage.png'"
+        <div class="flex gap-3 md:flex-row flex-col m-2">
+            <img class="max-h-fit   w-fit " :src="serie.image?.medium ? serie.image.medium : '/noimage.png'"
                 :alt="`Imagen de portada de la serie de ${serie.name}`">
             <div>
 
-                <div v-html="serie.summary"></div>
+                <div class="m-2" v-html="serie.summary"></div>
                 <div>
                     <ul class="flex flex-wrap">
                         <li class="rounded-xl bg-opacity-70  border border-blue-950  text-sm  text-blue-950 font-medium p-2 m-1 ms-0 text-center  "
@@ -87,7 +87,7 @@ async function start(idUser, idSerie) {
             </div>
         </div>
         <div class="flex m-2 mt-3 gap-1 justify-between  ">
-            <ButtonBase :href="serie.id" :name="serie.name" param="episodios">Episodios</ButtonBase>
+            <!-- <ButtonBase :href="serie.id" :name="serie.name" param="episodios">Episodios</ButtonBase> -->
             <ButtonBase :href="serie.name" :name="serie.id" param="temporadas">Temporadas</ButtonBase>
             <ButtonBase :href="serie.id" :name="serie.name" param="galeria">Galería</ButtonBase>
             <ButtonBase :href="serie.name" :name="serie.id" param="elenco">Elenco</ButtonBase>

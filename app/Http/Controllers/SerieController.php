@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-// use Http;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
@@ -11,7 +10,34 @@ use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class SerieController extends Controller
 {
+    protected $tr; 
 
+    public function __construct()
+    {
+        $this->tr = new GoogleTranslate('es');
+    }
+    public function getEpisode($id)
+    {
+
+        $episode = [];
+        $response = Http::get("https://api.tvmaze.com/episodes/" . $id);
+        if ($response->successful()) {
+            $episode = $response->json();
+            if (isset($episode['summary'])) {
+                $episode['summary'] = $this->tr->translate($episode['summary']);
+            }
+
+            if (isset($episode['name'])) {
+                $episode['name'] = ucfirst($this->tr->translate($episode['name']));
+            }
+        }
+        // var_dump($episode);
+        return Inertia::render('Series/SingleEpisodeView', [
+            'episode' => $episode,
+
+
+        ]);
+    }
     public function getCastBySerie($id, $name)
     {
         $cast = [];
@@ -50,20 +76,15 @@ class SerieController extends Controller
             foreach ($episodes as &$episode) {
                 $seasonId = $episode['season'];
                 $seasonNum = $episode['season'];
-         
+
 
                 if (!isset($seasons[$seasonId])) {
                     $seasons[$seasonId] = [];
                     array_push($cantSeason, $seasonId);
                 }
-                // if (isset($episode['summary'])) {
-                //     $episode['summary'] = $tr->translate($episode['summary']);
-                // }
-                // if (isset($episode['name'])) {
-                //     $episode['name'] = ucfirst($tr->translate($episode['name']));
-                // }
+
                 $seasons[$seasonId][] = $episode;
-              
+
 
             }
         }

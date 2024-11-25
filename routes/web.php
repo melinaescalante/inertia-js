@@ -63,6 +63,8 @@ Route::get('/show/{id}', [SerieController::class, 'getSerieById'])
 
 Route::get('/show/{id}/elenco/{name}', [SerieController::class, 'getCastBySerie'])
 ;
+Route::get('/show/episode/{id}', [SerieController::class, 'getEpisode'])
+;
 
 Route::get('/show/{id}/temporadas/{name}', [SerieController::class, 'getSeasonsBySerie'])
 ->whereNumber('id');
