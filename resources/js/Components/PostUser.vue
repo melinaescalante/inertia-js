@@ -119,8 +119,8 @@ function handleClose() {
 </script>
 <template>
     <article class="skiptranslate">
-    <div class="m-2 shadow-[inset_0_1px_18px_-10px_rgba(0,0,0,0.15)] shadow-orange-0 rounded-2xl p-4 mb-[2rem]">
-        <div class="flex flex-row justify-between  items-center">
+    <div class="m-2 shadow-[inset_0_1px_25px_-10px] shadow-orange-0 rounded-2xl p-4 mb-[2rem]">
+        <div class="flex flex-row justify-between items-center">
             <div>
                 <img :src="photoURL || '/noimage.png'" class=" border rounded-md  w-10 h-10 " alt="">
 

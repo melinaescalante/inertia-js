@@ -20,7 +20,7 @@ defineProps({
             class=" m-2 flex flex-col items-start bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl ">
 
     <img class="object-cover w-full rounded-t-lg h-52  md:w-44  md:rounded-none md:rounded-s-lg"
-                :src="episodes.image?.medium ? episodes.image.medium : 'noimage.png'" alt="">
+                :src="episodes.image?.medium ? episodes.image.medium : '/noimage.png'" alt="">
             <div class="flex flex-col justify-between p-4 ps-2 leading-normal">
                 <h2 class="mb-2 text-2xl font-medium tracking-tight text-gray-900 ">{{ episodes.name }}
                 </h2>

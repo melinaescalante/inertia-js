@@ -35,7 +35,7 @@ onMounted(async () => {
     <NavBar />
     <section id="series">
 
-        <h1 class="text-xl m-2 font-medium">Tus series a ver</h1>
+        <h1 class="text-xl m-2 font-medium skiptranslate">Tus series a ver</h1>
         <div v-if="!loading">
             <ul v-if="arrayFetch.length >= 1">
                 <li v-for="serie in arrayFetch">

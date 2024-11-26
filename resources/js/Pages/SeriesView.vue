@@ -176,15 +176,15 @@ async function next(id, idSerie, nameSerie) {
     </div>
     <template v-else>
 
-        <h1 class="text-xl m-4" v-if="!seriesWatching || seriesWatchingJson.length===0">
+        <h1 class="text-xl m-4 skiptranslate" v-if="!seriesWatching || seriesWatchingJson.length===0">
             Oops, no tienes ni una serie empezada!
 
         </h1>
-        <h1 v-else class="text-2xl font-medium ms-7 mt-3">Series empezadas</h1>
+        <h1 v-else class="text-2xl font-medium ms-7 mt-3 skiptranslate">Series empezadas</h1>
 
-        <div class="flex flex-col gap-3 m-4 mt-1">
+        <div class="flex flex-col gap-3 m-4 mt-1 ">
             <Link href="/buscador" v-if="!seriesWatching || seriesWatchingJson.length===0"
-                class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
+                class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 skiptranslate">
             Empezar
             nueva serie
             
@@ -201,7 +201,7 @@ async function next(id, idSerie, nameSerie) {
                 <div class="flex flex-col sm:flex-wrap mx-1 md:mx-2">
                     <h2 class="text-2xl font-normal  tracking-tight text-gray-900">{{ serie.name }}</h2>
                     <p v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
-                        class=" ">
+                        class=" skiptranslate">
                         Estas viendo de la temporada {{ localSeriesWatching.find(series =>
                             series[serie.id])?.[serie.id].currentSeason }}
                         capítulo {{ localSeriesWatching.find(series => series[serie.id])?.[serie.id].current }}
@@ -214,22 +214,22 @@ async function next(id, idSerie, nameSerie) {
                 <button v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
                     @click.stop="next(loginUser.id, serie.id, serie.name)" type="button" class="text-blue-1000 hover:text-white border border-blue-0 hover:bg-blue-1000  focus:outline-none focus:border-0
                    focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
-                   md:col-span-1 lg:justify-self-center lg:self-center   md:self-center sm:items-start md:m-2 mb-2 ms-2 self-end sm:m-2 ">
+                   md:col-span-1 skiptranslate lg:justify-self-center lg:self-center   md:self-center sm:items-start md:m-2 mb-2 ms-2 self-end sm:m-2 ">
                     Siguiente
                 </button>
             </div>
 
-            <h2 class="text-xl m-4 ms-2" v-if="!seriesToWatch.length >= 1">Oops, no tienes ni una serie en tu lista!</h2>
+            <h2 class="text-xl m-4 ms-2 skiptranslate" v-if="!seriesToWatch.length >= 1">Oops, no tienes ni una serie en tu lista!</h2>
 
-            <div class="" v-if="!seriesToWatch.length >= 1">
+            <div v-if="!seriesToWatch.length >= 1">
                 <Link href="/buscador"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 block w-full text-center">
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 block w-full text-center skiptranslate">
                 Agregar
                 serie a wishlist</Link>
 
             </div>
             <div v-if="seriesToWatch.length >= 1 && !loading">
-                <h2 class="text-2xl font-medium ms-2 mt-3 mb-3">Series en tu lista</h2>
+                <h2 class="text-2xl font-medium ms-2 mt-3 mb-3 skiptranslate">Series en tu lista</h2>
                 <CardWithData :data=seriesToWatch :imgContent="lastSerie?.image?.medium"
                     :altImgContent="lastSerie?.name" text="Tu lista de series para ver" route="/wishlist"
                     dataName="seriesToWatch">
@@ -238,7 +238,7 @@ async function next(id, idSerie, nameSerie) {
             </div>
             <div v-if="seriesWatched.length >= 1 && !loading">
 
-                <h2 class="text-2xl font-medium ms-2 mt-3 mb-3">Series vistas</h2>
+                <h2 class="text-2xl font-medium ms-2 mt-3 mb-3 skiptranslate">Series vistas</h2>
 
                 <CardWithData :data=seriesWatched :imgContent="lastSerieWatched?.image?.medium"
                     :altImgContent="lastSerieWatched?.name" text="Tu lista de series vistas" dataName="seriesWatched"
