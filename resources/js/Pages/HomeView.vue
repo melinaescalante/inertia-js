@@ -104,7 +104,7 @@ function usePosts() {
 <template>
   <NavBar />
  
-  <section class="posts">
+  <section class="posts skiptranslate" >
     <div v-if="!loadingPosts">
       <div v-for="post in posts" :key="post.id">
         <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"

@@ -96,7 +96,7 @@ export default {
       </button>
     </div>
   </form>
-  <div v-if="loading" class="flex flex-col justify-center items-center mb-2">
+  <div v-if="loading" class="flex flex-col justify-center items-center mb-2 skiptranslate">
 
     <p>{{ answer }}</p>
     <Spinner msg="Buscando series"></Spinner>
@@ -107,7 +107,7 @@ export default {
   </div>
   <ul v-if="!loading && series.length">
 
-    <li class="p-2 ps-6 border flex items-center" v-for="item in series">
+    <li class="p-2 ps-6 border flex items-center skiptranslate" v-for="item in series">
       <img class="h-[100%] w-12" :src="item.show.image ? item.show.image.medium : 'noimage.png'" :alt="item.show.name">
       <div class="flex flex-col">
 

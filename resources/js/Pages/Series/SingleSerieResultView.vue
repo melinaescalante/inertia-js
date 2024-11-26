@@ -68,7 +68,7 @@ async function start(idUser, idSerie) {
 </script>
 <template>
     <NavBar></NavBar>
-    <article>
+    <article class="skiptranslate">
         <h1 class="text-2xl font-medium ms-2 mt-3 mb-3">{{ serie.name }}</h1>
 
         <div class="flex gap-3 md:flex-row flex-col m-2">

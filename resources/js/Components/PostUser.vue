@@ -118,7 +118,7 @@ function handleClose() {
 
 </script>
 <template>
-    <article>
+    <article class="skiptranslate">
     <div class="m-2 shadow-[inset_0_1px_18px_-10px_rgba(0,0,0,0.15)] shadow-orange-0 rounded-2xl p-4 mb-[2rem]">
         <div class="flex flex-row justify-between  items-center">
             <div>

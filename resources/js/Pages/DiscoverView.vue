@@ -84,7 +84,7 @@ defineProps({ genres: Array })
 <!-- 
     <div id="gt-mordadam-43217984" class="hidden">
         </div> -->
-        <section id="discover-view" v-if="!loading">
+        <section id="discover-view" class="" v-if="!loading">
 
 
         <div v-for="(genero, key)  in serie" :key="key" class="flex  flex-col ">

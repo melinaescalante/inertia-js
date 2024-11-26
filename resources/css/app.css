@@ -1,10 +1,43 @@
+/* Ocultar la barra de Google Translate */
+.VIpgJd-ZVi9od-ORHb-OEVmcd.skiptranslate {
+    display: none !important;
+}
+html, body {
+    overflow: auto !important;
+    height: auto !important;
+  }
+  
+
+body {
+    display:relative;
+    /* margin-top: -40px !important; */
+
+}
+/* Oculta el widget emergente de Google Translate */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-menu-frame.skiptranslate,
+.goog-te-gadget-icon,
+#goog-gt-tt {
+  display: none !important;
+}
+
+.goog-te-menu-value {
+  display: none !important;
+}
+
+/* Evita que el resto de elementos hereden los estilos de Translate */
+body {
+  top: 0 !important;
+  position: static !important;
+}
+
+
 @font-face {
     font-family: 'Fredoka';
     src: url('/fonts/Fredoka-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
-
 @font-face {
     font-family: 'Fredoka';
     src: url('/fonts/Fredoka-Light.ttf') format('truetype');

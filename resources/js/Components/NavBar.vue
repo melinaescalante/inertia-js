@@ -35,7 +35,7 @@ const excludedPages = [
 </script>
 <template>
 
-    <nav class="flex justify-between items-center p-2 py-2 ps-5 border-blue-0 border rounded-lg  text-slate-800">
+    <nav class=" skiptranslate flex justify-between items-center p-2 py-2 ps-5 border-blue-0 border rounded-lg  text-slate-800">
         <div v-if="!loading" class="flex items-center gap-6">
 
             <ButtonGoBack v-if="!excludedPages.includes(currentPage)">
@@ -103,7 +103,7 @@ const excludedPages = [
         </ul>
     </nav>
     <div
-        class="fixed z-50 w-full h-18 max-w-lg -translate-x-1/2 bg-white border border-blue-0 rounded-full bottom-4 left-1/2 ">
+        class="skiptranslate fixed z-50 w-full h-18 max-w-lg -translate-x-1/2 bg-white border border-blue-0 rounded-full bottom-4 left-1/2 ">
         <div class="grid h-full max-w-lg grid-cols-[repeat(auto-fit,_minmax(60px,_1fr))] mx-auto">
             <NavItem  titleLink="Inicio" route="/"
                 roundedClass="rounded-s-full ">

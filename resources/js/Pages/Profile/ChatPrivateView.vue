@@ -47,7 +47,7 @@ function handleSubmit() {
 <template>
     <NavBar></NavBar>
         <Suspense>
-                <div>
+                <div class="skiptranslate">
                     <h2 class="sr-only">Mensajes privado</h2>
                     <div class="flex items-center gap-4 m-4 ms-2">
                         <img class="w-10 h-10 rounded-full" :src="user.photoURL|| '/noimage.png'" :alt="`Imagen de perfil del usuario ${user.displayName}`">

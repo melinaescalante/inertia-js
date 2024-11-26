@@ -86,14 +86,14 @@ export default {
   <div v-if="!loading && answer === 'No se encontraron usuarios.'" class="p-4 m-2 bg-red-200 rounded-md">
     <p>{{ answer }}</p>
   </div>
-  <ul class="mb-2" v-if="!loading && users?.length">
+  <ul class="mb-2 skiptranslate" v-if="!loading && users?.length">
 
     <li class="p-2 ps-6 border flex items-center" v-for="user in users">
       <img class="h-[100%] w-12" :src="user.photoURL ? user.photoURL : 'noimage.png'" :alt="user.displayName">
       <div class="flex flex-col">
 
         <Link :href="`/perfil/${user.id}`" class="ms-3 font-medium block"> {{ user.displayName }}</Link>
-        <div class="flex ms-2">
+        <div class="flex ms-2 flex-wrap">
 
           <p v-for="genre in user.genres"  class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000 text-sm  font-normal py-0 px-1 m-1 text-center"> {{Object.values(genre)[0]}}</p>
         </div>
