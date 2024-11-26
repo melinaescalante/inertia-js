@@ -4,6 +4,7 @@ import DiscoverFeature from '../components/DiscoverFeature.vue'
 import Spinner from '../Components/Spinner.vue'
 import { onMounted, ref } from 'vue';
 import { useLoginUser } from '../composables/useLoginUser';
+
 let serie = ref([]);
 const { loginUser } = useLoginUser()
 const loading = ref(true);
@@ -80,14 +81,18 @@ defineProps({ genres: Array })
 </script>
 <template>
     <NavBar></NavBar>
-    <section id="discover-view" v-if="!loading">
+<!-- 
+    <div id="gt-mordadam-43217984" class="hidden">
+        </div> -->
+        <section id="discover-view" v-if="!loading">
+
 
         <div v-for="(genero, key)  in serie" :key="key" class="flex  flex-col ">
             <div>
 
                 <p class="m-3  mt-4 ms-5 font-medium">Según tus géneros favoritos: <span class="text-blue-1000">{{
                     loginUser.genres?.length ? Object.values(loginUser.genres[key])[0] : genresStaticCopy[key]
-                        }}</span></p>
+                }}</span></p>
             </div>
             <div class="flex overflow-x-auto scroll overflow-scroll ">
                 <DiscoverFeature v-for="show in genero" :id="show.id" :genres="show.genres" :titleSerie="show.name"
@@ -95,7 +100,8 @@ defineProps({ genres: Array })
 
                 </DiscoverFeature>
             </div>
-        </div>
+    </div>
+
     </section>
     <Spinner v-else></Spinner>
 </template>

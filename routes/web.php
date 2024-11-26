@@ -70,7 +70,7 @@ Route::get('/show/{id}/temporadas/{name}', [SerieController::class, 'getSeasonsB
 ->whereNumber('id');
 
 Route::get('/show/temporadas/episodios/{name}/{season}/{id}', [SerieController::class, 'getEpisodesBySeason'])
-->whereNumber('id');
+->whereNumber('id')->name('episodesBySeason');
 
 Route::get('show/{name}/episodios/{id}', [SerieController::class, 'getAllEpisodes'])
 ->whereNumber('id');

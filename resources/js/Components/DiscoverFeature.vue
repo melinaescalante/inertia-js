@@ -21,7 +21,7 @@ const imgDefault = '/noimage.png'
       <img class=" lg:h-[100%] w-auto max-w-[15rem] md:rounded-lg  object-cover" :src="cover?.medium || imgDefault"
         :alt="text">
       <div class="flex flex-wrap ms-4 mt-4 me-4">
-        <p class="text-2xl font-medium mb-2">{{ titleSerie }}</p>
+        <p class="text-2xl font-medium mb-2">{{  titleSerie }}</p>
         <p v-html="synopsis.length > 150 ? `${synopsis.slice(0, 200)}...` : synopsis">
         </p>
         <p class="mb-3">{{ dateSerie }}</p>

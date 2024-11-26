@@ -2,14 +2,18 @@
 import { Link } from '@inertiajs/vue3';
 import NavBar from '../../components/NavBar.vue'
 
+import { onMounted } from 'vue';
 defineProps({
-    episode: Array,
+    episode: Object,
 
 })
+
+
+
 </script>
 <template>
     <NavBar></NavBar>
-    <h1 class="text-2xl font-medium ms-2 mt-3 mb-3">
+    <h1  class="text-2xl font-medium ms-2 mt-3 mb-3">
         {{ episode['name'] }}
     </h1>
     <h2 class="text-lg ms-2">
@@ -23,7 +27,8 @@ defineProps({
         </div>
         <div class="flex flex-col gap-5">
             <p><strong>Descripción</strong>:</p>
-            <div class="leading-7" v-html="episode.summary"></div>
+            <div class="leading-7"  v-html="episode.summary"</div>
+          
     
             <p><strong>Puntuación</strong>: {{ episode.rating.average }}</p>
             <p><strong>Estreno</strong>: {{ episode.airdate }}</p>

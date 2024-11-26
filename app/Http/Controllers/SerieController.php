@@ -162,14 +162,10 @@ class SerieController extends Controller
         $response = Http::get("https://api.tvmaze.com/seasons/" . $id . '/episodes');
         if ($response->successful()) {
             $episodes = $response->json();
-            $tr = new GoogleTranslate('es');
             foreach ($episodes as &$episode) {
-
-                if (isset($episode['summary'])) {
-                    $episode['summary'] = $tr->translate($episode['summary']);
-                }
+                # code...
                 if (isset($episode['name'])) {
-                    $episode['name'] = ucfirst($tr->translate($episode['name']));
+                    $episode['name'] = ucfirst($this->tr->translate($episode['name']));
                 }
             }
         }

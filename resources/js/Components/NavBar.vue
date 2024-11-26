@@ -179,17 +179,17 @@ const excludedPages = [
 
                 </NavItem>
             </div>
-            <NavItem v-if="loginUser.id !== null" titleLink="Mis Series" route="/misSeries"
+            <NavItem v-if="loginUser.id !== null" titleLink="Mis series" route="/misSeries"
                 roundedClass=" ">
                 <svg class="w-6 h-6 mb-1 group-hover:text-blue-1000 " aria-hidden="true" :class="currentPage === 'SeriesView' ? 'text-blue-1000' : 'text-gray-500'" 
                     fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <title>Mis Series</title>
+                    <title>Mis series</title>
 
                     <path d="M3 17V9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 7h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h7zm0 0L8 3m4 4 4-4" />
                 </svg>
-                <span class="sr-only">Mis Series</span>
+                <span class="sr-only">Mis series</span>
             </NavItem>
             <NavItem titleLink="Mi Perfil" :route="`/miPerfil`" roundedClass=" rounded-e-full ">
 
