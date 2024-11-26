@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
   <meta charset="utf-8" />
@@ -15,7 +15,7 @@
 <body class=" font-fredoka font-light max-w-xl mx-auto box-border mb-24 " data-csrf="{{ csrf_token() }}">
   
   @inertia
-  <!-- <script type="text/javascript">
+  <!-- <script>
     window.gtranslateSettings = window.gtranslateSettings || {};
     window.gtranslateSettings['43217984'] = {
       "default_language": "en",

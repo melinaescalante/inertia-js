@@ -24,7 +24,6 @@ async function handleComment() {
 }
 </script>
 <template>
-    <section id="comments">
         
     <div class="ms-3 mt-10">
         <p class="border-b">Comentarios {{ comments?.length || 0 }}</p>
@@ -68,5 +67,4 @@ async function handleComment() {
         </div>
     </div>
     
-</section>
 </template>

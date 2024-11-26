@@ -68,8 +68,8 @@ async function start(idUser, idSerie) {
 </script>
 <template>
     <NavBar></NavBar>
-    <h1 class="text-2xl font-medium ms-2 mt-3 mb-3">{{ serie.name }}</h1>
     <article>
+        <h1 class="text-2xl font-medium ms-2 mt-3 mb-3">{{ serie.name }}</h1>
 
         <div class="flex gap-3 md:flex-row flex-col m-2">
             <img class="max-h-fit   w-fit " :src="serie.image?.medium ? serie.image.medium : '/noimage.png'"
