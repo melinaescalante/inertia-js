@@ -73,7 +73,7 @@ function handleSubmit() {
                         </ul>
                         <Spinner v-else></Spinner>
                     </div>
-                    <form @submit.prevent="handleSubmit" action="" class="flex gap-3 items-stretch m-1 mt-2">
+                    <form @submit.prevent="handleSubmit" action="#" class="flex gap-3 items-stretch m-1 mt-2">
                         <label for="text" class="sr-only">Mensaje</label>
                         <textarea required name="text" id="text"
                             class="resize-none focus:ring-1 focus:ring-blue-300 focus:outline-none w-full min-h-10 p-2 border rounded-xl"

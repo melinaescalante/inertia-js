@@ -228,7 +228,7 @@ function handleClose() {
 
 
         <div class="relative">
-            <form action="" @submit.prevent="giveComment(id)" :id="id">
+            <form action="#" @submit.prevent="giveComment(id)" :id="id">
                 <label for="comment" class="sr-only">Deja tu comentario debajo:</label>
                 <input type="text" aria-label="comment"
                     class="block w-full p-3 border rounded-3xl focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4"

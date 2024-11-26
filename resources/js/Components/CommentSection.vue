@@ -28,7 +28,7 @@ async function handleComment() {
         
     <div class="ms-3 mt-10">
         <p class="border-b">Comentarios {{ comments?.length || 0 }}</p>
-        <form v-if="loginUser.id" @submit.prevent="handleComment" action="" class="flex gap-7 items-center ">
+        <form v-if="loginUser.id" @submit.prevent="handleComment" action="#" class="flex gap-7 items-center ">
 
             <div class="ms-0 m-3 mb-0 flex flex-col gap-3 w-full">
                 <label for="comment" >Dejá tu comentario</label>

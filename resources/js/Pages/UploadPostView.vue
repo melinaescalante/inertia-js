@@ -93,7 +93,7 @@ function handleImageChange(e) {
         <p>{{ msg }}</p>
     </div>
     <h1 class="text-2xl m-2">Subir publicación</h1>
-    <form action="" enctype="multipart/form-data" @submit.prevent="handlePost">
+    <form action="#" enctype="multipart/form-data" @submit.prevent="handlePost">
         <div class="flex flex-col mb-3">
             <span class="sr-only">Escribe la serie con la que te quieres referir</span>
             <label class="m-2 mb-0" for="serie">¿Sobre qué serie estás pensando?</label>

@@ -17,7 +17,7 @@ router.replace('/ingresar')
 
       Ajustes
     </h1>
-     <form action="" @submit.prevent="handleLogout">
+     <form action="#" @submit.prevent="handleLogout">
           <button type="submit" class="inline-block text-slate-50 font-medium w-full p-3 border rounded-3xl bg-blue-1000 mt-4">Cerrar sesion</button>
         </form>
 </template>
