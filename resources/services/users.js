@@ -142,6 +142,7 @@ export async function getUsers(searchTerm, callback) {
 
     if (searchTerm) {
       const q = query(usersRef, where('displayName', '>=', searchTerm), where('displayName', '<=', searchTerm + '\uf8ff'));
+      // const q = query(usersRef, where('username', '>=', searchTerm), where('username', '<=', searchTerm + '\uf8ff'));
 
       onSnapshot(q, snapshot => {
         const users = snapshot.docs.map(doc => {

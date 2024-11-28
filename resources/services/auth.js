@@ -18,6 +18,7 @@ if (localStorage.getItem('user')) {
 let observers = []
 onAuthStateChanged(auth, user => {
   if (user) {
+    console.log(user)
     authBackend(user.uid);
     updateLoginUser({
       id: user.uid,
@@ -141,14 +142,26 @@ export async function login({ email, password }) {
   }
 }
 
-export async function signUp({ email, password, userName }) {
+export async function signUp({ email, password, userName, fullname }) {
+// export async function signUp({ email, password, userName }) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+//codigo funcional sin username correcto
 
-    await updateProfile(userCredential.user, { displayName: userName });
+    // await updateProfile(userCredential.user, { displayName: userName });
 
+    await updateProfile(userCredential.user, { displayName: fullname });
+
+    // const userData = {
+    //   displayName: userName || "Usuario sin nombre", // 
+    //   email: email,
+    //   bio: null,
+    //   genres: null,
+    //   photoURL: null,
+    // };
     const userData = {
-      displayName: userName || "Usuario sin nombre", // 
+      displayName: userName || "Usuario sin nombre", 
+    username:userName,
       email: email,
       bio: null,
       genres: null,

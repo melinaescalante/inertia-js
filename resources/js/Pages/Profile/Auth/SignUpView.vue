@@ -12,8 +12,15 @@ const isValid = ref(false)
 const user = ref({
     email: '',
     password: '',
-    userName: ''
+    userName: '',
+    fullname:'',
 })
+//codigo funcional sin username correcto
+// const user = ref({
+//     email: '',
+//     password: '',
+//     userName: ''
+// })
 const loading = ref(false)
 function passwordIsValid(e) {
     if (user.value.password.length >= 6) {
@@ -50,6 +57,12 @@ function showPassword() {
                     <input type="email" id="email"
                         class=" p-2 mb-2 w-full border rounded-md  bg-slate-100 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                         v-model="user.email" required placeholder="nombre@gmail.com">
+                </div>
+                <div class="mb-5">
+                    <label for="fullname" class="block mb-2 ">Nombre completo</label>
+                    <input type="text" id="fullname"
+                        class=" p-2 mb-2 w-full border rounded-md  bg-slate-100 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                        required placeholder="" v-model="user.fullname">
                 </div>
                 <div class="mb-5">
                     <label for="username" class="block mb-2 ">Nombre de usuario</label>

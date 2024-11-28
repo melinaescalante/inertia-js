@@ -45,6 +45,7 @@ class SerieController extends Controller
         if ($response->successful()) {
             $cast = $response->json();
         }
+        // var_dump($cast);
         return Inertia::render('Series/CastSerieView', [
             'cast' => $cast,
             'name' => $name

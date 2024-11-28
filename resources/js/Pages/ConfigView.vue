@@ -1,11 +1,9 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
 import NavBar from '../components/NavBar.vue'
 import { router } from "@inertiajs/vue3";
-import { suscribeToAuthChanged, logout } from "../../services/auth";
+import {  logout } from "../../services/auth";
 import { useLoginUser } from "../composables/useLoginUser";
-
-const {loginUser}=useLoginUser()
+import {Link} from "@inertiajs/vue3";
 const handleLogout=()=>{
 logout()
 router.replace('/ingresar')
@@ -20,4 +18,8 @@ router.replace('/ingresar')
      <form action="#" @submit.prevent="handleLogout">
           <button type="submit" class="inline-block text-slate-50 font-medium w-full p-3 border rounded-3xl bg-blue-1000 mt-4">Cerrar sesion</button>
         </form>
+        <div class=" mx-auto text-center mt-4">
+
+          <Link class="text-blue-1000 text-center font-medium skiptranslate" href="https://tvonlandingpage.netlify.app">Landing page TVON</Link>
+        </div>
 </template>
