@@ -59,7 +59,7 @@ onMounted(async () => {
             </Link>
             <div class="flex flex-col col-span-2">
 
-                <p class="font-medium text-center">{{ loginUser.displayName ? loginUser.displayName : loginUser.email }}
+                <p class="font-medium text-center">{{ loginUser.value.userName }}
                 </p>
                 <div class="flex justify-around">
                     <p class="me-2">Series vistas <span class="text-center block">{{seriesWatched?.length || 0}}</span></p>
@@ -72,6 +72,8 @@ onMounted(async () => {
                     Editar Perfil</Link>
 
                 </div>
+                <p class="font-medium text-center">{{ loginUser.displayName}}
+                </p>
                 <p class=" text-blue-1000 text-center  font-medium m-2" v-if="loginUser.bio">{{ loginUser.bio }}</p>
                 <div class="flex flex-wrap">
                     <ul v-for="genre in loginUser.genres">

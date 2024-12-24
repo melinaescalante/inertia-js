@@ -8,6 +8,7 @@ export function useLoginUser() {
         id: null,
         email: null,
         displayName: null,
+        username:null,
         bio: null,
         genres: null,
         photoURL: null,
