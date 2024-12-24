@@ -91,7 +91,7 @@ async function handleFollowed() {
           Chatear</Link>
           <button type="button" @click="makeFollow"
             class="text-center border border-blue-1000  text-blue-1000 hover:bg-blue-0 hover:border-transparent transition-colors focus:ring-4 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
-            {{isFollow? 'Seguidos ': 'Seguir'}}</button>
+            {{isFollow? 'Siguiendo ': 'Seguir'}}</button>
         </div>
         <div class=" flex flex-wrap justify-around" v-else>
           <Link v-if="loginUser.id" href="/perfilinfo/edit"

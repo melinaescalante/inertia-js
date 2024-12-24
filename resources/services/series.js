@@ -1,7 +1,7 @@
 import { error } from "laravel-mix/src/Log";
 import { db } from "./firebase";
 import { doc, getDoc, updateDoc, setDoc, deleteField, FieldValue, onSnapshot, serverTimestamp, Timestamp } from "firebase/firestore";
-import { getNameUser, getUserName } from "./users";
+import { getLastSeriesWatched, getNameUser, getUserName } from "./users";
 
 /**
  * Agregamos serie a nuestra lista para ver
@@ -130,7 +130,8 @@ export async function startSerie(idUser, idSerie, idSeason) {
         ['current']: 1,
         ['currentSeason']: 1,
         ['currentIdSeason']: idSeason,
-        ['created_at']: Timestamp.now()
+        ['created_at']: Timestamp.now(),['last_modified']:Timestamp.now(),
+        ["id"]:idSerie
 
     };
     if (toWatchSnapshot.exists()) {
@@ -151,6 +152,8 @@ export async function startSerie(idUser, idSerie, idSeason) {
                 ...newAddSerie,
             }
         });
+        getLastSeriesWatched(idUser)
+
         return
     }
     else {
@@ -159,6 +162,7 @@ export async function startSerie(idUser, idSerie, idSeason) {
                 ...newAddSerie,
             }
         });
+        getLastSeriesWatched(idUser)
 
     }
 
@@ -256,7 +260,8 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
             if (data[idSerie]?.current !== undefined) {
                 let watching = data[idSerie].current + 1;
                 await updateDoc(toWatchDocRef, {
-                    [`${idSerie}.current`]: watching
+                    [`${idSerie}.current`]: watching,
+                    [`${idSerie}.last_modified`]: Timestamp.now()
                 });
             } else {
 
@@ -307,6 +312,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
 
                     await updateDoc(toWatchDocRef, {
                         [idSerie]: {
+                            id:idSerie,
                             current: 1,
                             currentSeason: watchingSeason,
                             currentIdSeason: idCurrentSeason,
@@ -349,7 +355,7 @@ export async function addSerieEnded(idUser, idSerie, nameSerie, created) {
 
         await setDoc(watchedDocRef, { watched: [newWatchedSerie] });
     }
-
+getLastSeriesWatched(idUser)
 }
 
 /**

@@ -25,6 +25,7 @@ onMounted(async () => {
 
 const excludedPages = [
     'HomeView',
+    'HomeFollowingView',
     'DiscoverView',
     'SeriesView',
     'SearchView',
@@ -108,7 +109,7 @@ const excludedPages = [
             <NavItem  titleLink="Inicio" route="/"
                 roundedClass="rounded-s-full ">
                 <svg class="w-5 h-5 mb-1  group-hover:text-blue-1000 " aria-hidden="true"
-                    :class="currentPage === 'HomeView' ? 'text-blue-1000' : 'text-gray-500'" xmlns="http://www.w3.org/2000/svg"
+                    :class="currentPage === 'HomeView' ||currentPage === 'HomeFollowingView' ? 'text-blue-1000' : 'text-gray-500'" xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor" viewBox="0 0 20 20">
                     <title>Inicio</title>
                     <path

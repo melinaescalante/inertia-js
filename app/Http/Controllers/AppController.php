@@ -14,6 +14,12 @@ class AppController extends Controller
        
         return Inertia::render('HomeView');
     }
+    public function following()
+    {
+       
+        return Inertia::render('HomeFollowingView');
+    }
+
 
     public function chat()
     {

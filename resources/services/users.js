@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { doc, getDoc, updateDoc, setDoc, collection, addDoc, getDocs, query, where, onSnapshot, limit } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, collection, addDoc, getDocs, query, where, onSnapshot, limit, Timestamp } from "firebase/firestore";
 /**
  * Funcion que en base al id de un usuario nos permite tarer el display name actualizado de cada usuario.
  * @param {String} id
@@ -13,6 +13,43 @@ export async function getNameUser(id) {
     return name
   } catch (error) {
     console.log("Documento no existente");
+
+  }
+}
+/**
+ * Funcion que en base al id de un usuario nos permite tarer el display name actualizado de cada usuario.
+ * @param {String} id
+ * @returns { String}
+ */
+export async function getLastSeriesWatched(id) {
+  try {
+    // Fecha maxima (hoy)
+    const today = new Date();
+    const endDate = Timestamp.fromDate(today);
+
+    // Calcular la fecha de hace 3 meses
+    let fiveMonthsAgo = new Date();
+    fiveMonthsAgo.setMonth(today.getMonth() - 3);
+    const startDate = Timestamp.fromDate(fiveMonthsAgo);
+
+
+    const userRef = doc(db, 'users', id);
+    const seriesWatchingRef = doc(userRef, "series", "watching");
+    const userSnapshot =await getDoc(seriesWatchingRef);
+    const seriesValues=Object.values(userSnapshot.data())
+    const test= seriesValues.filter(serie=>{
+      const lastModifiedMillis = serie.last_modified.toMillis(); 
+      const startMillis = startDate.toMillis();
+      const endMillis = endDate.toMillis();
+      return  lastModifiedMillis >= startMillis && lastModifiedMillis <= endMillis;
+    }).map((serie)=>serie.id)
+   
+    // console.log(test)
+    localStorage.setItem("ids_series_watching", JSON.stringify(test))
+
+    return seriesValues
+  } catch (error) {
+    console.log("Documento no existente", error);
 
   }
 }
@@ -141,7 +178,10 @@ export async function getUsers(searchTerm, callback) {
     const usersRef = collection(db, "users");
 
     if (searchTerm) {
-      const q = query(usersRef, where('displayName', '>=', searchTerm), where('displayName', '<=', searchTerm + '\uf8ff'));
+      const q = query(usersRef,
+        where('displayName', '>=', searchTerm),
+        where('displayName', '<=', searchTerm + '\uf8ff')
+      );
       // const q = query(usersRef, where('username', '>=', searchTerm), where('username', '<=', searchTerm + '\uf8ff'));
 
       onSnapshot(q, snapshot => {

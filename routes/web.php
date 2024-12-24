@@ -10,6 +10,8 @@ use App\Http\Middleware\CheckAuthSession;
 
 Route::get('/', [AppController::class,"home"])
 ->name('home');
+Route::get('/siguiendo', [AppController::class,"following"])
+->name('following');
 
 Route::get('/chatPrivado/{id}/{email}', [AppController::class,"chatPrivate"])
     ->middleware(CheckAuthSession::class);

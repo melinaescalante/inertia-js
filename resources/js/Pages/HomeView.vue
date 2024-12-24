@@ -1,10 +1,12 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
 import PostUser from '../components/PostUser.vue'
+import SwitcherHome from '../Components/SwitcherHome.vue';
 import { onMounted, ref, onUnmounted } from 'vue';
 import Spinner from '../Components/Spinner.vue'
-import {  fetchPosts, fetchPostsFrom } from '../../services/posts';
+import { fetchPosts, fetchPostsFrom } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
+import { login } from '../../services/auth';
 const { loginUser } = useLoginUser()
 
 const {
@@ -31,7 +33,7 @@ function usePosts() {
 
   onMounted(async () => {
     try {
-      await loadPosts();
+      await loadPosts(); // Pasar ids de las series.
       setIntersectionObserver();
     } catch (error) {
       console.error(error);
@@ -41,10 +43,19 @@ function usePosts() {
 
   async function loadPosts() {
     try {
-      unsubscribe = await fetchPosts(loginUser.value.id, (newPosts) => {
+      unsubscribe = await fetchPosts(loginUser.value.id, loginUser.value.lastSeriesWatched, (newPosts) => {
         posts.value = newPosts;
         loading.value = false;
       });
+      //   fetchPosts(loginUser.value.id, (newPosts) => {
+      //     posts.value = newPosts;
+      //     loading.value = false;
+      //   }).then(unssub => unsubscribe = unsub);
+      //   unsubscribe = await fetchPostsFromUsers(followedUsersId, (newPosts) => {
+      //     posts.value = newPosts;
+      //     loading.value = false;
+      //      orderPosts();
+      //   });
     } catch (error) {
       console.log(error);
     }
@@ -61,14 +72,14 @@ function usePosts() {
     try {
       let newPosts = []
       if (posts.value[posts.value.length - 1]?.created_at) {
-        newPosts = await fetchPostsFrom(
+        newPosts = await fetchPostsFrom(loginUser.value.lastSeriesWatched,
           posts.value[posts.value.length - 1]?.created_at,
         );
 
         if (newPosts.length === 0) {
-  
+
           observer.unobserve(newPostLoaderSign.value);
-          loadingMore.value=false
+          loadingMore.value = false
           return
         }
       }
@@ -103,21 +114,22 @@ function usePosts() {
 </script>
 <template>
   <NavBar />
- 
-  <section class="posts skiptranslate" >
+  <SwitcherHome></SwitcherHome>
+  <section class="posts skiptranslate">
     <div v-if="!loadingPosts">
       <div v-for="post in posts" :key="post.id">
         <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"
-          :imgAlt="post.image" :serie="post.serie"  :idSerie="post.idSerie"  :date="post.date" :likes="post.likes" :comments="post.comments"
-          :userName="post.user" :liked="post.liked" :userId="post.userid" :created_at="post.created_at" />
+          :imgAlt="post.image" :serie="post.serie" :idSerie="post.idSerie" :date="post.date" :likes="post.likes"
+          :comments="post.comments" :userName="post.user" :liked="post.liked" :userId="post.userid"
+          :created_at="post.created_at" />
       </div>
     </div>
-<div v-else class="mt-[70%]">
+    <div v-else class="mt-[70%]">
 
-  <Spinner msg="Cargando más posteos" />
-</div>
+      <Spinner msg="Cargando más posteos" />
+    </div>
 
-    <Spinner v-if="loadingMorePosts===true" msg="Cargando más posteos" />
+    <Spinner v-if="loadingMorePosts === true" msg="Cargando más posteos" />
     <div ref="newPostLoaderSign"></div>
   </section>
 </template>

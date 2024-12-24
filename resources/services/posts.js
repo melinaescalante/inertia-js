@@ -26,9 +26,54 @@ export async function uploadPost({ text, serie, idSerie, image, userid }) {
  * @param {Function} callback 
  * @returns {Function}
  */
-export function fetchPosts(idUser, callback) {
+export function fetchPosts(idUser,seriesCurrent, callback) {
     try {
-        // Configura la consulta inicial
+
+        const queryPost = query(
+            collection(db, 'posts-public'),
+            where('idSerie','in',seriesCurrent),
+            orderBy('created_at', 'desc'),
+            limit(4)
+        );
+        //Usamos onsnapshot para ver los cambios como likes y comentarios
+        const unsubscribe = onSnapshot(queryPost, async (snapshot) => {
+            const posts = snapshot.docs.map(async (post) => {
+                const like = await isLiked(post.id, idUser);
+                return {
+                    id: post.id,
+                    photoURL: await getPhotoURL(post.data().userid),
+                    serie: post.data().serie,
+                    idSerie: post.data().idSerie,
+
+                    text: post.data().text,
+                    image: post.data().image,
+                    likes: post.data().likes || [],
+                    comments: post.data().comments || [],
+                    shares: post.data().shares,
+                    user: await getUserName(post.data().userid),
+                    userid: post.data().userid,
+                    liked: like,
+                    created_at: post.data().created_at,
+                };
+            });
+            const postsData = await Promise.all(posts);
+            callback(postsData);
+        });
+        return unsubscribe;
+    } catch (error) {
+        console.log(error);
+    }
+}
+/**
+ * Cargamos los últimos 4 posteos
+ * @param {String} idUser 
+ * @param {Function} callback 
+ * @returns {Function}
+ */
+export function fetchPostsFollowed(idUser, callback) {
+    try {
+        const idsSeriesActual= localStorage.getItem('ids_series_watching')
+        console.log(idsSeriesActual)
         const queryPost = query(
             collection(db, 'posts-public'),
             orderBy('created_at', 'desc'),
@@ -68,10 +113,12 @@ export function fetchPosts(idUser, callback) {
  * @param {Timestamp} created_at 
  * @returns {Promise}
  */
-export async function fetchPostsFrom(created_at) {
+export async function fetchPostsFrom(seriesCurrent,created_at) {
     const posts = await getDocs(
         query(
             collection(db, 'posts-public'),
+            where('idSerie','in',seriesCurrent),
+
             orderBy('created_at', 'desc'),
             limit(4),
             startAfter(created_at),
