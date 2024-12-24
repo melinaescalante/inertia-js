@@ -1,7 +1,127 @@
 <script setup>
 import NavBar from '../components/NavBar.vue';
-import SwitcherHome from '../Components/SwitcherHome.vue';</script>
+import SwitcherHome from '../Components/SwitcherHome.vue';
+import PostUser from '../components/PostUser.vue'
+import { onMounted, ref, onUnmounted } from 'vue';
+import Spinner from '../Components/Spinner.vue'
+import { fetchPostsFollowed, fetchPostsFollowedFrom,  } from '../../services/posts';
+import { useLoginUser } from "../composables/useLoginUser";
+const { loginUser } = useLoginUser()
+
+const {
+    loading: loadingPosts,
+    posts,
+    newPostLoaderSign,
+    loadingMore: loadingMorePosts,
+} = usePosts();
+function usePosts() {
+    const loading = ref(true);
+    const posts = ref([]);
+    const newPostLoaderSign = ref(null);
+    const loadingMore = ref(false);
+    let unsubscribe = null;
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                loadMorePosts();
+            }
+        });
+    });
+
+
+    onMounted(async () => {
+        try {
+            await loadPosts(); // Pasar ids de las series.
+            setIntersectionObserver();
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+
+    async function loadPosts() {
+        try {
+            unsubscribe = await fetchPostsFollowed(loginUser.value.id, loginUser.value.following, (newPosts) => {
+                posts.value = newPosts;
+                loading.value = false;
+            });
+        
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    function setIntersectionObserver() {
+
+        observer.observe(newPostLoaderSign.value);
+    }
+    async function loadMorePosts() {
+        if (loadingMore.value) return;
+        loadingMore.value = true;
+
+
+        try {
+            let newPosts = []
+            if (posts.value[posts.value.length - 1]?.created_at) {
+                newPosts = await fetchPostsFollowedFrom(loginUser.value.following,
+                    posts.value[posts.value.length - 1]?.created_at,
+                );
+
+                if (newPosts.length === 0) {
+
+                    observer.unobserve(newPostLoaderSign.value);
+                    loadingMore.value = false
+                    return
+                }
+            }
+            posts.value = [
+                ...posts.value,
+                ...newPosts,
+            ]
+            setIntersectionObserver();
+        } catch (error) {
+            console.error('[Posts.vue] Error al cargar más posts', error);
+        }
+
+        loadingMore.value = false;
+
+    }
+
+    onUnmounted(() => {
+        if (unsubscribe) {
+            unsubscribe();
+        }
+    });
+
+    return {
+        loading,
+        loadingMore,
+        posts,
+        newPostLoaderSign,
+    }
+}
+
+
+</script>
 <template>
-<NavBar></NavBar>
-<SwitcherHome></SwitcherHome>
+    <NavBar />
+    <SwitcherHome></SwitcherHome>
+    <section class="posts skiptranslate">
+        <div v-if="!loadingPosts">
+            {{ console.log(posts) }}
+            <div v-for="post in posts" :key="post.id">
+                <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"
+                    :imgAlt="post.image" :serie="post.serie" :idSerie="post.idSerie" :date="post.date"
+                    :likes="post.likes" :comments="post.comments" :userName="post.user" :liked="post.liked"
+                    :userId="post.userid" :created_at="post.created_at" />
+            </div>
+        </div>
+        <div v-else class="mt-[70%]">
+
+            <Spinner msg="Cargando más posteos" />
+        </div>
+
+        <Spinner v-if="loadingMorePosts === true" msg="Cargando más posteos" />
+        <div ref="newPostLoaderSign"></div>
+    </section>
 </template>

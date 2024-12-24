@@ -26,12 +26,12 @@ export async function uploadPost({ text, serie, idSerie, image, userid }) {
  * @param {Function} callback 
  * @returns {Function}
  */
-export function fetchPosts(idUser,seriesCurrent, callback) {
+export function fetchPosts(idUser, seriesCurrent, callback) {
     try {
 
         const queryPost = query(
             collection(db, 'posts-public'),
-            where('idSerie','in',seriesCurrent),
+            where('idSerie', 'in', seriesCurrent),
             orderBy('created_at', 'desc'),
             limit(4)
         );
@@ -65,17 +65,17 @@ export function fetchPosts(idUser,seriesCurrent, callback) {
     }
 }
 /**
- * Cargamos los últimos 4 posteos
+ * Cargamos los últimos 4 posteos de mis seguidos
  * @param {String} idUser 
  * @param {Function} callback 
  * @returns {Function}
  */
-export function fetchPostsFollowed(idUser, callback) {
+export function fetchPostsFollowed(idUser, following, callback) {
     try {
-        const idsSeriesActual= localStorage.getItem('ids_series_watching')
-        console.log(idsSeriesActual)
+
         const queryPost = query(
             collection(db, 'posts-public'),
+            where('userid', 'in', following),
             orderBy('created_at', 'desc'),
             limit(4)
         );
@@ -113,11 +113,47 @@ export function fetchPostsFollowed(idUser, callback) {
  * @param {Timestamp} created_at 
  * @returns {Promise}
  */
-export async function fetchPostsFrom(seriesCurrent,created_at) {
+export async function fetchPostsFollowedFrom(following, created_at) {
     const posts = await getDocs(
         query(
             collection(db, 'posts-public'),
-            where('idSerie','in',seriesCurrent),
+            where('userid', 'in', following),
+
+            orderBy('created_at', 'desc'),
+            limit(4),
+            startAfter(created_at),
+        )
+    );
+    const promises = posts.docs.map(async post => {
+        return {
+            id: post.id,
+            photoURL: await getPhotoURL(post.data().userid),
+            serie: post.data().serie,
+            idSerie: post.data().idSerie,
+
+            text: post.data().text,
+            image: post.data().image,
+            likes: post.data().likes || [],
+            comments: post.data().comments,
+            shares: post.data().shares,
+            user: await getUserName(post.data().userid),
+            userid: post.data().userid,
+            liked: like,
+            created_at: post.data().created_at,
+        }
+    });
+    return await Promise.all(promises)
+}
+/**
+ * 
+ * @param {Timestamp} created_at 
+ * @returns {Promise}
+ */
+export async function fetchPostsFrom(seriesCurrent, created_at) {
+    const posts = await getDocs(
+        query(
+            collection(db, 'posts-public'),
+            where('idSerie', 'in', seriesCurrent),
 
             orderBy('created_at', 'desc'),
             limit(4),

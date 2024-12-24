@@ -3,22 +3,36 @@ import { auth } from "./firebase";
 import { getFileURL, uploadFile } from "./file-storage";
 
 import { updateUserProfile, getUsersProfileById } from "./users";
+import { getFollowedPeople, useLoginUser } from "../js/composables/useLoginUser";
 
 let loginUser = {
   id: null,
   email: null,
   displayName: null,
+  username: null,
   bio: null,
   genres: null,
-  photoURL: null
+  photoURL: null,
+  lastSeriesWatched: null,
+  // following: null,
+
 }
 if (localStorage.getItem('user')) {
   loginUser = JSON.parse(localStorage.getItem('user'))
 }
+if (localStorage.getItem('people')) {
+  loginUser.following = JSON.parse(localStorage.getItem('people'))
+}else{
+  useLoginUser()
+}
+if (localStorage.getItem('ids_series_watching')) {
+  loginUser.lastSeriesWatched = JSON.parse(localStorage.getItem('ids_series_watching'))
+}else{
+  useLoginUser()
+}
 let observers = []
 onAuthStateChanged(auth, user => {
   if (user) {
-    console.log(user)
     authBackend(user.uid);
     updateLoginUser({
       id: user.uid,
@@ -30,6 +44,7 @@ onAuthStateChanged(auth, user => {
       .then(userProfile => {
         updateLoginUser({
           ...loginUser,
+          username: userProfile.username,
           bio: userProfile.bio,
           genres: userProfile.genres
         })
@@ -40,9 +55,12 @@ onAuthStateChanged(auth, user => {
       id: null,
       email: null,
       displayName: null,
+      username: null,
       bio: null,
       genres: null,
-      photoURL: null
+      photoURL: null,
+      lastSeriesWatched: null,
+    following: null,
     })
     localStorage.removeItem("user")
   }
@@ -143,10 +161,10 @@ export async function login({ email, password }) {
 }
 
 export async function signUp({ email, password, userName, fullname }) {
-// export async function signUp({ email, password, userName }) {
+  // export async function signUp({ email, password, userName }) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-//codigo funcional sin username correcto
+    //codigo funcional sin username correcto
 
     // await updateProfile(userCredential.user, { displayName: userName });
 
@@ -160,8 +178,8 @@ export async function signUp({ email, password, userName, fullname }) {
     //   photoURL: null,
     // };
     const userData = {
-      displayName: userName || "Usuario sin nombre", 
-    username:userName,
+      displayName: userName || "Usuario sin nombre",
+      username: userName,
       email: email,
       bio: null,
       genres: null,

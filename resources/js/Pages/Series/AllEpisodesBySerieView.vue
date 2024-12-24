@@ -12,7 +12,6 @@ defineProps({
     <NavBar></NavBar>
 <h1 class="font-medium text-2xl m-2 mt-3 mb-3">{{ name }} episodios</h1>
     <div v-for="(season, index) in seasons" :key="index">
-{{ console.log(seasons[index][0].season) }}
         <h1 class="font-medium p-2 text-xl text-blue-800 border-b-2 border-t-2 border-orange-200  ">
             {{(seasons[index][0]?.season)?'Temporada '+seasons[index][0].season : 'No tiene numero de temporada'  }}  
     

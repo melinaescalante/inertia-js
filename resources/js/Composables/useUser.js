@@ -44,5 +44,5 @@ export function useUser(id, email, displayName) {
     });
 
     return { user };
-    return { user, getLatestSeriesIds };
+    // return { user, getLatestSeriesIds };
 }

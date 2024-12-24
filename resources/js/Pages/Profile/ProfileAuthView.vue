@@ -15,18 +15,17 @@ defineProps({
 })
 const loading = ref(true)
 const postsById = ref([])
-const seriesWatched=ref([])
-const following=ref([])
+const seriesWatched = ref([])
+const following = ref([])
 onMounted(async () => {
 
     try {
-        seriesWatched.value=await allSeriesWatched(loginUser.value.id)
+        seriesWatched.value = await allSeriesWatched(loginUser.value.id)
+        following.value=await allFollowing(loginUser.value.id)
         await readPostsByUser(async (newPosts) => {
             postsById.value = newPosts
             loading.value = false;
         }, loginUser.value.id)
-        following.value=await allFollowing(loginUser.value.id)
-
     } catch (error) {
         console.log(error)
     }
@@ -51,7 +50,7 @@ onMounted(async () => {
             <div class="relative group w-20 h-20 ms-2">
                 <img :src="loginUser.photoURL || '/no-image.jpg'" :alt="'Foto de perfil de ' + loginUser.email"
                     class="col-span-1 w-full h-full rounded-full object-cover group-hover:opacity-50">
-                
+
                 <img src="/public/images/camera.svg" alt="Icono de cámara"
                     class="absolute top-1/2 left-1/2 w-6 h-6 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             </div>
@@ -59,11 +58,12 @@ onMounted(async () => {
             </Link>
             <div class="flex flex-col col-span-2">
 
-                <p class="font-medium text-center">{{ loginUser.value.userName }}
+                <p class="font-medium text-center">@{{ loginUser.username }}
                 </p>
                 <div class="flex justify-around">
-                    <p class="me-2">Series vistas <span class="text-center block">{{seriesWatched?.length || 0}}</span></p>
-                    <p>Seguidos <span class="text-center block">{{following?.length || 0}}</span></p>
+                    <p class="me-2">Series vistas <span class="text-center block">{{ seriesWatched?.length || 0 }}</span>
+                    </p>
+                    <p>Seguidos <span class="text-center block">{{ following?.length || 0 }}</span></p>
                 </div>
                 <div class="mt-2 flex flex-wrap justify-around">
 
@@ -72,14 +72,14 @@ onMounted(async () => {
                     Editar Perfil</Link>
 
                 </div>
-                <p class="font-medium text-center">{{ loginUser.displayName}}
+                <p class="font-medium text-center">{{ loginUser.displayName }}
                 </p>
                 <p class=" text-blue-1000 text-center  font-medium m-2" v-if="loginUser.bio">{{ loginUser.bio }}</p>
                 <div class="flex flex-wrap">
                     <ul v-for="genre in loginUser.genres">
                         <li
                             class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000  text-sm font-normal px-2 py-1 m-1 text-center">
-                            {{Object.values(genre)[0]}}</li>
+                            {{ Object.values(genre)[0] }}</li>
                     </ul>
                 </div>
             </div>

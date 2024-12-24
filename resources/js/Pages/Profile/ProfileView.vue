@@ -78,7 +78,7 @@ async function handleFollowed() {
 
       <div class="flex flex-col col-span-2">
 
-        <p class="font-medium text-center">{{ user.displayName }}</p>
+        <p class="font-medium text-center">@{{ user.username }}</p>
         <div class="flex justify-around">
           <p class="me-2">Series vistas <span class="block text-center">{{ seriesWatched?.length || 0 }}</span></p>
           <p>Seguidos <span class="text-center block">{{ following?.length || 0 }}</span></p>
@@ -98,6 +98,8 @@ async function handleFollowed() {
             class="text-center text-white bg-blue-1000 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
           Editar Perfil</Link>
         </div>
+        <p class="font-medium text-center">{{ user.displayName }}</p>
+
         <p class=" text-blue-500 text-center font-medium m-2" v-if="user.bio">{{ user.bio }}</p>
         <div class="flex flex-wrap">
           <ul v-for="genre in user.genres">

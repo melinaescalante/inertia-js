@@ -93,7 +93,7 @@ async function loadSeriesWatching() {
             );
             await Promise.all(promises);
         } else {
-            console.log(localSeriesWatching.value, seriesWatchingJson.value, seriesWatching.value)
+          
             localSeriesWatching.value = seriesWatching.value;
             localSeriesWatching.value = seriesWatchingJson.value;
         }
@@ -104,7 +104,6 @@ async function loadSeriesWatching() {
 }
 async function next(id, idSerie, nameSerie) {
     let seasons
-    console.log(localSeriesWatching, seriesWatchingJson.value, seriesWatching.value)
 
     try {
         const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);

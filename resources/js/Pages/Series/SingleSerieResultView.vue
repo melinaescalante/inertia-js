@@ -39,7 +39,6 @@ onMounted(async () => {
 async function isInWishlist(id) {
     try {
         watching.value = await isStarted(loginUser.value.id, id)
-        console.log(watching.value)
         if (localseries.value.some(watchedSerie => Object.keys(watchedSerie).includes(String(id)))) {
             initialValue.value = true
             return

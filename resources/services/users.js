@@ -17,9 +17,9 @@ export async function getNameUser(id) {
   }
 }
 /**
- * Funcion que en base al id de un usuario nos permite tarer el display name actualizado de cada usuario.
+ * Funcion que en base al id de un usuario nos permite las series del usuario actualmente viendo, y las que están en un rango menor a 3 meses .
  * @param {String} id
- * @returns { String}
+ * @returns { Array}
  */
 export async function getLastSeriesWatched(id) {
   try {
@@ -53,7 +53,6 @@ export async function getLastSeriesWatched(id) {
 
   }
 }
-
 
 /**
  * 
@@ -147,6 +146,7 @@ export async function getUsersProfileById(id, email, displayName) {
         id: profileDocument.id,
         email: profileDocument.data().email,
         displayName: profileDocument.data().displayName,
+        username: profileDocument.data().username,
         bio: profileDocument.data().bio,
         genres: profileDocument.data().genres,
         photoURL: profileDocument.data().photoURL,
@@ -213,7 +213,7 @@ export async function getUsers(searchTerm, callback) {
 export async function addFollow(idUserAuth, idFollow) {
   const followingCollectionRef = collection(db, `users/${idUserAuth}/following`);
   const followingQuery = query(followingCollectionRef, where('following', '==', {
-    [idUserAuth]: true,
+    // [idUserAuth]: true,
     [idFollow]: true,
   }), limit(1));
   const followSnapshot = await getDocs(followingQuery);
@@ -221,7 +221,7 @@ export async function addFollow(idUserAuth, idFollow) {
     await addDoc(followingCollectionRef, {
       following: {
         [idFollow]: true,
-        [idUserAuth]: true
+        // [idUserAuth]: true
       }
     });
   } else {
@@ -243,11 +243,17 @@ export async function allFollowing(idUser) {
     friendsCollectionRef,
     where("following." + idUser, "==", true)
   );
-  const friendsSnapshot = await getDocs(friendQuery);
+  const friendsSnapshot = await getDocs(friendsCollectionRef);
 
   friendsSnapshot.forEach(doc => {
     allFriends.push(doc.data());
   });
+  const followingIds = allFriends.map((item) => {
+    const followingId = Object.keys(item.following);
+    return followingId[0]; 
+  });
+
+  localStorage.setItem("people", JSON.stringify(followingIds))
   return allFriends;
 }
 
@@ -261,7 +267,7 @@ export async function isFollowed(idUserAuth, idUser2) {
   try {
     const followingCollectionRef = collection(db, `users/${idUserAuth}/following`);
     const followingQuery = query(followingCollectionRef, where(`following`, "==", {
-      [idUserAuth]: true,
+      // [idUserAuth]: true,
       [idUser2]: true
     }));
     const followingSnapshot = await getDocs(followingQuery);
