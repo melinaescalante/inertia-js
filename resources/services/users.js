@@ -43,8 +43,6 @@ export async function getLastSeriesWatched(id) {
       const endMillis = endDate.toMillis();
       return lastModifiedMillis >= startMillis && lastModifiedMillis <= endMillis;
     }).map((serie) => serie.id)
-
-    // console.log(test)
     localStorage.setItem("ids_series_watching", JSON.stringify(test))
 
     return seriesValues

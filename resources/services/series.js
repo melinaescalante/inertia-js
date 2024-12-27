@@ -28,6 +28,8 @@ export async function addSerieToWatch(idUser, idSerie, nameSerie) {
                 await updateDoc(toWatchDocRef, {
                     seriesData: currentsToWatchFilter
                 });
+                const localSeries = JSON.parse(localStorage.getItem('ids_series_wishlist'))
+                deleteIdFromStorage(idSerie, localSeries, "ids_series_wishlist")
                 return
             }
             const newSerie = { [idSerie]: nameSerie };
@@ -114,14 +116,13 @@ export async function allSeriesWatching(idUser) {
         console.error(error)
     }
 }
-function deleteIdFromStorage(idSerie) {
+function deleteIdFromStorage(idSerie, arrayLocal, nameArray) {
     try {
-        const localSeries = JSON.parse(localStorage.getItem('ids_series_watching'))
-        console.log(localSeries)
-        const index = localSeries.indexOf(idSerie)
-        localSeries.splice(index, 1)
-        localStorage.setItem('ids_series_watching',localSeries)
-        console.log(localSeries)
+
+        const index = arrayLocal.indexOf(idSerie)
+        arrayLocal.splice(index, 1)
+        localStorage.setItem(nameArray, JSON.stringify(arrayLocal))
+        // console.log(localSeries)
 
     } catch (error) {
         console.log('no se ha eliminado')
@@ -158,7 +159,8 @@ export async function startSerie(idUser, idSerie, idSeason) {
             await updateDoc(toWatchDocRef, {
                 [idSerie]: deleteField()
             });
-            deleteIdFromStorage(idSerie)
+            const localSeries = JSON.parse(localStorage.getItem('ids_series_watching'))
+            deleteIdFromStorage(idSerie, localSeries, "ids_series_watching")
             //Eliminamos serie del storage
             return
         }
