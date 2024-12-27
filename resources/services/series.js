@@ -116,10 +116,10 @@ export async function allSeriesWatching(idUser) {
         console.error(error)
     }
 }
-function deleteIdFromStorage(idSerie, arrayLocal, nameArray) {
+export function deleteIdFromStorage(id, arrayLocal, nameArray) {
     try {
 
-        const index = arrayLocal.indexOf(idSerie)
+        const index = arrayLocal.indexOf(id)
         arrayLocal.splice(index, 1)
         localStorage.setItem(nameArray, JSON.stringify(arrayLocal))
         // console.log(localSeries)

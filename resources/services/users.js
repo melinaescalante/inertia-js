@@ -1,5 +1,6 @@
 import { db } from "./firebase";
 import { doc, getDoc, updateDoc, setDoc, collection, addDoc, getDocs, query, where, onSnapshot, limit, Timestamp, deleteDoc } from "firebase/firestore";
+import { deleteIdFromStorage } from "./series";
 /**
  * Funcion que en base al id de un usuario nos permite tarer el display name actualizado de cada usuario.
  * @param {String} id
@@ -52,7 +53,7 @@ export async function getLastSeriesWatched(id) {
   }
 }
 /**
- * Funcion que en base al id de un usuario nos permite traer las series del usuario en su lista para ver, y las que están en un rango menor a 3 meses .
+ * Funcion que en base al id de un usuario nos permite traer las series del usuario en su lista para ver.
  * @param {String} id
  * @returns { Array}
  */
@@ -62,6 +63,32 @@ export async function getLastSeriesToWatch(id) {
 
     const userRef = doc(db, 'users', id);
     const seriesToWatchRef = doc(userRef, "series", "toWatch");
+    const userSnapshot = await getDoc(seriesToWatchRef);
+    const seriesValues = Object.values(userSnapshot.data())
+
+    const arrayIds = seriesValues.flatMap((serie) =>
+      serie.map((x) => parseInt(Object.keys(x)[0]))
+    );
+
+    localStorage.setItem("ids_series_wishlist", JSON.stringify(arrayIds));
+    await sortArrayFromLocalStorage(arrayIds, JSON.parse(localStorage.getItem('ids_series_watching')))
+    return arrayIds
+  } catch (error) {
+    console.log("Documento no existente", error);
+
+  }
+}
+/**
+ * Funcion que en base al id de un usuario nos permite traer las series del usuario en su lista para ver.
+ * @param {String} id
+ * @returns { Array}
+ */
+export async function getPeopleFollow(id) {
+  try {
+
+
+    const userRef = doc(db, 'users', id);
+    const seriesToWatchRef = doc(userRef, "series", "following");
     const userSnapshot = await getDoc(seriesToWatchRef);
     const seriesValues = Object.values(userSnapshot.data())
 
@@ -259,6 +286,7 @@ export async function addFollow(idUserAuth, idFollow) {
         // [idUserAuth]: true
       }
     });
+    allFollowing(idUserAuth)
   } else {
     return
 
@@ -279,9 +307,9 @@ export async function removeFollow(idUserAuth, idFollow) {
       [idFollow]: true,
     }), limit(1));
     const followSnapshot = await getDocs(followingQuery);
-    // console.log(followSnapshot.docs[0])
+    const localSeries = JSON.parse(localStorage.getItem('people'))
     await deleteDoc(followSnapshot.docs[0].ref)
-    // console.log('se dejó de seguir')
+    deleteIdFromStorage(idFollow, localSeries, 'people')
   } catch (error) {
     console.error(error)
   }
