@@ -4,7 +4,8 @@ import { getFileURL, uploadFile } from "./file-storage";
 
 import { updateUserProfile, getUsersProfileById } from "./users";
 import { getFollowedPeople, useLoginUser } from "../js/composables/useLoginUser";
-
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "./firebase";
 let loginUser = {
   id: null,
   email: null,
@@ -14,7 +15,9 @@ let loginUser = {
   genres: null,
   photoURL: null,
   lastSeriesWatched: null,
-  // following: null,
+  seriesToWatch: null,
+
+  following: null,
 
 }
 if (localStorage.getItem('user')) {
@@ -22,12 +25,17 @@ if (localStorage.getItem('user')) {
 }
 if (localStorage.getItem('people')) {
   loginUser.following = JSON.parse(localStorage.getItem('people'))
-}else{
+} else {
   useLoginUser()
 }
 if (localStorage.getItem('ids_series_watching')) {
   loginUser.lastSeriesWatched = JSON.parse(localStorage.getItem('ids_series_watching'))
-}else{
+} else {
+  useLoginUser()
+}
+if (localStorage.getItem('ids_series_wishlist')) {
+  loginUser.seriesToWatch = JSON.parse(localStorage.getItem('ids_series_wishlist'))
+} else {
   useLoginUser()
 }
 let observers = []
@@ -60,7 +68,7 @@ onAuthStateChanged(auth, user => {
       genres: null,
       photoURL: null,
       lastSeriesWatched: null,
-    following: null,
+      following: null,
     })
     localStorage.removeItem("user")
   }
@@ -159,7 +167,18 @@ export async function login({ email, password }) {
     throw error;
   }
 }
+export async function isUsernameUnique(username) {
+  try {
+    const usersCollectionRef = collection(db, `users`);
+    const q = query(usersCollectionRef, where('username', '==', username))
+    const userSnapshot = await getDocs(q);
+    console.log(userSnapshot)
+    return userSnapshot.empty ? true : false
 
+  } catch (error) {
+    console.error(error)
+  }
+}
 export async function signUp({ email, password, userName, fullname }) {
   // export async function signUp({ email, password, userName }) {
   try {
@@ -167,33 +186,33 @@ export async function signUp({ email, password, userName, fullname }) {
     //codigo funcional sin username correcto
 
     // await updateProfile(userCredential.user, { displayName: userName });
+await isUsernameUnique(userName)
+    // await updateProfile(userCredential.user, { displayName: fullname });
 
-    await updateProfile(userCredential.user, { displayName: fullname });
-
+    // // const userData = {
+    // //   displayName: userName || "Usuario sin nombre", // 
+    // //   email: email,
+    // //   bio: null,
+    // //   genres: null,
+    // //   photoURL: null,
+    // // };
     // const userData = {
-    //   displayName: userName || "Usuario sin nombre", // 
+    //   displayName: userName || "Usuario sin nombre",
+    //   username: userName,
     //   email: email,
     //   bio: null,
     //   genres: null,
     //   photoURL: null,
     // };
-    const userData = {
-      displayName: userName || "Usuario sin nombre",
-      username: userName,
-      email: email,
-      bio: null,
-      genres: null,
-      photoURL: null,
-    };
 
-    // Guardar los datos del usuario en Firestore
-    await updateUserProfile(userCredential.user.uid, userData);
+    // // Guardar los datos del usuario en Firestore
+    // await updateUserProfile(userCredential.user.uid, userData);
 
-    updateLoginUser({
-      id: userCredential.user.uid,
-      email: userCredential.user.email,
-      ...userData,
-    });
+    // updateLoginUser({
+    //   id: userCredential.user.uid,
+    //   email: userCredential.user.email,
+    //   ...userData,
+    // });
 
   } catch (error) {
     console.error("Error en el registro del usuario:", error);

@@ -50,7 +50,7 @@ function showPassword() {
 
                         <input id="password" :type="!passwordVisible ? 'password' : 'text'" class="p-2 w-full border rounded-md bg-slate-100 
                     focus:ring-blue-500 focus:border-blue-500 focus:outline-none" v-model="user.password" required
-                            placeholder="Contraseña" />
+                            placeholder="Contraseña" autocomplete="current-password" />
                         <button type="button" @click="showPassword" class="bg-blue-1000 rounded-lg"><svg
                                 class="w-6 h-6 text-orange-0 fill-transparent " aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

@@ -109,8 +109,12 @@ export async function getPeopleFollow(id) {
  */
 export async function sortArrayFromLocalStorage(arrayToWatch, arrayWatching) {
   try {
-    const arrayConcat = [...new Set([...arrayToWatch, ...arrayWatching])].sort();
-    return arrayConcat
+let arrayConcat=[]
+    if (arrayToWatch|| arrayWatching) {
+      
+       arrayConcat = [...new Set([...arrayToWatch, ...arrayWatching])].sort();
+      }
+      return arrayConcat
 
   } catch (error) {
     console.error(error)
