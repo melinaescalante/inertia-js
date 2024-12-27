@@ -245,8 +245,8 @@ export async function getUsers(searchTerm, callback) {
 
     if (searchTerm) {
       const q = query(usersRef,
-        where('displayName', '>=', searchTerm),
-        where('displayName', '<=', searchTerm + '\uf8ff')
+        where('username', '>=', searchTerm),
+        where('username', '<=', searchTerm + '\uf8ff')
       );
       // const q = query(usersRef, where('username', '>=', searchTerm), where('username', '<=', searchTerm + '\uf8ff'));
 
@@ -256,6 +256,7 @@ export async function getUsers(searchTerm, callback) {
             id: doc.id,
             bio: doc.data().bio,
             displayName: doc.data().displayName,
+            username: doc.data().username,
             genres: doc.data().genres,
             photoURL: doc.data().photoURL
           }
