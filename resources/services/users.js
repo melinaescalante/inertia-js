@@ -17,7 +17,7 @@ export async function getNameUser(id) {
   }
 }
 /**
- * Funcion que en base al id de un usuario nos permite las series del usuario actualmente viendo, y las que están en un rango menor a 3 meses .
+ * Funcion que en base al id de un usuario nos permite traer las series del usuario actualmente viendo, y las que están en un rango menor a 3 meses .
  * @param {String} id
  * @returns { Array}
  */
@@ -35,15 +35,15 @@ export async function getLastSeriesWatched(id) {
 
     const userRef = doc(db, 'users', id);
     const seriesWatchingRef = doc(userRef, "series", "watching");
-    const userSnapshot =await getDoc(seriesWatchingRef);
-    const seriesValues=Object.values(userSnapshot.data())
-    const test= seriesValues.filter(serie=>{
-      const lastModifiedMillis = serie.last_modified.toMillis(); 
+    const userSnapshot = await getDoc(seriesWatchingRef);
+    const seriesValues = Object.values(userSnapshot.data())
+    const test = seriesValues.filter(serie => {
+      const lastModifiedMillis = serie.last_modified.toMillis();
       const startMillis = startDate.toMillis();
       const endMillis = endDate.toMillis();
-      return  lastModifiedMillis >= startMillis && lastModifiedMillis <= endMillis;
-    }).map((serie)=>serie.id)
-   
+      return lastModifiedMillis >= startMillis && lastModifiedMillis <= endMillis;
+    }).map((serie) => serie.id)
+
     // console.log(test)
     localStorage.setItem("ids_series_watching", JSON.stringify(test))
 
@@ -53,7 +53,44 @@ export async function getLastSeriesWatched(id) {
 
   }
 }
+/**
+ * Funcion que en base al id de un usuario nos permite traer las series del usuario en su lista para ver, y las que están en un rango menor a 3 meses .
+ * @param {String} id
+ * @returns { Array}
+ */
+export async function getLastSeriesToWatch(id) {
+  try {
 
+
+    const userRef = doc(db, 'users', id);
+    const seriesToWatchRef = doc(userRef, "series", "toWatch");
+    const userSnapshot = await getDoc(seriesToWatchRef);
+    const seriesValues = Object.values(userSnapshot.data())
+
+    const arrayIds = seriesValues.flatMap((serie) =>
+      serie.map((x) => parseInt(Object.keys(x)[0]))
+    );
+
+    localStorage.setItem("ids_series_wishlist", JSON.stringify(arrayIds));
+    await sortArrayFromLocalStorage(arrayIds, JSON.parse(localStorage.getItem('ids_series_watching')))
+    return arrayIds
+  } catch (error) {
+    console.log("Documento no existente", error);
+
+  }
+}
+/**
+ * Sort de ids de series a ver y viendo, se eliminan los duplicados
+ */
+export async function sortArrayFromLocalStorage(arrayToWatch, arrayWatching) {
+  try {
+    const arrayConcat =[...new Set([...arrayToWatch, ...arrayWatching])].sort();
+    return arrayConcat
+  
+  } catch (error) {
+    console.error(error)
+  }
+}
 /**
  * 
  * @param {string} id 
@@ -250,7 +287,7 @@ export async function allFollowing(idUser) {
   });
   const followingIds = allFriends.map((item) => {
     const followingId = Object.keys(item.following);
-    return followingId[0]; 
+    return followingId[0];
   });
 
   localStorage.setItem("people", JSON.stringify(followingIds))

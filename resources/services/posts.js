@@ -1,7 +1,7 @@
 import { db, storage } from './firebase'
 import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, updateDoc, doc, getDoc, where, deleteDoc, getDocs, limit, startAfter, Timestamp } from 'firebase/firestore'
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { getNameUser, getPhotoURL, getUserName } from './users';
+import { getNameUser, getPhotoURL, getUserName, sortArrayFromLocalStorage } from './users';
 /**
  * 
  * @param {{text:String, serie:String, image:String, userid:String,}}
@@ -28,7 +28,7 @@ export async function uploadPost({ text, serie, idSerie, image, userid }) {
  */
 export function fetchPosts(idUser, seriesCurrent, callback) {
     try {
-
+console.log(seriesCurrent)
         const queryPost = query(
             collection(db, 'posts-public'),
             where('idSerie', 'in', seriesCurrent),
@@ -37,6 +37,7 @@ export function fetchPosts(idUser, seriesCurrent, callback) {
         );
         //Usamos onsnapshot para ver los cambios como likes y comentarios
         const unsubscribe = onSnapshot(queryPost, async (snapshot) => {
+
             const posts = snapshot.docs.map(async (post) => {
                 const like = await isLiked(post.id, idUser);
                 return {
@@ -61,7 +62,17 @@ export function fetchPosts(idUser, seriesCurrent, callback) {
         });
         return unsubscribe;
     } catch (error) {
-        console.log(error);
+        if (seriesCurrent) {
+            callback(false); // Notifica al frontend que no hay datos
+            //   debugger
+            return () => { };
+
+
+        }
+        console.error(error)
+        callback([]);
+        return () => { };
+
     }
 }
 /**

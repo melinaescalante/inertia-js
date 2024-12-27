@@ -1,7 +1,6 @@
-import { error } from "laravel-mix/src/Log";
 import { db } from "./firebase";
 import { doc, getDoc, updateDoc, setDoc, deleteField, FieldValue, onSnapshot, serverTimestamp, Timestamp } from "firebase/firestore";
-import { getLastSeriesWatched, getNameUser, getUserName } from "./users";
+import { getLastSeriesToWatch, getLastSeriesWatched, getNameUser, getUserName } from "./users";
 
 /**
  * Agregamos serie a nuestra lista para ver
@@ -36,6 +35,7 @@ export async function addSerieToWatch(idUser, idSerie, nameSerie) {
             await updateDoc(toWatchDocRef, {
                 seriesData: currentsToWatch
             });
+            getLastSeriesToWatch(idUser)
 
         }
         else {
@@ -114,6 +114,19 @@ export async function allSeriesWatching(idUser) {
         console.error(error)
     }
 }
+function deleteIdFromStorage(idSerie) {
+    try {
+        const localSeries = JSON.parse(localStorage.getItem('ids_series_watching'))
+        console.log(localSeries)
+        const index = localSeries.indexOf(idSerie)
+        localSeries.splice(index, 1)
+        localStorage.setItem('ids_series_watching',localSeries)
+        console.log(localSeries)
+
+    } catch (error) {
+        console.log('no se ha eliminado')
+    }
+}
 /**
  * Empezamos a ver una serie nueva
  * @param {String} idUser 
@@ -130,20 +143,23 @@ export async function startSerie(idUser, idSerie, idSeason) {
         ['current']: 1,
         ['currentSeason']: 1,
         ['currentIdSeason']: idSeason,
-        ['created_at']: Timestamp.now(),['last_modified']:Timestamp.now(),
-        ["id"]:idSerie
+        ['created_at']: Timestamp.now(), ['last_modified']: Timestamp.now(),
+        ["id"]: idSerie
 
     };
     if (toWatchSnapshot.exists()) {
         const currentsWatching = toWatchSnapshot.data();
         const exists = Object.keys(currentsWatching).some(serie => {
             return serie === idSerie.toString();
+
         });
         //Elimino serie si ya esta en el documento
         if (exists) {
             await updateDoc(toWatchDocRef, {
                 [idSerie]: deleteField()
             });
+            deleteIdFromStorage(idSerie)
+            //Eliminamos serie del storage
             return
         }
 
@@ -312,7 +328,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
 
                     await updateDoc(toWatchDocRef, {
                         [idSerie]: {
-                            id:idSerie,
+                            id: idSerie,
                             current: 1,
                             currentSeason: watchingSeason,
                             currentIdSeason: idCurrentSeason,
@@ -355,7 +371,7 @@ export async function addSerieEnded(idUser, idSerie, nameSerie, created) {
 
         await setDoc(watchedDocRef, { watched: [newWatchedSerie] });
     }
-getLastSeriesWatched(idUser)
+    getLastSeriesWatched(idUser)
 }
 
 /**

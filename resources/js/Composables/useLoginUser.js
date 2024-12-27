@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted, ref } from "vue";
-import { getLastSeriesWatched, allFollowing } from "../../services/users";
+import { getLastSeriesWatched, allFollowing, getLastSeriesToWatch } from "../../services/users";
 import { suscribeToAuthChanged } from "../../services/auth";
 let latestSeriesIds = ref([]);
 export function useLoginUser() {
@@ -13,6 +13,7 @@ export function useLoginUser() {
     genres: null,
     photoURL: null,
     lastSeriesWatched: null,
+    seriesToWatch: null,
     following: null,
   });
   function getLatestSeriesIds() {
@@ -40,11 +41,19 @@ export function useLoginUser() {
       }
     })
   }
+  function getSeriesToWatch() {
+    getLastSeriesToWatch(loginUser.value.id).then((series) => {
+      if (series.length > 0) {
+        loginUser.value.seriesToWatch = series
+      }
+    });
+  }
 
   onMounted(() => {
     unsubscribeFromAuth = suscribeToAuthChanged(newUserData => loginUser.value = newUserData)
     if (loginUser.value.id) {
       const cachedSeries = localStorage.getItem("ids_series_watching");
+      const cachedToWatchSeries = localStorage.getItem("ids_series_wishlist");
       const cachedFollowing = localStorage.getItem("people");
 
       if (cachedSeries) {
@@ -56,12 +65,16 @@ export function useLoginUser() {
         // Si no hay datos cacheados, los obtenemos en segundo plano
         getLatestSeriesIds();
       }
+      if (cachedToWatchSeries) {
+        loginUser.value.seriesToWatch = JSON.parse(cachedToWatchSeries)
+
+      } else {
+        getSeriesToWatch();
+      }
       if (cachedFollowing) {
         loginUser.value.following = JSON.parse(cachedFollowing)
         
-        // latestSeriesIds.value = JSON.parse(cachedSeries);
       } else {
-        console.log('entre')
         getFollowedPeople();
       }
     }

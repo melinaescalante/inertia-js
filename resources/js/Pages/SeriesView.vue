@@ -20,7 +20,7 @@ onMounted(async () => {
         await loadSeriesToWatch()
         await loadSeriesWatching()
         await loadSeriesWatched()
-
+console.log(loginUser.value)
         loading.value = false
     } else {
         loading.value = false

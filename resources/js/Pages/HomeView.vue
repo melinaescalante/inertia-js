@@ -6,9 +6,11 @@ import { onMounted, ref, onUnmounted } from 'vue';
 import Spinner from '../Components/Spinner.vue'
 import { fetchPosts, fetchPostsFrom } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
-import { login } from '../../services/auth';
+import { Link } from '@inertiajs/vue3';
+import { sortArrayFromLocalStorage } from '../../services/users';
 const { loginUser } = useLoginUser()
-
+const msgError = ref("")
+const msgAlert = ref("")
 const {
   loading: loadingPosts,
   posts,
@@ -20,7 +22,8 @@ function usePosts() {
   const posts = ref([]);
   const newPostLoaderSign = ref(null);
   const loadingMore = ref(false);
-  let unsubscribe = null;
+  let unsubscribe = () => { };
+  // let unsubscribeFromAuth = () => { };
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -33,18 +36,29 @@ function usePosts() {
 
   onMounted(async () => {
     try {
-      await loadPosts(); // Pasar ids de las series.
+      try {
+
+        await loadPosts(); // Pasar ids de las series.
+      } catch (error) {
+
+        console.error('hol');
+      }
       setIntersectionObserver();
     } catch (error) {
-      console.error(error);
+      return
     }
   });
 
 
   async function loadPosts() {
-    try {
-      unsubscribe = await fetchPosts(loginUser.value.id, loginUser.value.lastSeriesWatched, (newPosts) => {
+    try {     
+      let series= await sortArrayFromLocalStorage(loginUser.value.lastSeriesWatched, loginUser.value.seriesToWatch)
+      console.log(await series)
+      unsubscribe = await fetchPosts(loginUser.value.id, series, (newPosts) => {
         posts.value = newPosts;
+        if (newPosts.length===0){
+           msgAlert.value = "¡Aún no hay posteos sobre tus gustos, sé el primero!"
+      }
         loading.value = false;
       });
       //   fetchPosts(loginUser.value.id, (newPosts) => {
@@ -89,6 +103,7 @@ function usePosts() {
       ]
       setIntersectionObserver();
     } catch (error) {
+      msgError.value = '¡Comienza a añadir series a ver o viendo, así podremos comenzar a generarte un para ti!'
       console.error('[Posts.vue] Error al cargar más posts', error);
     }
 
@@ -97,6 +112,7 @@ function usePosts() {
   }
 
   onUnmounted(() => {
+    // debugger
     if (unsubscribe) {
       unsubscribe();
     }
@@ -123,13 +139,31 @@ function usePosts() {
           :comments="post.comments" :userName="post.user" :liked="post.liked" :userId="post.userid"
           :created_at="post.created_at" />
       </div>
+      <div v-if="msgError!==''" class="mt-[50%]">
+        <p class="text-center p-3">
+          {{ msgError }}
+        </p>
+        <Link href="/buscador" class="block w-2/6  text-center mx-auto py-2 px-4 
+        bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Iniciar búsqueda</Link>
+
+      </div>
+      <div v-if="msgAlert!==''" class="mt-[50%] ">
+        <p class="text-center p-3">
+          {{ msgAlert }}
+        </p>
+        <Link href="/subirPublicacion" class="block w-2/6  text-center mx-auto py-2 px-4 
+        bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Subir posteo</Link>
+      </div>
     </div>
-    <div v-else class="mt-[70%]">
+    <div v-else class="mt-[55%] p-3">
 
       <Spinner msg="Cargando más posteos" />
     </div>
 
     <Spinner v-if="loadingMorePosts === true" msg="Cargando más posteos" />
+    <div v-else>
+      <!-- {{ msgError }} -->
+    </div>
     <div ref="newPostLoaderSign"></div>
   </section>
 </template>
