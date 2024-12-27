@@ -4,7 +4,7 @@ import { Link, usePage } from '@inertiajs/vue3'
 import { ref, onMounted } from 'vue'
 import Spinner from '../../components/Spinner.vue'
 import { readPostsByUser } from '../../../services/posts';
-import { allFollowing, isFollowed, getEmailUser,addFollow, getUserName } from '../../../services/users';
+import { allFollowing, isFollowed, getEmailUser, addFollow, getUserName, removeFollow } from '../../../services/users';
 import { useUser } from "../../composables/useUser";
 import { useLoginUser } from '../../composables/useLoginUser';
 import { allSeriesWatched } from '../../../services/series';
@@ -16,7 +16,7 @@ const postsById = ref([])
 const emailUser = ref(getEmailUser(id.value))
 const { loginUser } = useLoginUser()
 const userName = ref(getUserName(page.props.id));
-const { user } = useUser(id.value, emailUser.value, userName.value); 
+const { user } = useUser(id.value, emailUser.value, userName.value);
 const seriesWatched = ref([])
 onMounted(async () => {
   try {
@@ -29,7 +29,7 @@ onMounted(async () => {
       postsById.value = newPosts
       loading.value = false
     }, id.value)
-   
+
 
   } catch (error) {
     console.log(error)
@@ -41,13 +41,17 @@ async function totalFollowing() {
   try {
     following.value = await allFollowing(id.value)
   } catch (error) {
-console.log(error)
+    console.log(error)
   }
 }
 totalFollowing()
 async function makeFollow() {
   try {
-    await addFollow(loginUser.value.id, id.value)
+    if (isFollow.value === true) {
+      await removeFollow(loginUser.value.id, id.value)
+    } else {
+      await addFollow(loginUser.value.id, id.value)
+    }
     await handleFollowed()
   } catch (error) {
     console.log(error)
@@ -91,7 +95,7 @@ async function handleFollowed() {
           Chatear</Link>
           <button type="button" @click="makeFollow"
             class="text-center border border-blue-1000  text-blue-1000 hover:bg-blue-0 hover:border-transparent transition-colors focus:ring-4 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
-            {{isFollow? 'Siguiendo ': 'Seguir'}}</button>
+            {{ isFollow ? 'Siguiendo ' : 'Seguir' }}</button>
         </div>
         <div class=" flex flex-wrap justify-around" v-else>
           <Link v-if="loginUser.id" href="/perfilinfo/edit"

@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { doc, getDoc, updateDoc, setDoc, collection, addDoc, getDocs, query, where, onSnapshot, limit, Timestamp } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, collection, addDoc, getDocs, query, where, onSnapshot, limit, Timestamp, deleteDoc } from "firebase/firestore";
 /**
  * Funcion que en base al id de un usuario nos permite tarer el display name actualizado de cada usuario.
  * @param {String} id
@@ -82,9 +82,9 @@ export async function getLastSeriesToWatch(id) {
  */
 export async function sortArrayFromLocalStorage(arrayToWatch, arrayWatching) {
   try {
-    const arrayConcat =[...new Set([...arrayToWatch, ...arrayWatching])].sort();
+    const arrayConcat = [...new Set([...arrayToWatch, ...arrayWatching])].sort();
     return arrayConcat
-  
+
   } catch (error) {
     console.error(error)
   }
@@ -262,6 +262,28 @@ export async function addFollow(idUserAuth, idFollow) {
   } else {
     return
 
+  }
+}
+/**
+ * Dejamos de seguir a un usuario
+ * @param {String} idUserAuth 
+ * @param {String} idFollow 
+ * @returns {Promise}
+ */
+export async function removeFollow(idUserAuth, idFollow) {
+  try {
+
+    const followingCollectionRef = collection(db, `users/${idUserAuth}/following`);
+    const followingQuery = query(followingCollectionRef, where('following', '==', {
+      // [idUserAuth]: true,
+      [idFollow]: true,
+    }), limit(1));
+    const followSnapshot = await getDocs(followingQuery);
+    // console.log(followSnapshot.docs[0])
+    await deleteDoc(followSnapshot.docs[0].ref)
+    // console.log('se dejó de seguir')
+  } catch (error) {
+    console.error(error)
   }
 }
 /**
