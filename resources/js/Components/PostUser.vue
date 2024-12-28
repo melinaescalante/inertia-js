@@ -145,12 +145,13 @@ function handleClose() {
                                 </svg>
                                 <span class="sr-only">Cerrar modal</span>
                             </div>
-                            <p class="text-gray-400  ms-2">Informacion: {{ formatDate(created_at) }}</p>
+                            <p class="text-gray-600  ms-2">Informacion: {{ formatDate(created_at) }}</p>
                         </div>
 
                         <div class="max-w-[50%] mt-2" v-if="loginUser.id === userId">
 
-                            <ModalComponentDelete @closeModal="handleClose" :id="id"></ModalComponentDelete>
+                            <ModalComponentDelete @closeModal="handleClose" :id="id" modalTitle="Eliminar Posteo" modalDescription="¿Estás seguro de eliminar esta
+                        publicación?" msgAfirmative="Si, la quiero eliminar"></ModalComponentDelete>
                         </div>
                     </div>
                 </BottomSheet>

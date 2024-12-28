@@ -1,11 +1,14 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
 import { allSeriesToWatch, allSeriesWatching, nextEpisode, allSeriesWatched, currentInformation } from '../../services/series';
+import ModalComponentDelete from '../components/ModalComponentDelete.vue';
 import { ref, onMounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import { useLoginUser } from '../composables/useLoginUser';
 import Spinner from '../Components/Spinner.vue';
 import CardWithData from '../Components/CardWithData.vue';
+import BottomSheet from '../components/BottomSheet.vue';
+import { formatDate } from '../helpers/date';
 const seriesToWatch = ref([])
 const seriesWatched = ref([])
 const seriesWatching = ref([])
@@ -15,6 +18,14 @@ const { loginUser } = useLoginUser()
 const loading = ref(true)
 const lastSerie = ref()
 const lastSerieWatched = ref()
+const isBottomSheetOpen = ref(true);
+function handleClose() {
+
+    isBottomSheetOpen.value = false;
+    setTimeout(() => {
+        isBottomSheetOpen.value = true;
+    }, 100);
+}
 onMounted(async () => {
     if (loginUser.value?.id) {
         await loadSeriesToWatch()
@@ -74,7 +85,7 @@ async function loadSeriesToWatch() {
     }
 }
 
-async function loadSeriesWatching() {
+ async function loadSeriesWatching() {
     seriesWatching.value = await allSeriesWatching(loginUser.value.id)
 
     if (seriesWatching === false) return
@@ -215,15 +226,34 @@ async function next(id, idSerie, nameSerie) {
                     </Link>
                     <div class="flex md:flex-col flex-row-reverse justify-between space-x-2 col-span-1">
                         <div class="self-end mb-2 md:mt-0">
+                            <BottomSheet>
+                                <div class="flex flex-col">
+                                    <div class="flex">
+                                        <div>
 
-                            <button>
-                                <svg class="w-6 h-6  text-gray-800  dark:text-white" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                    viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
-                                        d="M12 6h.01M12 12h.01M12 18h.01" />
-                                </svg>
-                            </button>
+                                            <svg class="w-6 h-6 text-gray-400 " aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                                viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="1.5"
+                                                    d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                            </svg>
+                                            <span class="sr-only">Cerrar modal</span>
+                                        </div>
+                                        <p class="text-gray-600  ms-2">Fecha de inicio: {{ formatDate(seriesWatching.find(series =>
+                                    series[serie.id])?.[serie.id].created_at) }}</p>
+                                    </div>
+
+                                    <div class="max-w-[50%] mt-2" >
+
+                                        <ModalComponentDelete @closeModal="handleClose" 
+                                        modalTitle="Dejar de ver" 
+                                        :modalDescription="'¿Estás seguro que quieres dejar de ver ' + serie.name + '?'" 
+                                        msgAfirmative="Sí, la quiero dejar de ver." :idSeason="seriesWatching.find(series =>
+                                    series[serie.id])?.[serie.id].created_at" :idSerie="serie.id" ></ModalComponentDelete>
+                                    </div>
+                                </div>
+                            </BottomSheet>
 
                         </div>
                         <button v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"

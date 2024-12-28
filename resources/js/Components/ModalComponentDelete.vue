@@ -3,11 +3,19 @@ import { router, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { deletePost } from '../../services/posts'
 import { defineEmits } from 'vue';
+import { startSerie } from '../../services/series';
 import { useLoginUser } from '../composables/useLoginUser';
+const { loginUser } = useLoginUser()
 const page = usePage()
 const currentPage = page.component
-defineProps({
-    id: String
+const props = defineProps({
+    id: String | undefined,
+    modalTitle: String,
+    modalDescription: String,
+    msgAfirmative: String,
+    idSerie: Number| undefined,
+    idSeason: Object| undefined,
+    // action: Function
 })
 
 const showModal = ref(false);
@@ -23,23 +31,32 @@ function closeModal() {
 
 async function handleDeletePost(id) {
     try {
-        await deletePost(id)
-        emit('closeModal',false);
+        if (currentPage === 'HomeView' || currentPage === 'SinglePostView') {
+            await deletePost(id)
+
+        } else {
+            await startSerie(loginUser.value.id, props.idSerie, props.idSeason)
+        }
+        emit('closeModal', false);
         showModal.value = false;
-        if (currentPage==='SinglePostView') {
+        if (currentPage === 'SinglePostView') {
             router.replace('/miPerfil')
+        }else if(currentPage==='SeriesView'){
+            router.visit('/misSeries')
+
         }
     } catch (error) {
 
     }
 }
+
 </script>
 
 <template>
     <button @click="openModal"
         class="block text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 "
         type="button">
-        Eliminar posteo
+        {{ modalTitle }}
     </button>
 
     <div v-if="showModal" class="fixed inset-0 flex justify-center items-center z-50 bg-gray-800 bg-opacity-50"
@@ -61,11 +78,10 @@ async function handleDeletePost(id) {
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
-                    <h3 class="mb-5 text-lg font-normal text-gray-500 ">¿Estás seguro de eliminar esta
-                        publicación?</h3>
+                    <h3 class="mb-5 text-lg font-normal text-gray-500 ">{{ modalDescription }}</h3>
                     <button @click="handleDeletePost(id)" type="button"
                         class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300  font-medium rounded-full text-sm inline-flex items-center px-5 py-2.5 text-center">
-                        Si, la quiero eliminar
+                        {{ msgAfirmative }}
                     </button>
                     <button type="button"
                         class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 "
