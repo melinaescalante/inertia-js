@@ -19,7 +19,7 @@ export function useLoginUser() {
   function getLatestSeriesIds() {
     // Llamada en segundo plano para obtener las series
     getLastSeriesWatched(loginUser.value.id).then((series) => {
-      if (series.length > 0) {
+      if (series?.length > 0) {
         latestSeriesIds.value = series;
         loginUser.value.lastSeriesWatched = series
       }
@@ -43,7 +43,7 @@ export function useLoginUser() {
   }
   function getSeriesToWatch() {
     getLastSeriesToWatch(loginUser.value.id).then((series) => {
-      if (series.length > 0) {
+      if (series?.length > 0) {
         loginUser.value.seriesToWatch = series
       }
     });

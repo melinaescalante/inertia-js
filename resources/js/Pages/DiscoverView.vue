@@ -31,6 +31,13 @@ async function loadSeriesByUsersGenres() {
             const response = await fetch('https://api.tvmaze.com/shows');
             const shows = await response.json()
 
+            // Agarras el length del array de shows y lo restas por el limite.
+            // let num = shows.length - limit
+            // Math.Random() entre 0 y num.
+            // Se puede buscar si hay dos metodos que se llamen -> Skip y Take como en c#
+            // Haciendo esto haria -> Skip (numeroRandom) y Take (limit) 
+            // Obteniendo asi, los shows de una manera "Random"
+
             shows.forEach(show => {
                 if (genreArray.length < limit) {
                     if (show.genres.includes(genre) && !(idShows[show.id])) {

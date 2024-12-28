@@ -180,14 +180,11 @@ export async function isUsernameUnique(username) {
   }
 }
 export async function signUp({ email, password, userName, fullname }) {
-  // export async function signUp({ email, password, userName }) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     //codigo funcional sin username correcto
 
-    // await updateProfile(userCredential.user, { displayName: userName });
-await isUsernameUnique(userName)
-    // await updateProfile(userCredential.user, { displayName: fullname });
+    await updateProfile(userCredential.user, { displayName: fullname });
 
     // // const userData = {
     // //   displayName: userName || "Usuario sin nombre", // 
@@ -196,23 +193,23 @@ await isUsernameUnique(userName)
     // //   genres: null,
     // //   photoURL: null,
     // // };
-    // const userData = {
-    //   displayName: userName || "Usuario sin nombre",
-    //   username: userName,
-    //   email: email,
-    //   bio: null,
-    //   genres: null,
-    //   photoURL: null,
-    // };
+    const userData = {
+      displayName: userName || "Usuario sin nombre",
+      username: userName,
+      email: email,
+      bio: null,
+      genres: null,
+      photoURL: null,
+    };
 
     // // Guardar los datos del usuario en Firestore
-    // await updateUserProfile(userCredential.user.uid, userData);
+    await updateUserProfile(userCredential.user.uid, userData);
 
-    // updateLoginUser({
-    //   id: userCredential.user.uid,
-    //   email: userCredential.user.email,
-    //   ...userData,
-    // });
+    updateLoginUser({
+      id: userCredential.user.uid,
+      email: userCredential.user.email,
+      ...userData,
+    });
 
   } catch (error) {
     console.error("Error en el registro del usuario:", error);

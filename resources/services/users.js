@@ -37,14 +37,18 @@ export async function getLastSeriesWatched(id) {
     const userRef = doc(db, 'users', id);
     const seriesWatchingRef = doc(userRef, "series", "watching");
     const userSnapshot = await getDoc(seriesWatchingRef);
-    const seriesValues = Object.values(userSnapshot.data())
-    const test = seriesValues.filter(serie => {
-      const lastModifiedMillis = serie.last_modified.toMillis();
-      const startMillis = startDate.toMillis();
-      const endMillis = endDate.toMillis();
-      return lastModifiedMillis >= startMillis && lastModifiedMillis <= endMillis;
-    }).map((serie) => serie.id)
-    localStorage.setItem("ids_series_watching", JSON.stringify(test))
+    let seriesValues
+    if (userSnapshot.data()) {
+
+      seriesValues = Object.values(userSnapshot.data())
+      const test = seriesValues.filter(serie => {
+        const lastModifiedMillis = serie.last_modified.toMillis();
+        const startMillis = startDate.toMillis();
+        const endMillis = endDate.toMillis();
+        return lastModifiedMillis >= startMillis && lastModifiedMillis <= endMillis;
+      }).map((serie) => serie.id)
+      localStorage.setItem("ids_series_watching", JSON.stringify(test))
+    }
 
     return seriesValues
   } catch (error) {
@@ -64,7 +68,11 @@ export async function getLastSeriesToWatch(id) {
     const userRef = doc(db, 'users', id);
     const seriesToWatchRef = doc(userRef, "series", "toWatch");
     const userSnapshot = await getDoc(seriesToWatchRef);
-    const seriesValues = Object.values(userSnapshot.data())
+    let seriesValues = []
+    if (userSnapshot.data()) {
+
+      seriesValues = Object.values(userSnapshot?.data())
+    }
 
     const arrayIds = seriesValues.flatMap((serie) =>
       serie.map((x) => parseInt(Object.keys(x)[0]))
@@ -109,15 +117,16 @@ export async function getPeopleFollow(id) {
  */
 export async function sortArrayFromLocalStorage(arrayToWatch, arrayWatching) {
   try {
-let arrayConcat=[]
-    if (arrayToWatch|| arrayWatching) {
-      
-       arrayConcat = [...new Set([...arrayToWatch, ...arrayWatching])].sort();
-      }
-      return arrayConcat
+    let arrayConcat = []
+    if (arrayToWatch || arrayWatching) {
+
+      arrayConcat = [...new Set([...arrayToWatch, ...arrayWatching])].sort();
+    }
+    return arrayConcat
 
   } catch (error) {
-    console.error(error)
+    // console.error(error)
+    // continue
   }
 }
 /**
