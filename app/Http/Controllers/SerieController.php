@@ -239,7 +239,7 @@ class SerieController extends Controller
                 }
             }
         }
-        $seriesArrayLimit = array_slice($seriesArray, 0, 7);
+        $seriesArrayLimit = array_slice($seriesArray, 0, 6);
 
         return Inertia::render('SearchView', [
             'series' => $seriesArrayLimit

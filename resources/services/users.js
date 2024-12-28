@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { doc, getDoc, updateDoc, setDoc, collection, addDoc, getDocs, query, where, onSnapshot, limit, Timestamp, deleteDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, collection, addDoc, getDocs, query, where, onSnapshot, limit, Timestamp, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { deleteIdFromStorage } from "./series";
 /**
  * Funcion que en base al id de un usuario nos permite tarer el display name actualizado de cada usuario.
@@ -297,10 +297,10 @@ export async function addFollow(idUserAuth, idFollow) {
     await addDoc(followingCollectionRef, {
       following: {
         [idFollow]: true,
-        // [idUserAuth]: true
-      }
+
+      }, 'followed_at': Timestamp.now()
     });
-    allFollowing(idUserAuth)
+    getLastPeopleFollowed(idUserAuth)
   } else {
     return
 
@@ -351,11 +351,54 @@ export async function allFollowing(idUser) {
     const followingId = Object.keys(item.following);
     return followingId[0];
   });
-
-  localStorage.setItem("people", JSON.stringify(followingIds))
+  // getLastPeopleFollowed(idUser)
+  // localStorage.setItem("people", JSON.stringify(followingIds))
   return allFriends;
 }
+/**
+ * Funcion que en base al id de un usuario nos permite traer a las personas que sigue con un rango igual o menor a 2
+ meses .
+ * @param {String} id
+ * @returns { Array}
+ */
+export async function getLastPeopleFollowed(id) {
+  try {
+    // Fecha maxima (hoy)
+    const today = new Date();
+    const endDate = Timestamp.fromDate(today);
 
+    // Calcular la fecha de hace 2 meses
+    let fiveMonthsAgo = new Date();
+    fiveMonthsAgo.setMonth(today.getMonth() - 2);
+    const startDate = Timestamp.fromDate(fiveMonthsAgo);
+
+
+    const userRef = doc(db, 'users', id);
+    const seriesWatchingRef = collection(userRef, "following");
+    const userSnapshot = await getDocs(seriesWatchingRef);
+    let seriesValues = []
+    if (userSnapshot.docs) {
+      userSnapshot.docs.forEach(user => {
+        seriesValues.push(user._document.data.value.mapValue.fields)
+      });
+      const lastFollowed = seriesValues.filter((person) => {
+        const followedAt = new Date(person.followed_at.timestampValue);
+        const lastFollowMillis = followedAt.getTime();
+        const startMillis = startDate.toMillis();
+        const endMillis = endDate.toMillis();
+        console.log(lastFollowMillis >= startMillis && lastFollowMillis <= endMillis)
+        return lastFollowMillis >= startMillis && lastFollowMillis <= endMillis;
+      }).flatMap((person) => Object.keys(person.following.mapValue.fields))
+      console.log(lastFollowed)
+
+      localStorage.setItem("people", JSON.stringify(lastFollowed))
+      return lastFollowed
+    }
+  } catch (error) {
+    console.log("Documento no existente", error);
+
+  }
+}
 /**
  * Consultamos si un usuario es seguido por otro
  * @param {String} idUserAuth 
@@ -372,8 +415,11 @@ export async function isFollowed(idUserAuth, idUser2) {
     const followingSnapshot = await getDocs(followingQuery);
 
     if (!followingSnapshot.empty) {
+      console.log(followingSnapshot.docs)
       return true;
     } else {
+      console.log(followingSnapshot.docs)
+
       return false;
     }
   } catch (error) {

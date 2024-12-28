@@ -35,7 +35,7 @@ onMounted(async () => {
     <NavBar></NavBar>
     <div class="flex items-center justify-between">
 
-        <h1 class="ms-2 text-xl mt-4 mb-4 font-medium">Chat recientes</h1>
+        <h1 class="ms-2 text-xl mt-4 mb-4 font-medium skiptranslate">Chat recientes</h1>
         <span>
             <Link href="/buscadorUsuarios">
             <img class="h-6 w-6 me-2" src="/public/images/plus.svg" alt="Crear un nuevo chat el privado">

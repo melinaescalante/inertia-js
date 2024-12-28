@@ -1,17 +1,12 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import NavBar from '../components/NavBar.vue'
 import SearchUsersComponent from '../Components/SearchUsersComponent.vue';
-// defineProps({
-//     users: Array  
-// })
+
 </script>
 <template>
     <NavBar></NavBar>
-    <SearchUsersComponent ></SearchUsersComponent>
-    <div class="flex gap-4 flex-wrap justify-center">
-        <Link href="/buscador" class="border  rounded-lg border-blue-500 px-2 py-1">Series</Link>
-        <Link href="/buscadorUsuarios" class="border rounded-lg border-blue-500 px-2 py-1">Personas</Link>
-    </div>
+    <SearchUsersComponent></SearchUsersComponent>
+    
 
 </template>

@@ -1,19 +1,24 @@
 <script>
 import Spinner from './Spinner.vue';
 import { getUsers } from '../../services/users';
-import { Link } from '@inertiajs/vue3';
-
+import { Link, usePage } from '@inertiajs/vue3';
+const page = usePage()
+const currentPage = page.component
 export default {
   components: {
     Spinner,
     Link,
   },
   data() {
+    const page = usePage();
+    const currentPage = page.component; 
+
     return {
       formInput: '',
       answer: '',
       loading: false,
       users: [],
+      currentPage, 
     };
   },
   methods: {
@@ -73,11 +78,15 @@ export default {
         placeholder="Busca a tus amigos" required v-model="formInput" @input="answer = ''; getAnswer(formInput)" />
 
       <button type="submit"
-        class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
+        class="text-blue-1000 absolute end-2.5 bottom-2.5 bg-blue-0 hover:bg-blue-800  hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
         Buscar
       </button>
     </div>
   </form>
+  <div class="flex gap-4 flex-wrap justify-center">
+        <Link href="/buscador" class="border  rounded-lg border-blue-0 px-2 py-1">Series</Link>
+        <Link href="/buscadorUsuarios" :class="currentPage === 'SearchUsersView' ? 'bg-blue-1000 text-white border-blue-1000 font-normal' : 'text-black bg-white border-blue-0 '" class="border rounded-lg px-2 py-1" >Personas</Link>
+    </div>
   <div v-if="loading && answer === 'Buscando usuarios...'" class="flex flex-col justify-center items-center">
 
     <p>{{ answer }}</p>

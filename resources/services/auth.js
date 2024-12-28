@@ -3,7 +3,7 @@ import { auth } from "./firebase";
 import { getFileURL, uploadFile } from "./file-storage";
 
 import { updateUserProfile, getUsersProfileById } from "./users";
-import { getFollowedPeople, useLoginUser } from "../js/composables/useLoginUser";
+import {  useLoginUser } from "../js/composables/useLoginUser";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebase";
 let loginUser = {

@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted, ref } from "vue";
-import { getLastSeriesWatched, allFollowing, getLastSeriesToWatch } from "../../services/users";
+import { getLastSeriesWatched, allFollowing, getLastSeriesToWatch, getLastPeopleFollowed } from "../../services/users";
 import { suscribeToAuthChanged } from "../../services/auth";
 let latestSeriesIds = ref([]);
 export function useLoginUser() {
@@ -34,7 +34,7 @@ export function useLoginUser() {
     // Retornás esas series.
   }
   function getFollowedPeople() {
-    allFollowing(loginUser.value.id).then((following) => {
+    getLastPeopleFollowed(loginUser.value.id).then((following) => {
       if (following.length > 0) {
         loginUser.value.following = following
 
@@ -73,7 +73,7 @@ export function useLoginUser() {
       }
       if (cachedFollowing) {
         loginUser.value.following = JSON.parse(cachedFollowing)
-        
+
       } else {
         getFollowedPeople();
       }
@@ -86,12 +86,4 @@ export function useLoginUser() {
   return {
     loginUser
   }
-}
-export function getFollowedPeople() {
-  allFollowing(loginUser.value.id).then((following) => {
-    if (following.length > 0) {
-      loginUser.value.following = following
-
-    }
-  })
 }

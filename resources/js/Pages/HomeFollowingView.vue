@@ -4,10 +4,12 @@ import SwitcherHome from '../Components/SwitcherHome.vue';
 import PostUser from '../components/PostUser.vue'
 import { onMounted, ref, onUnmounted } from 'vue';
 import Spinner from '../Components/Spinner.vue'
-import { fetchPostsFollowed, fetchPostsFollowedFrom,  } from '../../services/posts';
+import { fetchPostsFollowed, fetchPostsFollowedFrom, } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
+import { Link } from '@inertiajs/vue3';
 const { loginUser } = useLoginUser()
-
+const msgError = ref("")
+const msgAlert = ref("")
 const {
     loading: loadingPosts,
     posts,
@@ -44,10 +46,15 @@ function usePosts() {
         try {
             unsubscribe = await fetchPostsFollowed(loginUser.value.id, loginUser.value.following, (newPosts) => {
                 posts.value = newPosts;
+                if (newPosts.length === 0) {
+                    msgAlert.value = "¡Aún tus seguidos no tienen publicaciones!"
+                }
                 loading.value = false;
             });
-        
+
         } catch (error) {
+            loading.value = false;
+
             console.log(error);
         }
     }
@@ -80,7 +87,8 @@ function usePosts() {
             ]
             setIntersectionObserver();
         } catch (error) {
-            console.error('[Posts.vue] Error al cargar más posts', error);
+            msgError.value = '¡Comienza a seguir gente y conocer acerca de sus gustos!'
+            console.log('[Posts.vue] Error al cargar más posts', error);
         }
 
         loadingMore.value = false;
@@ -114,6 +122,23 @@ function usePosts() {
                     :imgAlt="post.image" :serie="post.serie" :idSerie="post.idSerie" :date="post.date"
                     :likes="post.likes" :comments="post.comments" :userName="post.user" :liked="post.liked"
                     :userId="post.userid" :created_at="post.created_at" />
+            </div>
+            <div v-if="msgError !== ''" class="mt-[50%]">
+                <p class="text-center p-3">
+                    {{ msgError }}
+                </p>
+                <Link href="/buscadorUsuarios" class="block w-2/6  text-center mx-auto py-2 px-4 
+        bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Iniciar
+                búsqueda</Link>
+
+            </div>
+            <div v-if="msgAlert !== ''" class="mt-[50%] ">
+                <p class="text-center p-3">
+                    {{ msgAlert }}
+                </p>
+                <Link href="/subirPublicacion" class="block w-2/6  text-center mx-auto py-2 px-4 
+        bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Subir
+                posteo</Link>
             </div>
         </div>
         <div v-else class="mt-[70%]">

@@ -63,8 +63,7 @@ console.log(seriesCurrent)
         return unsubscribe;
     } catch (error) {
         if (seriesCurrent) {
-            callback(false); // Notifica al frontend que no hay datos
-            //   debugger
+            callback(false); 
             return () => { };
 
 
@@ -116,7 +115,16 @@ export function fetchPostsFollowed(idUser, following, callback) {
         });
         return unsubscribe;
     } catch (error) {
-        console.log(error);
+        if (following) {
+            callback(false); 
+            return () => { };
+
+
+        }
+        console.error(error)
+        callback([]);
+        return () => { };
+
     }
 }
 /**
