@@ -20,7 +20,14 @@ const { user } = useUser(id.value, emailUser.value, userName.value);
 const seriesWatched = ref([])
 onMounted(async () => {
   try {
-    seriesWatched.value = await allSeriesWatched(id.value)
+    allSeriesWatched(id.value)
+      .then(series => {
+        seriesWatched.value = series || [];
+      })
+      .catch(error => {
+        console.error("Error fetching series:", error);
+        seriesWatched.value = []; 
+      });
     if (loginUser.value.id) {
       handleFollowed()
     }

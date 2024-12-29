@@ -384,21 +384,23 @@ export async function addSerieEnded(idUser, idSerie, nameSerie, created) {
  * @param {String} idUser 
  * @returns {Array|false}
  */
-export async function allSeriesWatched(idUser) {
-    try {
-        const seriesWatchedRef = doc(db, `users/${idUser}/series/watched`);
-        const seriesWatchedSnapshot = await getDoc(seriesWatchedRef);
-        if (seriesWatchedSnapshot.exists()) {
-            let seriesWatchedObtained = seriesWatchedSnapshot.data().watched || [];
-            seriesWatchedObtained = seriesWatchedObtained.reverse();
-            return seriesWatchedObtained;
-        } else {
-            return false
-        }
-    } catch (error) {
-        console.error(error);
-    }
+export function allSeriesWatched(idUser) {
+    const seriesWatchedRef = doc(db, `users/${idUser}/series/watched`);
+    return getDoc(seriesWatchedRef)
+        .then(seriesWatchedSnapshot => {
+            if (seriesWatchedSnapshot.exists()) {
+                let seriesWatchedObtained = seriesWatchedSnapshot.data().watched || [];
+                return seriesWatchedObtained.reverse();
+            } else {
+                return false;
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            // return Promise.reject(error); // Propagar el error si es necesario
+        });
 }
+
 /**
  * Dejamos comentarios para una determinada serie
  * @param {String} comment 

@@ -14,6 +14,14 @@ const arrayFetch = ref([])
 const series = ref([])
 onMounted(async () => {
     try {
+        // allSeriesWatched(loginUser.value.id)
+        //     .then(arraySeries => {
+        //         series.value = arraySeries;
+        //     })
+        //     .catch(error => {
+        //         console.error("Error fetching series:", error);
+        //         series.value = []; 
+        //     });
         series.value = await allSeriesWatched(loginUser.value.id)
         const promises = series.value.map(async (serie) => {
             const response = await fetch('https://api.tvmaze.com/singlesearch/shows?q=' + serie.nameSerie);

@@ -20,8 +20,17 @@ const following = ref([])
 onMounted(async () => {
 
     try {
-        seriesWatched.value = await allSeriesWatched(loginUser.value.id)
-        following.value=await allFollowing(loginUser.value.id)
+        allSeriesWatched(loginUser.value.id)
+            .then(series => {
+                seriesWatched.value = series || [];
+            })
+            .catch(error => {
+                console.error("Error fetching series:", error);
+                seriesWatched.value = []; // Puedes manejar un valor por defecto en caso de error
+            });
+
+        // seriesWatched.value = await allSeriesWatched(loginUser.value.id)
+        following.value = await allFollowing(loginUser.value.id)
         await readPostsByUser(async (newPosts) => {
             postsById.value = newPosts
             loading.value = false;
@@ -29,8 +38,6 @@ onMounted(async () => {
     } catch (error) {
         console.log(error)
     }
-
-
 
 })
 
@@ -61,7 +68,8 @@ onMounted(async () => {
                 <p class="font-medium text-center">@{{ loginUser.username }}
                 </p>
                 <div class="flex justify-around">
-                    <p class="me-2">Series vistas <span class="text-center block">{{ seriesWatched?.length || 0 }}</span>
+                    <p class="me-2">Series vistas <span class="text-center block">{{ seriesWatched?.length || 0
+                            }}</span>
                     </p>
                     <p>Seguidos <span class="text-center block">{{ following?.length || 0 }}</span></p>
                 </div>
