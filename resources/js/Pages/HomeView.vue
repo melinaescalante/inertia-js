@@ -52,6 +52,14 @@ function usePosts() {
       console.log(await series)
       unsubscribe = await fetchPosts(loginUser.value.id, series, (newPosts) => {
         posts.value = newPosts;
+        // console.log(newPosts)
+        // console.log(loginUser.value.lastSeriesWatched, loginUser.value.seriesToWatch)
+        if (!loginUser.value.lastSeriesWatched?.length && !loginUser.value.seriesToWatch?.length) {
+          console.log('no posteos')
+          msgError.value = '¡Comienza a añadir series a ver o viendo, así podremos comenzar a generarte un para ti!'
+          loading.value = false;
+          return
+        }
         if (newPosts.length === 0) {
           msgAlert.value = "¡Aún no hay posteos sobre tus gustos, sé el primero!"
         }
@@ -99,16 +107,15 @@ function usePosts() {
       ]
       setIntersectionObserver();
     } catch (error) {
-      msgError.value = '¡Comienza a añadir series a ver o viendo, así podremos comenzar a generarte un para ti!'
-      console.error('[Posts.vue] Error al cargar más posts', error);
+      console.log('aca load more')
+      // msgError.value = '¡Comienza a añadir series a ver o viendo, así podremos comenzar a generarte un para ti!'
+      console.log('[Posts.vue] Error al cargar más posts', error);
     }
 
     loadingMore.value = false;
 
   }
-
   onUnmounted(() => {
-    // debugger
     if (unsubscribe) {
       unsubscribe();
     }
@@ -159,7 +166,7 @@ function usePosts() {
     </div>
 
     <Spinner v-if="loadingMorePosts === true" msg="Cargando más posteos" />
-    
+
     <div ref="newPostLoaderSign"></div>
   </section>
 </template>

@@ -22,38 +22,73 @@ onMounted(async () => {
     }
 });
 async function loadSeriesByUsersGenres() {
+
     if (loginUser.value.genres !== undefined && loginUser.value.genres !== null) {
         let idShows = [];
-        loginUser.value.genres.forEach(async (genre, index) => {
-            genre = Object.keys(genre)[0]
-            let genreArray = []
-            const limit = 10
-            const response = await fetch('https://api.tvmaze.com/shows');
-            const shows = await response.json()
+        const limit = 10;
+        const response = await fetch('https://api.tvmaze.com/shows');
+        const shows = await response.json();
 
-            // Agarras el length del array de shows y lo restas por el limite.
-            // let num = shows.length - limit
-            // Math.Random() entre 0 y num.
-            // Se puede buscar si hay dos metodos que se llamen -> Skip y Take como en c#
-            // Haciendo esto haria -> Skip (numeroRandom) y Take (limit) 
-            // Obteniendo asi, los shows de una manera "Random"
+        for (const userGenre of loginUser.value.genres) {
+            const genre = Object.keys(userGenre)[0];
+            let genreArray = [];
 
-            shows.forEach(show => {
-                if (genreArray.length < limit) {
-                    if (show.genres.includes(genre) && !(idShows[show.id])) {
-                        idShows.push(show.id);
-                        idShows[show.id] = show.id
-                        genreArray.push(show);
-                    }
-                }
-            });
+            const filteredShows = shows.filter(show => show.genres.includes(genre) && !idShows[show.id]);
 
-            serie.value.push(genreArray)
-        });
+            while (genreArray.length < limit && filteredShows.length > 0) {
+                const randomIndex = Math.floor(Math.random() * filteredShows.length);
+                const randomShow = filteredShows.splice(randomIndex, 1)[0];
+
+                genreArray.push(randomShow);
+                idShows.push(randomShow.id);
+                idShows[randomShow.id] = randomShow.id;
+            }
+
+            serie.value.push(genreArray);
+        }
+
         loading.value = false;
-
     }
+
+    // if (loginUser.value.genres !== undefined && loginUser.value.genres !== null) {        
+    //     let idShows = [];
+    //     const limit = 10
+    //     const response = await fetch('https://api.tvmaze.com/shows');
+    //     const shows = await response.json()
+
+    //     loginUser.value.genres.forEach(async (genre, index) => {
+    //         genre = Object.keys(genre)[0]
+    //         let genreArray = []
+
+    //         const maxLimit = shows.length - limit;
+    //         const startNumber = Math.floor(Math.random() * (maxLimit + 1));
+    //         const series = shows.slice(startNumber, startNumber + limit);
+
+    //         series.forEach(show => {
+    //             if (genreArray.length >= limit) return;
+    //             if (!show.genres.includes(genre) || idShows[show.id]) return;                
+    //             idShows.push(show.id);
+    //             idShows[show.id] = show.id
+    //             genreArray.push(show);
+    //         });
+
+    // shows.forEach(show => {
+    //     if (genreArray.length < limit) {
+    //         if (show.genres.includes(genre) && !(idShows[show.id])) {
+    //             idShows.push(show.id);
+    //             idShows[show.id] = show.id
+    //             genreArray.push(show);
+    //         }
+    //     }
+    // });
+
+    //         serie.value.push(genreArray)
+    //     });
+
+    //     loading.value = false;
+    // }
 }
+
 let genresStaticCopy = []
 async function loadSeriesByDefault() {
     let genresStatic = []
@@ -63,35 +98,47 @@ async function loadSeriesByDefault() {
     genresStatic.set("Romance", "Romance");
     genresStatic.set("Drama", "Drama");
     genresStaticCopy = Array.from(genresStatic.keys())
+
+    const limit = 10
+    const response = await fetch('https://api.tvmaze.com/shows');
+    const shows = await response.json();
     genresStatic.forEach(async (genre) => {
         let genreArray = []
-        const limit = 10
-        const response = await fetch('https://api.tvmaze.com/shows');
-        const shows = await response.json();
-        shows.forEach(show => {
-            if (genreArray.length < limit) {
-                if (show.genres.includes(genre) && !(idShows[show.id])) {
-                    idShows.push(show.id);
-                    idShows[show.id] = show.id
-                    genreArray.push(show);
-                }
-            }
-        });
-        serie.value.push(genreArray)
+        const filteredShows = shows.filter(show => show.genres.includes(genre) && !idShows[show.id]);
+        while (genreArray.length < limit && filteredShows.length > 0) {
+            const randomIndex = Math.floor(Math.random() * filteredShows.length);
+            const randomShow = filteredShows.splice(randomIndex, 1)[0];
+            genreArray.push(randomShow);
+            idShows.push(randomShow.id);
+            idShows[randomShow.id] = randomShow.id;
+        }
+
+        serie.value.push(genreArray);
+        // }
+
         loading.value = false
 
-    });
 
+        console.log(genre)
+    });
+    // shows.forEach(show => {
+    //     if (genreArray.length < limit) {
+    //         if (show.genres.includes(genre) && !(idShows[show.id])) {
+    //             idShows.push(show.id);
+    //             idShows[show.id] = show.id
+    //             genreArray.push(show);
+    //         }
+    //     }
+    // serie.value.push(genreArray)
+    // });
 }
 
 defineProps({ genres: Array })
 </script>
 <template>
     <NavBar></NavBar>
-<!-- 
-    <div id="gt-mordadam-43217984" class="hidden">
-        </div> -->
-        <section id="discover-view" class="" v-if="!loading">
+
+    <section id="discover-view" class="" v-if="!loading">
 
 
         <div v-for="(genero, key)  in serie" :key="key" class="flex  flex-col ">
@@ -99,7 +146,7 @@ defineProps({ genres: Array })
 
                 <p class="m-3  mt-4 ms-5 font-medium">Según tus géneros favoritos: <span class="text-blue-1000">{{
                     loginUser.genres?.length ? Object.values(loginUser.genres[key])[0] : genresStaticCopy[key]
-                }}</span></p>
+                        }}</span></p>
             </div>
             <div class="flex overflow-x-auto scroll overflow-scroll ">
                 <DiscoverFeature v-for="show in genero" :id="show.id" :genres="show.genres" :titleSerie="show.name"
@@ -107,7 +154,7 @@ defineProps({ genres: Array })
 
                 </DiscoverFeature>
             </div>
-    </div>
+        </div>
 
     </section>
     <Spinner v-else></Spinner>

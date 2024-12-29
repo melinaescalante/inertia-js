@@ -28,7 +28,7 @@ export async function uploadPost({ text, serie, idSerie, image, userid }) {
  */
 export function fetchPosts(idUser, seriesCurrent, callback) {
     try {
-console.log(seriesCurrent)
+// console.log(seriesCurrent)
         const queryPost = query(
             collection(db, 'posts-public'),
             where('idSerie', 'in', seriesCurrent),
@@ -68,7 +68,7 @@ console.log(seriesCurrent)
 
 
         }
-        console.error(error)
+        console.log(error)
         callback([]);
         return () => { };
 
@@ -121,7 +121,7 @@ export function fetchPostsFollowed(idUser, following, callback) {
 
 
         }
-        console.error(error)
+        console.log(error)
         callback([]);
         return () => { };
 
