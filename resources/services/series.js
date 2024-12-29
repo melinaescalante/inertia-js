@@ -382,7 +382,7 @@ export async function addSerieEnded(idUser, idSerie, nameSerie, created) {
 /**
  * 
  * @param {String} idUser 
- * @returns {Array|false}
+ * @returns {Promise}
  */
 export function allSeriesWatched(idUser) {
     const seriesWatchedRef = doc(db, `users/${idUser}/series/watched`);

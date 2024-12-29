@@ -208,6 +208,24 @@ export async function getUserName(id) {
   }
 }
 /**
+ * Traeemos un nombre de usuario único según id
+ * @param {String} id 
+ * @returns {String}
+ */
+export async function getUsername(id) {
+  try {
+
+    const profileRef = doc(db, `/users/${id}`)
+    const profileDocument = await getDoc(profileRef)
+    if (profileDocument.exists()) {
+      return profileDocument.data().username
+
+    }
+  } catch (error) {
+    console.log('Hubo un error al traer el perfil', error)
+  }
+}
+/**
  * Traemos la informacion del usuario para su vista de perfil, ya sea el logueado o uno de la comunidad ya registrado
  * @param {id:string, email:string} data
  * @returns {id: string, email: string, displayName: string, bio: string, career: string}|{email: string, bio: string, career: string}

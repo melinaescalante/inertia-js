@@ -71,8 +71,9 @@ onMounted(async () => {
                     <p class="me-2">Series vistas <span class="text-center block">{{ seriesWatched?.length || 0
                             }}</span>
                     </p>
-                    <p>Seguidos <span class="text-center block">{{ following?.length || 0 }}</span></p>
+                    <Link href="/seguidos" >Seguidos <span class="text-center block">{{ following?.length || 0 }}</span></Link>
                 </div>
+
                 <div class="mt-2 flex flex-wrap justify-around">
 
                     <Link v-if="loginUser.id" href="/perfilinfo/edit"

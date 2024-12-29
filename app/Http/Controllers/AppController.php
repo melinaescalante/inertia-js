@@ -14,12 +14,16 @@ class AppController extends Controller
        
         return Inertia::render('HomeView');
     }
-    public function following()
+    public function homeFollowing()
     {
        
         return Inertia::render('HomeFollowingView');
     }
-
+    public function following(Request $request)
+    {
+     
+        return Inertia::render('Profile/FollowingView');
+    }
 
     public function chat()
     {
