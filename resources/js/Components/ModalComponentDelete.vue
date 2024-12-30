@@ -2,7 +2,6 @@
 import { router, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { deletePost } from '../../services/posts'
-import { defineEmits } from 'vue';
 import { startSerie } from '../../services/series';
 import { useLoginUser } from '../composables/useLoginUser';
 const { loginUser } = useLoginUser()

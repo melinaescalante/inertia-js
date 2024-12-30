@@ -1,6 +1,6 @@
 <script setup>
 import NavBar from '../../components/NavBar.vue'
-import { Link, usePage } from '@inertiajs/vue3'
+import { Link, usePage , router} from '@inertiajs/vue3'
 import { ref, onMounted } from 'vue'
 import Spinner from '../../components/Spinner.vue'
 import { readPostsByUser } from '../../../services/posts';
@@ -40,7 +40,17 @@ onMounted(async () => {
     }
 
 })
+function visit() {
+    debugger
+    const username=loginUser.value.username
+    router.visit(`/${username}/seguidos`, {
+        data: {
+            userId: loginUser.value.id,
+        },
+        method:'post'
+    });
 
+}
 </script>
 <template>
     <NavBar></NavBar>
@@ -71,7 +81,7 @@ onMounted(async () => {
                     <p class="me-2">Series vistas <span class="text-center block">{{ seriesWatched?.length || 0
                             }}</span>
                     </p>
-                    <Link href="/seguidos" >Seguidos <span class="text-center block">{{ following?.length || 0 }}</span></Link>
+                    <Link href="#" @click="visit"  >Seguidos <span class="text-center block">{{ following?.length || 0 }}</span></Link>
                 </div>
 
                 <div class="mt-2 flex flex-wrap justify-around">

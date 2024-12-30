@@ -249,11 +249,12 @@ export async function getUsersProfileById(id, email, displayName) {
       await setDoc(profileRef, {
         email: email,
         displayName: displayName,
+        username: username,
         bio: null,
         genres: null,
         photoURL: null
       });
-      return { id, email, displayName, bio: null, genres: null, photoURL: null };
+      return { id, email, displayName, bio: null, genres: null, photoURL: null,username:null };
     }
   } catch (error) {
     console.log("Hubo un error al traer el perfil", error);

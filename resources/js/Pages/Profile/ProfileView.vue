@@ -1,6 +1,6 @@
 <script setup>
 import NavBar from '../../components/NavBar.vue'
-import { Link, usePage } from '@inertiajs/vue3'
+import { Link, usePage, router } from '@inertiajs/vue3'
 import { ref, onMounted } from 'vue'
 import Spinner from '../../components/Spinner.vue'
 import { readPostsByUser } from '../../../services/posts';
@@ -17,6 +17,7 @@ const emailUser = ref(getEmailUser(id.value))
 const { loginUser } = useLoginUser()
 const userName = ref(getUserName(page.props.id));
 const { user } = useUser(id.value, emailUser.value, userName.value);
+
 const seriesWatched = ref([])
 onMounted(async () => {
   try {
@@ -26,7 +27,7 @@ onMounted(async () => {
       })
       .catch(error => {
         console.error("Error fetching series:", error);
-        seriesWatched.value = []; 
+        seriesWatched.value = [];
       });
     if (loginUser.value.id) {
       handleFollowed()
@@ -67,7 +68,21 @@ async function makeFollow() {
 async function handleFollowed() {
   isFollow.value = await isFollowed(loginUser.value.id, id.value);
 
+
 }
+function visit() {
+    const username=user.value.username
+    console.log(username)
+    router.visit(`/${username}/seguidos`, {
+        data: {
+            userId: user.value.id,
+        },
+        method:'post'
+    });
+
+}
+
+
 </script>
 
 <template>
@@ -92,8 +107,12 @@ async function handleFollowed() {
         <p class="font-medium text-center">@{{ user.username }}</p>
         <div class="flex justify-around">
           <p class="me-2">Series vistas <span class="block text-center">{{ seriesWatched?.length || 0 }}</span></p>
+          <!-- <Link href="#" @click.prevent="visit"> -->
 
-          <Link  href="/seguidos" >Seguidos <span class="text-center block">{{ following?.length || 0 }}</span></Link>
+            <Link href="#" @click="visit">
+            Seguidos <span class="text-center block">{{ following?.length || 0 }}</span>
+            </Link>
+
         </div>
         <div class="mt-2 flex flex-wrap justify-around" v-if="user.id !== loginUser.id">
 
