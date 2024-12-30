@@ -95,7 +95,7 @@ async function start(idUser, idSerie, urlImage) {
         </div>
         <template v-if="loginUser.id">
 
-            <div v-if="!loading" class="m-2 flex justify-center justify-between gap-2">
+            <div v-if="!loading" class="m-2 flex justify-between gap-2">
                 <div class="flex flex-col items-center">
 
                     <Link href="#" @click="addSerie(loginUser.id, serie.id, serie.name)" type="button"

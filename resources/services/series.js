@@ -38,7 +38,7 @@ export async function addSerieToWatch(idUser, idSerie, nameSerie) {
             await updateDoc(toWatchDocRef, {
                 seriesData: currentsToWatch
             });
-            
+
             getLastSeriesToWatch(idUser)
         }
         else {
@@ -149,7 +149,7 @@ export async function startSerie(idUser, idSerie, idSeason, urlImage) {
         ['currentIdSeason']: idSeason,
         ['created_at']: Timestamp.now(), ['last_modified']: Timestamp.now(),
         ["id"]: idSerie,
-        ["urlImage"]:urlImage
+        ["urlImage"]: urlImage
 
     };
     if (toWatchSnapshot.exists()) {
@@ -211,8 +211,27 @@ async function verifyChapter(idSeason, temporada, capitulo) {
         return false;
     }
 }
+/**Verificamos si existe un capitulo anterior al actualmente viendo
+ * @returns {Boolean}
+ */
+async function verifyChapterBefore(idSeason, temporada, capitulo) {
+    try {
+        const response = await fetch(`https://api.tvmaze.com/seasons/${idSeason}/episodes`);
+        const episodes = await response.json();
+        const episodeExists = episodes.find(episode => {
+            return episode.season === temporada && episode.number === capitulo - 1;
+        });
+        if (response.status !== 200) {
+            throw new Error("Error al obtener los episodios");
+        }
+        return episodeExists;
+    } catch (error) {
+        console.error("Error verificando el capítulo anterior:", error);
+        return false;
+    }
+}
 /**
- * Verificamos si hay un capítulo luego del actualmente mirando
+ * Verificamos si hay un capítulo luego del actualmente mirando, en otra temporada
  * @param {Number} idSerie 
  * @param {Number} temporada 
  * @returns {{seasonExists:Boolean, nextSeasonId:Number}}
@@ -229,6 +248,31 @@ async function verifySeason(idSerie, temporada) {
     if (seasonExists) {
         const nextSeasonId = seasonExists.id
         return { seasonExists, nextSeasonId };
+    } else {
+        false
+    }
+
+}
+/**
+ * Verificamos si hay un capítulo antes del actualmente mirando, en la temporada anterior
+ * @param {Number} idSerie 
+ * @param {Number} temporada 
+ * @returns {{seasonExists:Boolean, nextSeasonId:Number}|boolean}
+ */
+async function verifySeasonBefore(idSerie, temporada) {
+    const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
+    const seasons = await response.json();
+    const seasonExists = seasons.find(season => {
+        return season.number === temporada - 1
+    });
+    // console.log(seasonExists.episodeOrder)
+    if (response.status !== 200) {
+        throw new Error("Error al obtener los episodios");
+    }
+    if (seasonExists) {
+        const beforeSeasonId = seasonExists.id
+        const lastEpisode = seasonExists.episodeOrder
+        return { seasonExists, beforeSeasonId,lastEpisode };
     } else {
         false
     }
@@ -302,7 +346,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
             } else {
                 const data = toWatchSnapshot.data();
                 if (data[idSerie] !== undefined) {
-                    await addSerieEnded(idUser, idSerie, nameSerie, data[idSerie].created_at,data[idSerie].urlImage)
+                    await addSerieEnded(idUser, idSerie, nameSerie, data[idSerie].created_at, data[idSerie].urlImage)
                     await updateDoc(toWatchDocRef, {
                         [idSerie]: deleteField()
                     });
@@ -349,7 +393,94 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
         }
     }
 }
+/**
+ * 
+ * @param {*} idUser 
+ * @returns 
+ */
+export async function backEpisode(idUser, idSerie, idSeason, temporada, capitulo, nameSerie) {
+    try {
+        const userDocRef = doc(db, "users", idUser);
+        const watchingDocRef = doc(userDocRef, `series/watching`);
+        const watchingSnapshot = await getDoc(watchingDocRef);
+        const thereIsBackEpisode = await verifyChapterBefore(idSeason, temporada, capitulo)
+        console.log(thereIsBackEpisode)
+        if (thereIsBackEpisode !== false && thereIsBackEpisode !== undefined) {
 
+            if (watchingSnapshot.exists()) {
+                const data = watchingSnapshot.data();
+                if (data[idSerie]?.current !== undefined) {
+                    let watching = data[idSerie].current - 1;
+                    await updateDoc(watchingDocRef, {
+                        [`${idSerie}.current`]: watching,
+                        [`${idSerie}.last_modified`]: Timestamp.now()
+                    });
+                } else {
+
+                    return false
+                }
+                return 'episode before'
+            }
+
+        } else {
+            let season, idCurrentSeason, beforeEpisode;
+            try {
+                const result = await verifySeasonBefore(idSerie, temporada);
+                if (result) {
+                    season = result.seasonExists;
+                    idCurrentSeason = result.beforeSeasonId;
+                    beforeEpisode = result.lastEpisode;
+
+                } else {
+                    const data = watchingSnapshot.data();
+                    if (data[idSerie] !== undefined) {
+                        // await addSerieEnded(idUser, idSerie, nameSerie, data[idSerie].created_at, data[idSerie].urlImage)
+                        await updateDoc(watchingDocRef, {
+                            [idSerie]: deleteField()
+                        });
+
+                        return 'remove';
+                    } else {
+                        return false;
+                    }
+
+                }
+            } catch (error) {
+                console.error('Error en verifySeason:', error);
+                return false;
+            }
+            let seasons
+            const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
+            if (response.status == 200) {
+                seasons = await response.json();
+            }
+            if (season) {
+                if (watchingSnapshot.exists()) {
+                    const data = watchingSnapshot.data();
+                    if (data[idSerie]?.currentSeason !== undefined) {
+    
+                        let watchingSeason = data[idSerie].currentSeason - 1;
+    
+                        await updateDoc(watchingDocRef, {
+                            [idSerie]: {
+                                id: idSerie,
+                                current: beforeEpisode,
+                                currentSeason: watchingSeason,
+                                currentIdSeason: idCurrentSeason,
+                                created_at: data[idSerie].created_at
+                            }
+                        });
+                    } else {
+                        return false
+                    }
+                    return 'season before'
+                }
+            }
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
 export async function addSerieEnded(idUser, idSerie, nameSerie, created, urlImage) {
     const userDocRef = doc(db, "users", idUser);
     const watchedDocRef = doc(userDocRef, `series/watched`);
@@ -357,7 +488,7 @@ export async function addSerieEnded(idUser, idSerie, nameSerie, created, urlImag
 
     const newWatchedSerie = {
         ['ended_at']: Timestamp.now(), ['created_at']: created, ['nameSerie']: nameSerie, ['idSerie']: idSerie,
-        ['urlImage']: urlImage, 
+        ['urlImage']: urlImage,
     };
     if (watchedSnapshot.exists()) {
 

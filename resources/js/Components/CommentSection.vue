@@ -58,7 +58,7 @@ async function handleComment() {
                     </div>
 
                 </div>
-                <span class="text-sm font-normal text-gray-900 self-end">{{ formatDate(comment.created_at) }}</span>
+                <span class="text-[14px] text-gray-800 self-start">{{ formatDate(comment.created_at) }}</span>
             </li>
         </ul>
         <div v-if="!comments && loading"class="mt-4">

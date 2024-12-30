@@ -1,6 +1,6 @@
 <script setup>
 import NavBar from '../components/NavBar.vue'
-import { allSeriesToWatch, allSeriesWatching, nextEpisode, allSeriesWatched, currentInformation } from '../../services/series';
+import { allSeriesToWatch, allSeriesWatching, nextEpisode, allSeriesWatched, currentInformation, backEpisode } from '../../services/series';
 import ModalComponentDelete from '../components/ModalComponentDelete.vue';
 import { ref, onMounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
@@ -85,7 +85,7 @@ async function loadSeriesToWatch() {
     }
 }
 
- async function loadSeriesWatching() {
+async function loadSeriesWatching() {
     seriesWatching.value = await allSeriesWatching(loginUser.value.id)
 
     if (seriesWatching === false) return
@@ -175,6 +175,74 @@ async function next(id, idSerie, nameSerie) {
         console.error(error);
     }
 }
+async function back(id, idSerie, nameSerie) {
+    let seasons
+
+    try {
+        const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
+        if (response.status == 200) {
+            seasons = await response.json();
+        }
+        const { currentEpisode: episode, currentSeason: season, currentIdSeason: idSeason } = await currentInformation(loginUser.value.id, idSerie)
+        
+        const value = await backEpisode(id, idSerie, idSeason, season, episode, nameSerie)
+        if (value === 'episode before') {
+            
+            console.log(seasons[season-1],)
+            const updatedSeries = localSeriesWatching.value.map(serie => {
+                if (serie[idSerie]) {
+                    return {
+                        ...serie,
+                        [idSerie]: {
+                            ...serie[idSerie],
+                            current: episode - 1
+                        }
+                    };
+                }
+                return serie;
+            });
+            localSeriesWatching.value = updatedSeries;
+
+
+
+        } else if (value === 'season before') {
+            const updatedSeries = localSeriesWatching.value.map(serie => {
+                if (serie[idSerie]) {
+                    console.log(seasons[season-1].episodeOrder)
+                    console.log(season, season-1)
+                    console.log(seasons[season-1])
+                    return {
+                        ...serie,
+                        [idSerie]: {
+                            current:seasons[season-2].episodeOrder,
+                            currentSeason: season - 1,
+                            currentIdSeason: seasons[season-1].id,
+                        }
+                    };
+                }
+                return serie;
+            });
+            localSeriesWatching.value = updatedSeries;
+        } else if (value === 'remove') {
+
+            const updatedSeries = localSeriesWatching.value.map(serie => {
+                if (serie.hasOwnProperty(idSerie)) {
+
+                    const { [idSerie]: _, ...rest } = serie;
+                    return rest;
+                }
+                return serie;
+            });
+
+            seriesWatchingJson.value = seriesWatchingJson.value.filter(serie => serie.id !== idSerie);
+            await loadSeriesWatched()
+        }
+
+
+    } catch (error) {
+        console.error(error);
+    }
+}
 </script>
 <template>
     <NavBar></NavBar>
@@ -224,7 +292,7 @@ async function next(id, idSerie, nameSerie) {
                         </div>
                     </div>
                     </Link>
-                    <div class="flex md:flex-col flex-row-reverse justify-between space-x-2 col-span-1">
+                    <div class="flex md:flex-col flex-row-reverse  justify-between space-x-2 col-span-1 p-2">
                         <div class="self-end mb-2 md:mt-0">
                             <BottomSheet>
                                 <div class="flex flex-col">
@@ -240,28 +308,34 @@ async function next(id, idSerie, nameSerie) {
                                             </svg>
                                             <span class="sr-only">Cerrar modal</span>
                                         </div>
-                                        <p class="text-gray-600  ms-2">Fecha de inicio: {{ formatDate(seriesWatching.find(series =>
-                                    series[serie.id])?.[serie.id].created_at) }}</p>
+                                        <p class="text-gray-600  ms-2">Fecha de inicio: {{
+                                            formatDate(seriesWatching.find(series =>
+                                                series[serie.id])?.[serie.id].created_at) }}</p>
                                     </div>
 
-                                    <div class="max-w-[50%] mt-2" >
+                                    <div class="max-w-[50%] mt-2">
 
-                                        <ModalComponentDelete @closeModal="handleClose" 
-                                        modalTitle="Dejar de ver" 
-                                        :modalDescription="'¿Estás seguro que quieres dejar de ver ' + serie.name + '?'" 
-                                        msgAfirmative="Sí, la quiero dejar de ver." :idSeason="seriesWatching.find(series =>
-                                    series[serie.id])?.[serie.id].created_at" :idSerie="serie.id" ></ModalComponentDelete>
+                                        <ModalComponentDelete @closeModal="handleClose" modalTitle="Dejar de ver"
+                                            :modalDescription="'¿Estás seguro que quieres dejar de ver ' + serie.name + '?'"
+                                            msgAfirmative="Sí, la quiero dejar de ver." :idSeason="seriesWatching.find(series =>
+                                                series[serie.id])?.[serie.id].created_at" :idSerie="serie.id">
+                                        </ModalComponentDelete>
                                     </div>
                                 </div>
                             </BottomSheet>
 
                         </div>
                         <button v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
-                            @click.stop="next(loginUser.id, serie.id, serie.name)" type="button"
-                            class="text-blue-1000  hover:text-white border border-blue-0 hover:bg-blue-1000  focus:outline-none focus:border-0
-                            focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
-                            skiptranslate lg:justify-self-center lg:self-center   md:self-center sm:items-start md:m-2 mb-2 ms-2 md:mt-9 md:mb-10 self-end sm:m-2 ">
+                            @click.stop="next(loginUser.id, serie.id, serie.name)" type="button" class="text-blue-1000  hover:text-white border border-blue-1000 hover:bg-blue-1000  focus:outline-none focus:border
+                            focus:ring-0 font-medium rounded-lg text-sm px-4 py-2.5 text-center 
+                            skiptranslate  md:m-2 mb-2 ms-2 md:mt-9   sm:m-2 ">
                             Siguiente
+                        </button>
+                        <button v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
+                            @click.stop="back(loginUser.id, serie.id, serie.name)" type="button" class="text-red-800  hover:text-white border border-red-800 hover:bg-red-800  focus:outline-none focus:border
+                            focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                            skiptranslate sm:items-start md:m-2 mb-2 ms-2  md:mb-10 sm:m-2">
+                            Volver
                         </button>
                     </div>
                 </div>
