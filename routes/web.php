@@ -19,9 +19,10 @@ Route::get('/chatPrivado/{id}/{email}', [AppController::class, "chatPrivate"])
 Route::get('/chat', [AppController::class, "chat"])
     ->middleware(CheckAuthSession::class);
 
-Route::post('/{username}/seguidos', [AppController::class, "following"])
+Route::get('/{id}/{username}/seriesVistasRegistro', [AppController::class, "seriesWatchedRegister"])
     ->whereAlphaNumeric('username')->middleware(CheckAuthSession::class);
-Route::get('/{username}/seguidos', [AppController::class, "following"])
+
+Route::get('/{userId}/{username}/seguidos', [AppController::class, "following"])
     ->whereAlphaNumeric('username')->middleware(CheckAuthSession::class);
 
 Route::get('/configuraciones', [AppController::class, "configuraciones"])

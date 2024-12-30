@@ -70,18 +70,6 @@ async function handleFollowed() {
 
 
 }
-function visit() {
-    const username=user.value.username
-    console.log(username)
-    router.visit(`/${username}/seguidos`, {
-        data: {
-            userId: user.value.id,
-        },
-        method:'post'
-    });
-
-}
-
 
 </script>
 
@@ -107,9 +95,7 @@ function visit() {
         <p class="font-medium text-center">@{{ user.username }}</p>
         <div class="flex justify-around">
           <p class="me-2">Series vistas <span class="block text-center">{{ seriesWatched?.length || 0 }}</span></p>
-          <!-- <Link href="#" @click.prevent="visit"> -->
-
-            <Link href="#" @click="visit">
+            <Link :href="`/${user.id}/${user.username}/seguidos`" >
             Seguidos <span class="text-center block">{{ following?.length || 0 }}</span>
             </Link>
 

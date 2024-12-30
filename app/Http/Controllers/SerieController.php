@@ -199,7 +199,6 @@ class SerieController extends Controller
 
         }
 
-
         return Inertia::render('Series/SingleSerieResultView', [
             'serie' => $serie
         ]);

@@ -3,21 +3,20 @@ import { getUsername, allFollowing, getPhotoURL } from '../../../services/users'
 import { Link, usePage } from '@inertiajs/vue3';
 import NavBar from '../../components/NavBar.vue';
 import { onMounted, ref } from 'vue';
-import { useLoginUser } from '../../composables/useLoginUser';
 import Spinner from '../../Components/Spinner.vue';
-const { loginUser } = useLoginUser()
 const loading = ref(true)
 const page = usePage()
 const props = defineProps({
     userId: String
 })
-console.log(props.userId)
+console.log(page.props.userId)
 const following = ref([])
 onMounted(async () => {
 
     try {
-     
-        const users = await allFollowing(props.userId);
+
+        const users = await allFollowing(page.props.userId) || [];
+        console.log(users);
 
         const userDetails = await Promise.all(
             users.map(async user => {
@@ -28,7 +27,7 @@ onMounted(async () => {
             })
         );
 
-        following.value = userDetails;
+        following.value = userDetails || [];
         loading.value = false
         console.log(following.value);
     } catch (error) {
@@ -54,9 +53,14 @@ onMounted(async () => {
 
             </div>
         </div>
-    </div>
-    <div v-else>
 
-        <Spinner class="mx-auto" msg="Cargando chats"></Spinner>
     </div>
+    <div v-if="following.length == 0 && !loading" class="skiptranslate m-2">
+        <p>Sin seguidos</p>
+    </div>
+    <div v-if="loading">
+
+        <Spinner class="mx-auto" msg="Cargando seguidores"></Spinner>
+    </div>
+
 </template>

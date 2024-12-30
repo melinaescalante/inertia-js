@@ -56,13 +56,14 @@ async function addSerie(idUser, idSerie, nameSerie) {
     const newserie = { [idSerie]: nameSerie }
     localseries.value.push(newserie)
 }
-async function start(idUser, idSerie) {
+async function start(idUser, idSerie, urlImage) {
     let seasons
+    console.log(urlImage)
     const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
     if (response.status == 200) {
         seasons = await response.json();
     }
-    await startSerie(idUser, idSerie, seasons[0].id)
+    await startSerie(idUser, idSerie, seasons[0].id, urlImage)
 }
 </script>
 <template>
@@ -94,11 +95,11 @@ async function start(idUser, idSerie) {
         </div>
         <template v-if="loginUser.id">
 
-            <div v-if="!loading" class="flex justify-between m-2">
+            <div v-if="!loading" class="m-2 flex justify-center justify-between gap-2">
                 <div class="flex flex-col items-center">
 
                     <Link href="#" @click="addSerie(loginUser.id, serie.id, serie.name)" type="button"
-                        class="border-gray-200 h-16 text-blue-1000 hover:text-blue-600 border bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex min-w-40 items-center ">
+                        class="border-gray-200 h-16 text-blue-1000 hover:text-blue-600 border bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex min-w-20 md:min-w-40 items-center ">
                     <svg class="w-6 h-6 me-1 text-blue-1000" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         fill="none" viewBox="0 0 24 24">
                         <path v-if="!initialValue" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -117,8 +118,8 @@ async function start(idUser, idSerie) {
                 </div>
                 <div class="flex flex-col items-center">
 
-                    <Link href="#" @click="start(loginUser.id, serie.id, serie.name)" type="button"
-                        class="h-16 min-w-40 py-2.5 px-5 text-sm font-medium text-white focus:outline-none bg-blue-1000 rounded-lg  hover:bg-blue-500 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 text-center inline-flex items-center justify-center ">
+                    <Link href="#" @click="start(loginUser.id, serie.id,serie.image.original)" type="button"
+                        class="h-16 min-w-20  md:min-w-40 py-2.5 px-5 text-sm font-medium text-white focus:outline-none bg-blue-1000 rounded-lg  hover:bg-blue-500 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 text-center inline-flex items-center justify-center ">
                     <svg class="w-6 h-6 me-1 text-white " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor" viewBox="0 0 24 24">
                         <path v-if="!watching" fill-rule="evenodd"

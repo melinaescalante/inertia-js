@@ -19,12 +19,18 @@ class AppController extends Controller
        
         return Inertia::render('HomeFollowingView');
     }
-    public function following(Request $request,$username)
+    public function following($userId,$username)
     {
-        // dd()
-        // var_dump($request->query('userId'));
-        $userId = $request->input('userId') ;
+       
         return Inertia::render('Profile/FollowingView', [
+            'username' => $username,
+            'userId' => $userId,
+        ]);
+    }
+    public function seriesWatchedRegister($userId,$username)
+    {
+       
+        return Inertia::render('Profile/SeriesWatchedView', [
             'username' => $username,
             'userId' => $userId,
         ]);

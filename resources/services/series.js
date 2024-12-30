@@ -138,7 +138,7 @@ export function deleteIdFromStorage(id, arrayLocal, nameArray) {
  * @param {Number} idSeason 
  * @returns {Promise}
  */
-export async function startSerie(idUser, idSerie, idSeason) {
+export async function startSerie(idUser, idSerie, idSeason, urlImage) {
     const userDocRef = doc(db, "users", idUser);
     const toWatchDocRef = doc(userDocRef, `series/watching`);
     const toWatchSnapshot = await getDoc(toWatchDocRef);
@@ -148,7 +148,8 @@ export async function startSerie(idUser, idSerie, idSeason) {
         ['currentSeason']: 1,
         ['currentIdSeason']: idSeason,
         ['created_at']: Timestamp.now(), ['last_modified']: Timestamp.now(),
-        ["id"]: idSerie
+        ["id"]: idSerie,
+        ["urlImage"]:urlImage
 
     };
     if (toWatchSnapshot.exists()) {
@@ -301,7 +302,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
             } else {
                 const data = toWatchSnapshot.data();
                 if (data[idSerie] !== undefined) {
-                    await addSerieEnded(idUser, idSerie, nameSerie, data[idSerie].created_at)
+                    await addSerieEnded(idUser, idSerie, nameSerie, data[idSerie].created_at,data[idSerie].urlImage)
                     await updateDoc(toWatchDocRef, {
                         [idSerie]: deleteField()
                     });
@@ -349,13 +350,14 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
     }
 }
 
-export async function addSerieEnded(idUser, idSerie, nameSerie, created) {
+export async function addSerieEnded(idUser, idSerie, nameSerie, created, urlImage) {
     const userDocRef = doc(db, "users", idUser);
     const watchedDocRef = doc(userDocRef, `series/watched`);
     const watchedSnapshot = await getDoc(watchedDocRef);
 
     const newWatchedSerie = {
-        ['ended_at']: Timestamp.now(), ['created_at']: created, ['nameSerie']: nameSerie, ['idSerie']: idSerie
+        ['ended_at']: Timestamp.now(), ['created_at']: created, ['nameSerie']: nameSerie, ['idSerie']: idSerie,
+        ['urlImage']: urlImage, 
     };
     if (watchedSnapshot.exists()) {
 

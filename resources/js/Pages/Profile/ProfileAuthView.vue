@@ -40,17 +40,7 @@ onMounted(async () => {
     }
 
 })
-function visit() {
-    debugger
-    const username=loginUser.value.username
-    router.visit(`/${username}/seguidos`, {
-        data: {
-            userId: loginUser.value.id,
-        },
-        method:'post'
-    });
 
-}
 </script>
 <template>
     <NavBar></NavBar>
@@ -78,10 +68,10 @@ function visit() {
                 <p class="font-medium text-center">@{{ loginUser.username }}
                 </p>
                 <div class="flex justify-around">
-                    <p class="me-2">Series vistas <span class="text-center block">{{ seriesWatched?.length || 0
+                    <Link :href="`/${loginUser.id}/${loginUser.username}/seriesVistasRegistro`"><p class="me-2">Series vistas <span class="text-center block">{{ seriesWatched?.length || 0
                             }}</span>
-                    </p>
-                    <Link href="#" @click="visit"  >Seguidos <span class="text-center block">{{ following?.length || 0 }}</span></Link>
+                    </p></Link>
+                    <Link :href="`/${loginUser.id}/${loginUser.username}/seguidos`"  >Seguidos <span class="text-center block">{{ following?.length || 0 }}</span></Link>
                 </div>
 
                 <div class="mt-2 flex flex-wrap justify-around">

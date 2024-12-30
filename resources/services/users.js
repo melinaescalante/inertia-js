@@ -370,6 +370,7 @@ export async function allFollowing(idUser) {
     const followingId = Object.keys(item.following);
     return followingId[0];
   });
+  console.log(allFriends)
   // getLastPeopleFollowed(idUser)
   // localStorage.setItem("people", JSON.stringify(followingIds))
   return allFriends;
@@ -434,7 +435,6 @@ export async function isFollowed(idUserAuth, idUser2) {
     const followingSnapshot = await getDocs(followingQuery);
 
     if (!followingSnapshot.empty) {
-      console.log(followingSnapshot.docs)
       return true;
     } else {
       console.log(followingSnapshot.docs)
