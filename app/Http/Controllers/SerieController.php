@@ -72,20 +72,15 @@ class SerieController extends Controller
         $cantSeason = [];
         $response = Http::get("https://api.tvmaze.com/shows/" . $id . '/episodes');
         if ($response->successful()) {
-            $tr = new GoogleTranslate('es');
             $episodes = $response->json();
             foreach ($episodes as &$episode) {
                 $seasonId = $episode['season'];
                 $seasonNum = $episode['season'];
-
-
                 if (!isset($seasons[$seasonId])) {
                     $seasons[$seasonId] = [];
                     array_push($cantSeason, $seasonId);
                 }
-
                 $seasons[$seasonId][] = $episode;
-
 
             }
         }
@@ -163,13 +158,7 @@ class SerieController extends Controller
         $response = Http::get("https://api.tvmaze.com/seasons/" . $id . '/episodes');
         if ($response->successful()) {
             $episodes = $response->json();
-            // foreach ($episodes as &$episode) {
-            //     # code...
-            //     if (isset($episode['name'])) {
-            //         $episode['name'] = ucfirst($this->tr->translate($episode['name']));
-            //     }
-            // }
-            // var_dump($episodes);
+  
         }
         return Inertia::render('Series/EpisodesBySeasonView', [
             'episodesBySeason' => $episodes,

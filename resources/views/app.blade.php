@@ -13,20 +13,7 @@
 </head>
 
 <body class=" font-fredoka font-light max-w-xl mx-auto box-border mb-28  " data-csrf="{{ csrf_token() }}">
-
-  <!-- <div id="google_translate_element" class="hidden ">
-
-    <div class="skiptranslate goog-te-gadget" dir="ltr" style="">
-      <div id=":0.targetLanguage"><select class="goog-te-combo" aria-label="Widget de idiomas del Traductor">
-          <option value="es" selected>español</option>
-
-        </select></div>
-    </div>
-  </div> -->
-
   @inertia
-
-
   <!-- Contenedor oculto del widget de Google Translate -->
   <div id="google_translate_element" style="display: none;"></div>
 
@@ -56,13 +43,6 @@
       setGoogleTranslateLanguage('es'); // Cambiar a inglés automáticamente
     }, 500); // Ajusta el tiempo si es necesario
   </script>
-  <!-- 
-  <script>
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({ pageLanguage: 'en',autoDisplay: false, }, 'google_translate_element');
-    }
-  </script>
-  <script async defer src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> -->
 
 </body>
 

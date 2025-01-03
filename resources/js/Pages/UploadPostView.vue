@@ -12,6 +12,7 @@ defineProps({
 const msg = ref('')
 const loading = ref(false);
 const imageInput = ref(null);
+const imagePreview= ref(null)
 const newPost = ref({
     userid: null,
     serie: null,
@@ -77,24 +78,31 @@ async function handlePost() {
         loading.value = false;
     }
 }
+console.log(imagePreview.value)
 
 function handleImageChange(e) {
     const file = e.target.files[0];
     newPost.value.image = file;
+    const reader = new FileReader()
+    reader.addEventListener('load', function () {
+        imagePreview.value = reader.result
+        console.log(imagePreview.value)
+    })
+    reader.readAsDataURL(file);
 }
 </script>
 <template>
     <NavBarSecondary></NavBarSecondary>
-     <div v-if="msg !== 'Se ha publicado correctamente' && msg !== ''" class="bg-red-200 p-4 m-2 rounded-md">
+     <div v-if="msg !== 'Se ha publicado correctamente' && msg !== ''" class="bg-red-200 p-4 m-2 rounded-md skiptranslate">
         {{ msg }}
     </div>
 
-    <div v-if="msg == 'Se ha publicado correctamente'" class="bg-green-200 p-4 m-2 rounded-md">
+    <div v-if="msg == 'Se ha publicado correctamente'" class="bg-green-200 p-4 m-2 rounded-md skiptranslate">
         <p>{{ msg }}</p>
     </div>
-    <h1 class="text-2xl m-2">Subir publicación</h1>
+    <h1 class="text-2xl m-2 skiptranslate">Subir publicación</h1>
     <form action="#" enctype="multipart/form-data" @submit.prevent="handlePost">
-        <div class="flex flex-col mb-3">
+        <div class="flex flex-col mb-3 skiptranslate">
             <span class="sr-only">Escribe la serie con la que te quieres referir</span>
             <label class="m-2 mb-0" for="serie">¿Sobre qué serie estás pensando?</label>
 
@@ -102,7 +110,7 @@ function handleImageChange(e) {
                 :refreshCount="refreshCount"></SearchComponentPost>
 
         </div>
-        <div class="flex flex-col mb-3">
+        <div class="flex flex-col mb-3 skiptranslate">
             <span class="sr-only">Escribe lo que quieras</span>
             <label for="description"></label>
             <textarea :readonly="loading"
@@ -110,7 +118,7 @@ function handleImageChange(e) {
                 name="description" id="description" placeholder="Escribe lo que quieras"
                 v-model="newPost.text"></textarea>
         </div>
-        <div class="m-2 mb-4 mt-3">
+        <div class="m-2 mb-4 mt-3 skiptranslate">
             <label class="block">
                 <span class="sr-only">Puedes subir una imagen:</span>
                 <input ref="imageInput" type="file" @change="handleImageChange"
@@ -119,10 +127,13 @@ function handleImageChange(e) {
             </label>
         </div>
 
+        <div v-if="imagePreview"  class="w-1/2 m-2 mt-4 skiptranslate">
+                <img v-if="imagePreview" :src="imagePreview" :alt="`Preview de imagen seleccionada para ${imagePreview}`"  />
+            </div>
+       
         <button type="submit"
-            class="m-2  rounded-lg py-2 px-4 bg-blue-1000 text-white hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-900 transition-colors">
+            class="m-2 skiptranslate rounded-lg py-2 px-4 bg-blue-1000 text-white hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-900 transition-colors">
             {{ !loading ? "Publicar" : "Publicando.." }}
         </button>
     </form>
-   
 </template>

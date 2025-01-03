@@ -40,7 +40,6 @@ onMounted(async () => {
 <template>
     <NavBar></NavBar>
     <h1 class="font-medium text-2xl m-2 mt-3 mb-5">Seguidos</h1>
-    {{ userId }}
     <div v-if="!loading" v-for="(user, index) in following" :key="index"
         class="flex items-center gap-4  p-4  border-b-[1px]  border-blue-1000 skiptranslate">
         <img class="w-10 h-10 rounded-full" :src="user.photo || '/noimage.png'"

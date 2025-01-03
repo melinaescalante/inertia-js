@@ -14,14 +14,7 @@ const arrayFetch = ref([])
 const series = ref([])
 onMounted(async () => {
     try {
-        // allSeriesWatched(loginUser.value.id)
-        //     .then(arraySeries => {
-        //         series.value = arraySeries;
-        //     })
-        //     .catch(error => {
-        //         console.error("Error fetching series:", error);
-        //         series.value = []; 
-        //     });
+
         series.value = await allSeriesWatched(loginUser.value.id)
         const promises = series.value.map(async (serie) => {
             const response = await fetch('https://api.tvmaze.com/singlesearch/shows?q=' + serie.nameSerie);
@@ -40,7 +33,7 @@ onMounted(async () => {
 </script>
 <template>
     <NavBar></NavBar>
-    <h1 class="font-medium text-2xl m-2 mt-3 mb-3">Series vistas</h1>
+    <h1 class="font-medium text-2xl m-2 mt-3 mb-3 skiptranslate">Series vistas</h1>
     <section id="ended-series">
 
     <div v-if="!loading">
@@ -61,7 +54,7 @@ onMounted(async () => {
                         <p class="border rounded-md px-2 text-blue-1000 border-orange-0 font-normal " v-for="genre in serie.genres">
                             {{ genre }}</p>
                     </div>
-                    <div class="flex flex-col gap-2 mt-2">
+                    <div class="flex flex-col gap-2 mt-2 skiptranslate">
                         <p>La empezaste: {{ formatDate(series[index].created_at) }}</p>
                         <p>La terminaste: {{ formatDate(series[index].ended_at) }}</p>
                     
@@ -70,7 +63,7 @@ onMounted(async () => {
                 </Link>
             </li>
         </ul>
-        <p class="m-2" v-else>No tienes nada en tu lista!</p>
+        <p class="m-2 skiptranslate" v-else>No tienes nada en tu lista!</p>
     </div>
     <Spinner v-else msg="Cargando series vistas"></Spinner>
     </section>

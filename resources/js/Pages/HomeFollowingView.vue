@@ -116,7 +116,6 @@ function usePosts() {
     <SwitcherHome></SwitcherHome>
     <section class="posts skiptranslate">
         <div v-if="!loadingPosts">
-            {{ console.log(posts) }}
             <div v-for="post in posts" :key="post.id">
                 <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"
                     :imgAlt="post.image" :serie="post.serie" :idSerie="post.idSerie" :date="post.date"
@@ -124,7 +123,7 @@ function usePosts() {
                     :userId="post.userid" :created_at="post.created_at" />
             </div>
             <div v-if="msgError !== ''" class="mt-[50%]">
-                <p class="text-center p-3">
+                <p class="text-center p-3 skiptranslate">
                     {{ msgError }}
                 </p>
                 <Link href="/buscadorUsuarios" class="block w-2/6  text-center mx-auto py-2 px-4 
@@ -133,11 +132,11 @@ function usePosts() {
 
             </div>
             <div v-if="msgAlert !== ''" class="mt-[50%] ">
-                <p class="text-center p-3">
+                <p class="text-center p-3 skiptranslate">
                     {{ msgAlert }}
                 </p>
                 <Link href="/subirPublicacion" class="block w-2/6  text-center mx-auto py-2 px-4 
-        bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Subir
+        bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0 skiptranslate">Subir
                 posteo</Link>
             </div>
         </div>

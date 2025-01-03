@@ -160,7 +160,7 @@ function usePosts() {
         posteo</Link>
       </div>
     </div>
-    <div v-else class="mt-[55%] p-3">
+    <div v-else class="mt-[50%] p-3">
 
       <Spinner msg="Cargando más posteos" />
     </div>

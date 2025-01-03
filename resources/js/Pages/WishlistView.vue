@@ -43,11 +43,11 @@ onMounted(async () => {
                     <Link :href="`/show/${serie.id}`"
                         class=" m-2 flex  items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
 
-                    <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1"
+                    <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1 "
                         :src="serie.image ? serie.image.medium : '/noimage.png'"
                         :alt="`Portada de la serie en la wishlist ${serie.name}`">
                     <div class="flex flex-col justify-between p-4 leading-normal">
-                        <p class="mb-3 font-medium text-gray-700 ">Tienes en tu lista para ver </p>
+                        <p class="mb-3 font-medium text-gray-700 skiptranslate ">Tienes en tu lista para ver </p>
                         <h2 class="mb-2 text-2xl font-medium tracking-tight text-gray-900 ">{{ serie.name }}
                         </h2>
                         <div class="flex flex-wrap gap-4">
@@ -59,7 +59,7 @@ onMounted(async () => {
                     </Link>
                 </li>
             </ul>
-            <p class="m-2" v-else>No tienes nada en tu lista!</p>
+            <p class="m-2 skiptranslate" v-else>No tienes nada en tu lista!</p>
         </div>
         <Spinner v-else msg="Cargando series vistas"></Spinner>
     </section>

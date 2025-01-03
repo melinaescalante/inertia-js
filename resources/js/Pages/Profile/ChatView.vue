@@ -33,7 +33,7 @@ onMounted(async () => {
 <template>
 
     <NavBar></NavBar>
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between skiptranslate">
 
         <h1 class="ms-2 text-xl mt-4 mb-4 font-medium skiptranslate">Chat recientes</h1>
         <span>
@@ -42,10 +42,11 @@ onMounted(async () => {
             </Link>
         </span>
     </div>
-    <div>
+    <div class="skiptranslate">
         <div v-if="!loading" v-for="(chat, index) in chats" :key="index"
             class="flex items-center gap-4  p-4  border-b-[1px]  border-blue-1000">
-            <img class="w-10 h-10 rounded-full" :src="chat.photo || '/noimage.png'" :alt="`Foto de perfil del usuario ${chat.userName}`">
+            <img class="w-10 h-10 rounded-full" :src="chat.photo || '/noimage.png'"
+                :alt="`Foto de perfil del usuario ${chat.userName}`">
             <div class="font-medium ">
                 <div>
                     <Link
@@ -54,12 +55,12 @@ onMounted(async () => {
                 </div>
             </div>
         </div>
-        <div  v-else>
+        <div v-else class="mt-[50%]">
 
-            <Spinner class="mx-auto" msg="Cargando chats"></Spinner>
+            <Spinner class="mx-auto" msg="Cargando chats recientes"></Spinner>
         </div>
         <div v-if="!chats.length && !loading">
-<p class="m-3">¡Sin chats recientes!</p>
+            <p class="m-3">¡Sin chats recientes!</p>
         </div>
     </div>
 </template>

@@ -54,7 +54,7 @@ async function handleFileSelection(e) {
                 class="mt-2 border rounded-lg py-2 px-4 bg-blue-700 text-white hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-900 transition-colors"
                 type="submit">{{ !loading ? 'Actualizar Foto' : 'Actualizando foto..' }}</button>
         </form>
-        <div class="w-1/2 mt-4">
+        <div v-if="editData.photo" class="w-1/2 mt-4">
             <h2>Imagen seleccionada</h2>
             <img v-if="editData.photo" :src="editData.photoPreview" :alt="`Preview de imagen seleccionada para ${editData.photoPreview}`"  />
         </div>

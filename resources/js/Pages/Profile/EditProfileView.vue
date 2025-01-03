@@ -95,7 +95,7 @@ onUnmounted(() => {
                 id="name" v-model="editData.displayName" />
         </div>
         <label for="genres" class="ms-2 m-2">Géneros favoritos</label>
-        <div class="grid grid-cols-2  mb-3">
+        <div class="grid grid-cols-2  mb-3 skiptranslate">
 
             <div v-for="(genre, index) in genresTypes" class="flex" :key="index">
 

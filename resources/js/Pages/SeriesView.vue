@@ -247,8 +247,8 @@ async function back(id, idSerie, nameSerie) {
 <template>
     <NavBar></NavBar>
     <section id="mis-series">
-        <div v-if="loading" class="flex justify-center mt-[40vh]">
-            <Spinner>
+        <div v-if="loading" class="flex justify-center mt-[50%]">
+            <Spinner msg="Cargando actividad de mis series">
 
             </Spinner>
         </div>
@@ -295,7 +295,7 @@ async function back(id, idSerie, nameSerie) {
                     <div class="flex md:flex-col flex-row-reverse  justify-between space-x-2 col-span-1 p-2">
                         <div class="self-end mb-2 md:mt-0">
                             <BottomSheet>
-                                <div class="flex flex-col">
+                                <div class="flex flex-col skiptranslate">
                                     <div class="flex">
                                         <div>
 

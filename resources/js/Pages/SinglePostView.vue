@@ -35,7 +35,7 @@ onMounted(async () => {
     
     <template v-if="loading">
 
-        <div class="flex justify-center mt-80">
+        <div class="flex justify-center mt-80 skiptranslate">
             <Spinner msg="Cargando publicación"></Spinner>
         </div>
     </template>
