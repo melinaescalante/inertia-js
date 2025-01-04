@@ -1,5 +1,5 @@
 
-import { addDoc, collection, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, Timestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "./firebase";
 
 // TODO: Traer los mensajes de chat, optimizar la operación de escritura cacheando la
@@ -48,7 +48,8 @@ async function privateChatDocument(senderId, receiverId) {
                 [senderId]: true,
                 [receiverId]: true,
             },
-            userId: senderId
+            userId: senderId,
+            // last_modified: Timestamp.now()
         });
     } else {
         chatDoc = chatSnapshot.docs[0];
@@ -74,6 +75,10 @@ export async function savePrivateChatMessage(senderId, receiverId, text) {
         text,
         created_at: serverTimestamp(),
     });
+    // const chatDocRef = doc(db, 'private-chats', chatDoc.id);
+    // await updateDoc(chatDocRef, {
+    //     last_modified: serverTimestamp(),
+    // });
 }
 
 /**
@@ -111,7 +116,8 @@ export async function allChats(idUser) {
 
     const chatQuery = query(
         messagesRef,
-        where("users." + idUser, "==", true)
+        where("users." + idUser, "==", true),
+        // orderBy("last_modified",'desc')
     );
 
     const chatSnapshot = await getDocs(chatQuery);

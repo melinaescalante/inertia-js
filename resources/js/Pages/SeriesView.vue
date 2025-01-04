@@ -149,7 +149,7 @@ async function next(id, idSerie, nameSerie) {
                         [idSerie]: {
                             current: 1,
                             currentSeason: season + 1,
-                            currentIdSeason: idSeason + 1,
+                            currentIdSeason: seasons[season-1].id,
                         }
                     };
                 }
@@ -208,9 +208,7 @@ async function back(id, idSerie, nameSerie) {
         } else if (value === 'season before') {
             const updatedSeries = localSeriesWatching.value.map(serie => {
                 if (serie[idSerie]) {
-                    console.log(seasons[season-1].episodeOrder)
-                    console.log(season, season-1)
-                    console.log(seasons[season-1])
+                  
                     return {
                         ...serie,
                         [idSerie]: {

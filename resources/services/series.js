@@ -346,7 +346,9 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
             } else {
                 const data = toWatchSnapshot.data();
                 if (data[idSerie] !== undefined) {
+                    console.log(data[idSerie])
                     await addSerieEnded(idUser, idSerie, nameSerie, data[idSerie].created_at, data[idSerie].urlImage)
+                    console.log(nameSerie, data[idSerie].created_at, data[idSerie].urlImage)
                     await updateDoc(toWatchDocRef, {
                         [idSerie]: deleteField()
                     });
@@ -357,9 +359,11 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                 }
 
             }
+            console.log(result)
         } catch (error) {
             console.error('Error en verifySeason:', error);
-            return false;
+            // return 'endSeason';
+
         }
 
         let seasons
@@ -382,7 +386,8 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                             current: 1,
                             currentSeason: watchingSeason,
                             currentIdSeason: idCurrentSeason,
-                            created_at: data[idSerie].created_at
+                            created_at: data[idSerie].created_at,
+                            urlImage:data[idSerie].urlImage
                         }
                     });
                 } else {

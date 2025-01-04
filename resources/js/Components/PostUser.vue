@@ -221,12 +221,7 @@ function handleClose() {
             </div>
             <ul v-if="areCommentsVisible && !loadingComments">
 
-                <!-- <li v-for="comment in commentsArray"  class="border-b-2 ms-2 mt-3 mb-3">
-                <strong>
-                    <Link class="text-blue-1000" :href="`/perfil/${comment.userId}`">{{ comment.userName }}</Link>
-                </strong>: {{ comment.commentInfo }}
-            </li> -->
-                <li class=" flex flex-col  bg-opacity-35 m-3 p-3 rounded-lg break-words" v-for="comment in commentsArray">
+                              <li class=" flex flex-col  bg-opacity-35 m-3 p-3 rounded-lg break-words" v-for="comment in commentsArray">
 
                     <div class="flex gap-4 flex-wrap">
 

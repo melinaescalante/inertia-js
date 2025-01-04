@@ -357,7 +357,7 @@ export async function comment(id, comment, iduser) {
         const postSnapshot = await getDoc(postRef);
         if (postSnapshot) {
             const currentComments = postSnapshot.data().comments || [];
-            const newComment = { [iduser]: comment ,['created_at']:Timestamp.now()};
+            const newComment = { ['comment']: comment ,['created_at']:Timestamp.now(),['userid']:iduser};
             currentComments.push(newComment);
 
             await updateDoc(postRef, {
@@ -385,12 +385,12 @@ export async function getComments(callback, id) {
             if (commentsData) {
                 let commentsArray = [];
                 const promises = commentsData.map(async (comment) => {
-                    const userName = await getUserName(Object.keys(comment)[0]);
-                    const commentInfo = Object.values(comment)[0];
-                    console.log(commentsData)
+                    const userName = await getUserName(comment.userid);
+                    const commentInfo = comment.comment;
+                    console.log(comment.created_at)
                     const commentFull = {
                         userName,
-                        userId: Object.keys(comment)[0],
+                        userId: comment.userid,
                         commentInfo,
                         created_at:comment.created_at
                         
