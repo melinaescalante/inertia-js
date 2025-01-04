@@ -28,7 +28,6 @@ export async function uploadPost({ text, serie, idSerie, image, userid }) {
  */
 export function fetchPosts(idUser, seriesCurrent, callback) {
     try {
-// console.log(seriesCurrent)
         const queryPost = query(
             collection(db, 'posts-public'),
             where('idSerie', 'in', seriesCurrent),
@@ -395,7 +394,6 @@ export async function getComments(callback, id) {
                         created_at:comment.created_at
                         
                     };
-                    console.log(commentFull)
                     commentsArray.push(commentFull)
                 });
                 await Promise.all(promises);

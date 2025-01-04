@@ -3,7 +3,7 @@ import { auth } from "./firebase";
 import { getFileURL, uploadFile } from "./file-storage";
 
 import { updateUserProfile, getUsersProfileById } from "./users";
-import {  useLoginUser } from "../js/composables/useLoginUser";
+import { useLoginUser } from "../js/composables/useLoginUser";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebase";
 let loginUser = {
@@ -161,8 +161,6 @@ export async function login({ email, password }) {
   // 3.Password
   try {
     const user = await signInWithEmailAndPassword(auth, email, password);
-
-    console.log(user)
   } catch (error) {
     throw error;
   }
@@ -172,7 +170,6 @@ export async function isUsernameUnique(username) {
     const usersCollectionRef = collection(db, `users`);
     const q = query(usersCollectionRef, where('username', '==', username))
     const userSnapshot = await getDocs(q);
-    console.log(userSnapshot)
     return userSnapshot.empty ? true : false
 
   } catch (error) {
@@ -212,7 +209,7 @@ export async function signUp({ email, password, userName, fullname }) {
     });
 
   } catch (error) {
-    console.error("Error en el registro del usuario:", error);
+    
     throw error;
   }
 }

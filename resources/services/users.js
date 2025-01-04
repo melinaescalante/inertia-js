@@ -370,7 +370,6 @@ export async function allFollowing(idUser) {
     const followingId = Object.keys(item.following);
     return followingId[0];
   });
-  console.log(allFriends)
   // getLastPeopleFollowed(idUser)
   // localStorage.setItem("people", JSON.stringify(followingIds))
   return allFriends;
@@ -406,10 +405,8 @@ export async function getLastPeopleFollowed(id) {
         const lastFollowMillis = followedAt.getTime();
         const startMillis = startDate.toMillis();
         const endMillis = endDate.toMillis();
-        console.log(lastFollowMillis >= startMillis && lastFollowMillis <= endMillis)
         return lastFollowMillis >= startMillis && lastFollowMillis <= endMillis;
       }).flatMap((person) => Object.keys(person.following.mapValue.fields))
-      console.log(lastFollowed)
 
       localStorage.setItem("people", JSON.stringify(lastFollowed))
       return lastFollowed
@@ -437,7 +434,6 @@ export async function isFollowed(idUserAuth, idUser2) {
     if (!followingSnapshot.empty) {
       return true;
     } else {
-      console.log(followingSnapshot.docs)
 
       return false;
     }

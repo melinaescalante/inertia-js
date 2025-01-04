@@ -48,14 +48,12 @@ function usePosts() {
 
   async function loadPosts() {
     try {
-      let series = await sortArrayFromLocalStorage(loginUser.value.lastSeriesWatched, loginUser.value.seriesToWatch)
-      console.log(await series)
+      let series = await sortArrayFromLocalStorage(loginUser.value.lastSeriesWatched||[], loginUser.value.seriesToWatch||[])
+      console.log(loginUser.value.lastSeriesWatched, loginUser.value.seriesToWatch)
       unsubscribe = await fetchPosts(loginUser.value.id, series, (newPosts) => {
         posts.value = newPosts;
-        // console.log(newPosts)
-        // console.log(loginUser.value.lastSeriesWatched, loginUser.value.seriesToWatch)
+       
         if (!loginUser.value.lastSeriesWatched?.length && !loginUser.value.seriesToWatch?.length) {
-          console.log('no posteos')
           msgError.value = '¡Comienza a añadir series a ver o viendo, así podremos comenzar a generarte un para ti!'
           loading.value = false;
           return
@@ -107,7 +105,6 @@ function usePosts() {
       ]
       setIntersectionObserver();
     } catch (error) {
-      console.log('aca load more')
       // msgError.value = '¡Comienza a añadir series a ver o viendo, así podremos comenzar a generarte un para ti!'
       console.log('[Posts.vue] Error al cargar más posts', error);
     }

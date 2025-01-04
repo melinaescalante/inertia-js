@@ -11,7 +11,7 @@ import { getLastSeriesToWatch, getLastSeriesWatched, getNameUser, getUserName } 
  */
 export async function addSerieToWatch(idUser, idSerie, nameSerie) {
     try {
-        // debugger
+        debugger
         const userDocRef = doc(db, "users", idUser);
         const toWatchDocRef = doc(userDocRef, "series", "toWatch");
         const toWatchSnapshot = await getDoc(toWatchDocRef);
@@ -125,7 +125,6 @@ export function deleteIdFromStorage(id, arrayLocal, nameArray) {
         const index = arrayLocal.indexOf(id)
         arrayLocal.splice(index, 1)
         localStorage.setItem(nameArray, JSON.stringify(arrayLocal))
-        // console.log(localSeries)
 
     } catch (error) {
         console.log('no se ha eliminado')
@@ -265,7 +264,6 @@ async function verifySeasonBefore(idSerie, temporada) {
     const seasonExists = seasons.find(season => {
         return season.number === temporada - 1
     });
-    // console.log(seasonExists.episodeOrder)
     if (response.status !== 200) {
         throw new Error("Error al obtener los episodios");
     }
@@ -346,9 +344,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
             } else {
                 const data = toWatchSnapshot.data();
                 if (data[idSerie] !== undefined) {
-                    console.log(data[idSerie])
                     await addSerieEnded(idUser, idSerie, nameSerie, data[idSerie].created_at, data[idSerie].urlImage)
-                    console.log(nameSerie, data[idSerie].created_at, data[idSerie].urlImage)
                     await updateDoc(toWatchDocRef, {
                         [idSerie]: deleteField()
                     });
@@ -359,7 +355,6 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                 }
 
             }
-            console.log(result)
         } catch (error) {
             console.error('Error en verifySeason:', error);
             // return 'endSeason';
@@ -409,7 +404,6 @@ export async function backEpisode(idUser, idSerie, idSeason, temporada, capitulo
         const watchingDocRef = doc(userDocRef, `series/watching`);
         const watchingSnapshot = await getDoc(watchingDocRef);
         const thereIsBackEpisode = await verifyChapterBefore(idSeason, temporada, capitulo)
-        console.log(thereIsBackEpisode)
         if (thereIsBackEpisode !== false && thereIsBackEpisode !== undefined) {
 
             if (watchingSnapshot.exists()) {

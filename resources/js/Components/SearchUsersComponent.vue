@@ -84,7 +84,7 @@ export default {
     </div>
   </form>
   <div class="flex gap-4 flex-wrap justify-center">
-        <Link href="/buscador" class="border  rounded-lg border-blue-0 px-2 py-1">Series</Link>
+        <Link href="/buscador" class="border skiptranslate rounded-lg border-blue-0 px-2 py-1">Series</Link>
         <Link href="/buscadorUsuarios" :class="currentPage === 'SearchUsersView' ? 'bg-blue-1000 text-white border-blue-1000 font-normal' : 'text-black bg-white border-blue-0 '" class="border rounded-lg px-2 py-1" >Personas</Link>
     </div>
   <div v-if="loading && answer === 'Buscando usuarios...'" class="flex flex-col justify-center items-center">

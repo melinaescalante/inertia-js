@@ -2,7 +2,7 @@
 import { router, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { deletePost } from '../../services/posts'
-import { startSerie } from '../../services/series';
+import { addSerieToWatch, startSerie } from '../../services/series';
 import { useLoginUser } from '../composables/useLoginUser';
 const { loginUser } = useLoginUser()
 const page = usePage()
@@ -14,7 +14,7 @@ const props = defineProps({
     msgAfirmative: String,
     idSerie: Number| undefined,
     idSeason: Object| undefined,
-    // action: Function
+    nameSerie: String | undefined
 })
 
 const showModal = ref(false);
@@ -33,8 +33,10 @@ async function handleDeletePost(id) {
         if (currentPage === 'HomeView' || currentPage === 'SinglePostView') {
             await deletePost(id)
 
-        } else {
+        } else if  (currentPage === 'SeriesView'){
             await startSerie(loginUser.value.id, props.idSerie, props.idSeason)
+        }else{
+            await addSerieToWatch(loginUser.value.id,props.idSerie, props.nameSerie)
         }
         emit('closeModal', false);
         showModal.value = false;
@@ -42,6 +44,9 @@ async function handleDeletePost(id) {
             router.replace('/miPerfil')
         }else if(currentPage==='SeriesView'){
             router.visit('/misSeries')
+
+        }else{
+            router.visit('/wishlist')
 
         }
     } catch (error) {
@@ -77,7 +82,7 @@ async function handleDeletePost(id) {
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
-                    <h3 class="mb-5 text-lg font-normal text-gray-500 ">{{ modalDescription }}</h3>
+                    <h3 class="mb-5 text-lg font-normal text-gray-500  ">{{ modalDescription }}</h3>
                     <button @click="handleDeletePost(id)" type="button"
                         class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300  font-medium rounded-full text-sm inline-flex items-center px-5 py-2.5 text-center">
                         {{ msgAfirmative }}

@@ -75,10 +75,10 @@ export async function savePrivateChatMessage(senderId, receiverId, text) {
         text,
         created_at: serverTimestamp(),
     });
-    // const chatDocRef = doc(db, 'private-chats', chatDoc.id);
-    // await updateDoc(chatDocRef, {
-    //     last_modified: serverTimestamp(),
-    // });
+    const chatDocRef = doc(db, 'private-chats', chatDoc.id);
+    await updateDoc(chatDocRef, {
+        last_modified: serverTimestamp(),
+    });
 }
 
 /**
@@ -125,6 +125,11 @@ export async function allChats(idUser) {
     chatSnapshot.forEach(doc => {
         allChats.push(doc.data());
     });
-
+    allChats.sort((a, b) => {
+        const dateA = a.last_modified?.toMillis?.() 
+        const dateB = b.last_modified?.toMillis?.() || 0;
+        return dateB - dateA; 
+    });
+// console.log(allChats)
     return allChats;
 }

@@ -31,7 +31,6 @@ onMounted(async () => {
         await loadSeriesToWatch()
         await loadSeriesWatching()
         await loadSeriesWatched()
-        console.log(loginUser.value)
         loading.value = false
     } else {
         loading.value = false
@@ -188,7 +187,6 @@ async function back(id, idSerie, nameSerie) {
         const value = await backEpisode(id, idSerie, idSeason, season, episode, nameSerie)
         if (value === 'episode before') {
             
-            console.log(seasons[season-1],)
             const updatedSeries = localSeriesWatching.value.map(serie => {
                 if (serie[idSerie]) {
                     return {

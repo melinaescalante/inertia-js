@@ -13,7 +13,6 @@ onMounted(async () => {
         series.value = await allSeriesWatched(page.props.userId)
         loading.value = false
 
-        console.log(series.value)
     } catch (error) {
         console.error(error)
     }

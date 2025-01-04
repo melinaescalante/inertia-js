@@ -9,14 +9,12 @@ const page = usePage()
 const props = defineProps({
     userId: String
 })
-console.log(page.props.userId)
 const following = ref([])
 onMounted(async () => {
 
     try {
 
         const users = await allFollowing(page.props.userId) || [];
-        console.log(users);
 
         const userDetails = await Promise.all(
             users.map(async user => {
@@ -29,7 +27,6 @@ onMounted(async () => {
 
         following.value = userDetails || [];
         loading.value = false
-        console.log(following.value);
     } catch (error) {
         console.log(error)
     }

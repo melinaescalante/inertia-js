@@ -119,7 +119,6 @@ async function loadSeriesByDefault() {
         loading.value = false
 
 
-        console.log(genre)
     });
     // shows.forEach(show => {
     //     if (genreArray.length < limit) {

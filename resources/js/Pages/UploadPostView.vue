@@ -78,7 +78,6 @@ async function handlePost() {
         loading.value = false;
     }
 }
-console.log(imagePreview.value)
 
 function handleImageChange(e) {
     const file = e.target.files[0];
@@ -86,7 +85,6 @@ function handleImageChange(e) {
     const reader = new FileReader()
     reader.addEventListener('load', function () {
         imagePreview.value = reader.result
-        console.log(imagePreview.value)
     })
     reader.readAsDataURL(file);
 }

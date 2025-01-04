@@ -11,7 +11,6 @@ defineProps({
     <NavBar></NavBar>
     <h1 class="font-medium text-2xl m-2 mt-3 mb-3">Elenco {{ name }}</h1>
     <section id="cast">
-{{ console.log(cast) }}
         <div class="grid grid-cols-2 gap-8 p-2 m-auto justify-items-center grid-rows-none  items-baseline ">
 
             <div class="flex flex-col items-start justify-center text-start skiptranslate" v-for="person in cast">

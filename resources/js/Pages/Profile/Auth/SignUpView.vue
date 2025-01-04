@@ -16,12 +16,10 @@ const user = ref({
     userName: '',
     fullname: '',
 })
-console.log(user.value.userName.length)
 
 async function usernameIsValid() {
-    console.log(user.value.userName.length)
-    if (user.value.userName.length>1) {
-        
+    if (user.value.userName.length > 1) {
+
         isUsernameValid.value = await isUsernameUnique(user.value.userName)
     }
 }
@@ -39,8 +37,17 @@ async function handleSubmit() {
 
         router.replace('/')
     } catch (error) {
+        if (error.code === 'auth/email-already-in-use') {
+            msg.value = "El email ingresado ya se encuentra en uso."
+        } else if (error.code === 'default') {
+            msg.value = "Ha ocurrido un error inesperado. Por favor inténtelo de nuevo en unos minutos."
+
+        }
+        setTimeout(() => {
+            msg.value = '';
+
+        }, 2000);
         console.log(error)
-        msg.value = "Su usuario no se ha registrado"
     }
 }
 const passwordVisible = ref(false);
@@ -74,41 +81,41 @@ function showPassword() {
                         class=" p-2 mb-2 w-full border rounded-md  bg-slate-100 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                         v-model="user.userName" required placeholder="melina2" autocomplete="username"
                         @input="usernameIsValid">
-                 <template v-if="user.userName.length>=1">
+                    <template v-if="user.userName.length >= 1">
 
-                     <div v-if="!isUsernameValid " class="flex items-center mt-3 gap-1">
-                         <div>
-                             
-                             <svg class="w-6 h-6 text-red-500 dark:text-white" aria-hidden="true"
-                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                             viewBox="0 0 24 24">
-                             <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
-                             d="m6 6 12 12m3-6a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                            
+                        <div v-if="!isUsernameValid" class="flex items-center mt-3 gap-1">
+                            <div>
+
+                                <svg class="w-6 h-6 text-red-500 dark:text-white" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
+                                        d="m6 6 12 12m3-6a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+
+                            </div>
+                            <p class="text-red-500">Este nombre de usuario está en uso. Elegí otro.
+                            </p>
+
                         </div>
-                        <p class="text-red-500">Este nombre de usuario está en uso. Elegí otro.
-                        </p>
-                        
-                    </div>
-                    <div v-else class="flex items-center mt-3 gap-1">
-                        <div>
-                            
-                            <svg class="w-6 h-6 text-green-600 dark:text-white" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                            viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2"
-                                    d="m8.032 12 1.984 1.984 4.96-4.96m4.55 5.272.893-.893a1.984 1.984 0 0 0 0-2.806l-.893-.893a1.984 1.984 0 0 1-.581-1.403V7.04a1.984 1.984 0 0 0-1.984-1.984h-1.262a1.983 1.983 0 0 1-1.403-.581l-.893-.893a1.984 1.984 0 0 0-2.806 0l-.893.893a1.984 1.984 0 0 1-1.403.581H7.04A1.984 1.984 0 0 0 5.055 7.04v1.262c0 .527-.209 1.031-.581 1.403l-.893.893a1.984 1.984 0 0 0 0 2.806l.893.893c.372.372.581.876.581 1.403v1.262a1.984 1.984 0 0 0 1.984 1.984h1.262c.527 0 1.031.209 1.403.581l.893.893a1.984 1.984 0 0 0 2.806 0l.893-.893a1.985 1.985 0 0 1 1.403-.581h1.262a1.984 1.984 0 0 0 1.984-1.984V15.7c0-.527.209-1.031.581-1.403Z" />
-                            </svg>
-                            
-                            
+                        <div v-else class="flex items-center mt-3 gap-1">
+                            <div>
+
+                                <svg class="w-6 h-6 text-green-600 dark:text-white" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="m8.032 12 1.984 1.984 4.96-4.96m4.55 5.272.893-.893a1.984 1.984 0 0 0 0-2.806l-.893-.893a1.984 1.984 0 0 1-.581-1.403V7.04a1.984 1.984 0 0 0-1.984-1.984h-1.262a1.983 1.983 0 0 1-1.403-.581l-.893-.893a1.984 1.984 0 0 0-2.806 0l-.893.893a1.984 1.984 0 0 1-1.403.581H7.04A1.984 1.984 0 0 0 5.055 7.04v1.262c0 .527-.209 1.031-.581 1.403l-.893.893a1.984 1.984 0 0 0 0 2.806l.893.893c.372.372.581.876.581 1.403v1.262a1.984 1.984 0 0 0 1.984 1.984h1.262c.527 0 1.031.209 1.403.581l.893.893a1.984 1.984 0 0 0 2.806 0l.893-.893a1.985 1.985 0 0 1 1.403-.581h1.262a1.984 1.984 0 0 0 1.984-1.984V15.7c0-.527.209-1.031.581-1.403Z" />
+                                </svg>
+
+
+                            </div>
+                            <p class="text-green-600">Este nombre de está disponible.
+                            </p>
+
                         </div>
-                        <p class="text-green-600">Este nombre de está disponible.
-                        </p>
-                        
-                    </div>
-                </template>
+                    </template>
                 </div>
                 <div class="mb-6">
                     <label for="password" class="block mb-2">Constraseña</label>
@@ -118,14 +125,24 @@ function showPassword() {
                             class=" p-2 w-full border rounded-md bg-slate-100 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                             v-model="user.password" required placeholder="Contraseña" autocomplete="new-password" />
 
-                        <button type="button" @click="showPassword" class="bg-blue-1000 rounded-lg"><svg
-                                class="w-6 h-6 text-orange-0 fill-transparent " aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <button type="button" @click="showPassword" class="bg-blue-1000 rounded-lg">
+                            <svg v-if="!passwordVisible" class="w-6 h-6 text-orange-0 fill-transparent "
+                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-width="1.5"
                                     d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
                                 <path stroke="currentColor" stroke-width="1.5"
                                     d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                             </svg>
+                            <svg v-else class="w-6 h-6 text-orange-0 fill-transparent " aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="1.5
+                                    "
+                                    d="M3.933 13.909A4.357 4.357 0 0 1 3 12c0-1 4-6 9-6m7.6 3.8A5.068 5.068 0 0 1 21 12c0 1-3 6-9 6-.314 0-.62-.014-.918-.04M5 19 19 5m-4 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+
                         </button>
                     </div>
                     <p v-if="!isValid" class="text-slate-500 mt-3">Su contraseña debe tener un mínimo de 6 caracteres.

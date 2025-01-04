@@ -58,7 +58,6 @@ async function addSerie(idUser, idSerie, nameSerie) {
 }
 async function start(idUser, idSerie, urlImage) {
     let seasons
-    console.log(urlImage)
     const response = await fetch(`https://api.tvmaze.com/shows/${idSerie}/seasons`);
     if (response.status == 200) {
         seasons = await response.json();
