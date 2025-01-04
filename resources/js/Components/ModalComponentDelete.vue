@@ -45,7 +45,7 @@ async function handleDeletePost(id) {
         }else if(currentPage==='SeriesView'){
             router.visit('/misSeries')
 
-        }else{
+        }else if(currentPage==='WishlistView'){
             router.visit('/wishlist')
 
         }
