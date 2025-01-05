@@ -118,21 +118,21 @@ function handleClose() {
 
 </script>
 <template>
-    <article class="skiptranslate">
+    <article>
         <div class="m-2 shadow-[inset_0_1px_25px_-10px] shadow-orange-0 rounded-2xl p-4 mb-[2rem]">
             <div class="flex flex-row justify-between items-center">
                 <div>
-                    <img :src="photoURL || '/noimage.png'" class=" border rounded-md  w-10 h-10 " alt="">
+                    <img :src="photoURL || '/noimage.png'" class=" border rounded-md  w-10 h-10 skiptranslate" alt="">
 
                 </div>
-                <div class="flex flex-col mx-2">
+                <div class="flex flex-col mx-2 ">
 
                     <Link :href="`/perfil/${userId}`" class="text-[1.04rem] font-normal text-center  ">{{ userName }}
                     </Link>
                     <Link :href="`/show/${idSerie}`" class=" text-center decoration-none text-blue-500">{{ serie }}
                     </Link>
                 </div>
-                <div>
+                <div class="skiptranslate">
                     <BottomSheet v-if="userId === loginUser.id" :isclosed="isBottomSheetOpen">
                         <div class="flex flex-col">
                             <div class="flex">
@@ -162,7 +162,7 @@ function handleClose() {
 
                 </div>
             </div>
-            <div class="my-4">
+            <div class="my-4 skiptranslate">
                 <p class="ms-1">{{ descriptionUser }}</p>
 
 
@@ -171,7 +171,7 @@ function handleClose() {
                 </div>
                 <p class="text-slate-500 ms-1 mt-2">{{ formatDate(created_at) }}</p>
             </div>
-            <div class="flex justify-between my-5 mx-5">
+            <div class="flex justify-between my-5 mx-5 skiptranslate">
                 <div>
                     <div class="flex">
 
@@ -219,7 +219,7 @@ function handleClose() {
 
                 </div>
             </div>
-            <ul v-if="areCommentsVisible && !loadingComments">
+            <ul v-if="areCommentsVisible && !loadingComments" class="skiptranslate">
 
                               <li class=" flex flex-col  bg-opacity-35 m-3 p-3 rounded-lg break-words" v-for="comment in commentsArray">
 
@@ -238,13 +238,13 @@ function handleClose() {
                     </div>
                     <span class="text-[14px] text-gray-800 self-start">{{ formatDate(comment.created_at) }}</span>
                 </li>
-                <p v-if="!comments.length" class="text-slate-400 ms-2">¡Sé el primero en comentar!</p>
+                <p v-if="!comments.length" class="text-slate-400 ms-2 ">¡Sé el primero en comentar!</p>
 
             </ul>
 
 
 
-            <div class="relative">
+            <div class="relative skiptranslate">
                 <form action="#" @submit.prevent="giveComment(id)" :id="id">
                     <label for="comment" class="sr-only">Deja tu comentario debajo:</label>
                     <input type="text" aria-label="comment"

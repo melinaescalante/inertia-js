@@ -131,7 +131,7 @@ function usePosts() {
 <template>
   <NavBar />
   <SwitcherHome></SwitcherHome>
-  <section class="posts skiptranslate">
+  <section class="posts ">
     <div v-if="!loadingPosts">
       <div v-for="post in posts" :key="post.id">
         <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"
@@ -140,24 +140,24 @@ function usePosts() {
           :created_at="post.created_at" />
       </div>
       <div v-if="msgError !== ''" class="mt-[50%]">
-        <p class="text-center p-3">
+        <p class="text-center skiptranslate p-3">
           {{ msgError }}
         </p>
-        <Link href="/buscador" class="block w-2/6  text-center mx-auto py-2 px-4 
+        <Link href="/buscador" class="block w-2/6 skiptranslate text-center mx-auto py-2 px-4 
         bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Iniciar
         búsqueda</Link>
 
       </div>
       <div v-if="msgAlert !== ''" class="mt-[50%] ">
-        <p class="text-center p-3">
+        <p class="text-center skiptranslate p-3">
           {{ msgAlert }}
         </p>
-        <Link href="/subirPublicacion" class="block w-2/6  text-center mx-auto py-2 px-4 
+        <Link href="/subirPublicacion" class="block w-2/6 skiptranslate text-center mx-auto py-2 px-4 
         bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Subir
         posteo</Link>
       </div>
     </div>
-    <div v-else class="mt-[50%] p-3">
+    <div v-else class="mt-[50%] p-3 skiptranslate">
 
       <Spinner msg="Cargando más posteos" />
     </div>

@@ -32,7 +32,7 @@ onMounted(async () => {
 </script>
 <template>
     <NavBar></NavBar>
-    
+
     <template v-if="loading">
 
         <div class="flex justify-center mt-80 skiptranslate">
@@ -43,8 +43,9 @@ onMounted(async () => {
         <section id="my-post">
 
             <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"
-            :imgAlt="post.image" :serie="post.serie" :idSerie="post.idSerie" :created_at="post.created_at" :likes="post.likes"
-            :comments="post.comments" :userName="post.user" :liked="post.liked" :userId="post.userid"></PostUser>
+                :imgAlt="post.image" :serie="post.serie" :idSerie="post.idSerie" :created_at="post.created_at"
+                :likes="post.likes" :comments="post.comments" :userName="post.user" :liked="post.liked"
+                :userId="post.userid"></PostUser>
         </section>
     </template>
 </template>

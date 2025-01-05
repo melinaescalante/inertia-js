@@ -174,6 +174,9 @@ class SerieController extends Controller
         if ($response->successful()) {
             $serie = $response->json();
             $tr = new GoogleTranslate('es');
+            if (isset($serie['name'])) {
+                $serie['name'] = $tr->translate($serie['name']);
+            }
             if (isset($serie['summary'])) {
                 $serie['summary'] = $tr->translate($serie['summary']);
             }
@@ -185,7 +188,8 @@ class SerieController extends Controller
                 }
                 $serie['genres'] = $genres;
             }
-
+            
+            // var_dump($serie);
         }
 
         return Inertia::render('Series/SingleSerieResultView', [
@@ -227,7 +231,7 @@ class SerieController extends Controller
                 }
             }
         }
-        $seriesArrayLimit = array_slice($seriesArray, 0, 6);
+        $seriesArrayLimit = array_slice($seriesArray, 0, 5);
 
         return Inertia::render('SearchView', [
             'series' => $seriesArrayLimit

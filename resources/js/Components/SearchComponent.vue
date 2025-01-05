@@ -22,7 +22,7 @@ export default {
     return {
       formInput: '',
       answer: '',
-      currentPage, 
+      currentPage,
 
       loading: false
     };
@@ -34,6 +34,13 @@ export default {
         debounceTimeout = setTimeout(() => fn(...args), delay);
       };
     },
+    async translateToEnglish(text) {
+      // Simula un traductor o usa un servicio de API para traducción
+      const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=es|en`);
+      const data = await response.json();
+      return data.responseData.translatedText;
+    },
+
     async fetchSeries(value) {
       if (this.loading) return;
 
@@ -44,9 +51,10 @@ export default {
 
       this.loading = true;
       this.answer = 'Buscando series...';
+      const translatedValue = await this.translateToEnglish(value);
       try {
         router.reload({
-          data: { name: value },
+          data: { name: translatedValue },
           onSuccess: (page) => {
             if (!this.series.length) {
               this.answer = 'No se encontraron series.';
@@ -108,7 +116,7 @@ export default {
 
   <ul v-if="!loading && series.length">
 
-    <li class="p-2 ps-6 border flex items-center skiptranslate" v-for="item in series">
+    <li class="p-2 ps-6 border flex items-center " v-for="item in series">
       <img class="h-[100%] w-12" :src="item.show.image ? item.show.image.medium : 'noimage.png'" :alt="item.show.name">
       <div class="flex flex-col">
 

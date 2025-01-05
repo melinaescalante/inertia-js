@@ -44,6 +44,11 @@ export default {
                 debounceTimeout = setTimeout(() => fn(...args), delay);
             };
         },
+        async translateToEnglish(text) {
+            const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=es|en`);
+            const data = await response.json();
+            return data.responseData.translatedText;
+        },
         async fetchSeries(value) {
             if (this.loading) return;
             //Si sacamos espacios en blanco y no tiene valor retornamos
@@ -54,10 +59,11 @@ export default {
 
             this.loading = true;
             this.answer = 'Buscando usuarios...';
+            const translatedValue = await this.translateToEnglish(value);
 
             try {
                 router.reload({
-                    data: { name: value },
+                    data: { name: translatedValue },
                     onSuccess: (page) => {
                         if (!this.series.length > 0) {
                             this.answer = "No se encontraron series.";

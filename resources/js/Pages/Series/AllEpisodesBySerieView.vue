@@ -17,16 +17,17 @@ defineProps({
     
          </h1>
         <div v-for="episode in season">
-            <div  class=" m-2 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
+            <Link :href="`/show/episode/${episode.id}`"  class=" m-2 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
             
                     <img class="object-cover w-full rounded-t-lg h-52  md:w-44  md:rounded-none md:rounded-s-lg" :src="episode.image?episode.image.medium:'/noimage.png'" alt="">
                     <div class="flex flex-col justify-between p-4 leading-normal">
                         <h2 class="mb-2 text-2xl font-medium tracking-tight text-gray-900 ">{{ episode.name }}</h2>
                         <p class="mb-2 font-normal">Temporada {{ episode.season}} episodio {{ episode.number }}</p>
-                        <p class="mb-3 font-light text-gray-700 " v-html="episode.summary"></p>
+                        <p class="mb-3 font-light text-gray-700" v-html="episode.summary.length > 200 ? episode.summary.slice(0, 200) + '...' : episode.summary"></p>
+
                         <p class="mb-3 font-normal text-gray-700 "> Estreno {{  episode.airdate}} </p>
                     </div>
+                </Link>
                 </div>
-        </div>
     </div>
 </template>

@@ -47,7 +47,7 @@ onMounted(async () => {
                     :src="serie.image ? serie.image.medium : '/noimage.png'"
                     :alt="`Portada de la serie en la wishlist ${serie.name}`">
                 <div class="flex flex-col justify-between p-4 leading-normal">
-                    <p class="mb-3 font-medium text-gray-700 ">Has visto </p>
+                    <p class="mb-3 font-medium text-gray-700 skiptranslate">Has visto </p>
                     <h2 class="mb-2 text-2xl font-medium tracking-tight text-gray-900 ">{{ serie.name }}
                     </h2>
                     <div class="flex flex-wrap gap-4 ">

@@ -71,7 +71,7 @@ async function start(idUser, idSerie, urlImage) {
         <h1 class="text-2xl font-medium ms-2 mt-3 mb-3">{{ serie.name }}</h1>
 
         <div class="flex gap-3 md:flex-row flex-col m-2">
-            <img class="max-h-fit   w-fit " :src="serie.image?.medium ? serie.image.medium : '/noimage.png'"
+            <img class="max-w-[50%] h-fit" :src="serie.image?.medium ? serie.image.medium : '/noimage.png'"
                 :alt="`Imagen de portada de la serie de ${serie.name}`">
             <div>
 
@@ -82,11 +82,11 @@ async function start(idUser, idSerie, urlImage) {
                             v-for="genre in serie.genres">{{ genre }}</li>
                     </ul>
                 </div>
-                <p>Estreno: {{ serie.premiered }}</p>
+                <p class="ms-2">Estreno: {{ serie.premiered }}</p>
             </div>
         </div>
         <div class="flex m-2 mt-3 gap-1 justify-between  ">
-            <!-- <ButtonBase :href="serie.id" :name="serie.name" param="episodios">Episodios</ButtonBase> -->
+            <ButtonBase :href="serie.id" :name="serie.name" param="episodios">Episodios</ButtonBase>
             <ButtonBase :href="serie.name" :name="serie.id" param="temporadas">Temporadas</ButtonBase>
             <ButtonBase :href="serie.id" :name="serie.name" param="galeria">Galería</ButtonBase>
             <ButtonBase :href="serie.name" :name="serie.id" param="elenco">Elenco</ButtonBase>
