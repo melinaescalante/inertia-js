@@ -127,7 +127,7 @@ function handleClose() {
                 </div>
                 <div class="flex flex-col mx-2 ">
 
-                    <Link :href="`/perfil/${userId}`" class="text-[1.04rem] font-normal text-center  ">{{ userName }}
+                    <Link :href="`/perfil/${userId}`" class="text-[1.04rem] font-normal text-center skiptranslate  ">{{ userName }}
                     </Link>
                     <Link :href="`/show/${idSerie}`" class=" text-center decoration-none text-blue-500">{{ serie }}
                     </Link>

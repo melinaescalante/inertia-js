@@ -12,7 +12,8 @@
   @inertiaHead
 </head>
 
-<body class=" font-fredoka font-light max-w-xl mx-auto box-border mb-28  " data-csrf="{{ csrf_token() }}">
+<body class=" font-fredoka font-light max-w-xl mx-auto box-border" data-csrf="{{ csrf_token() }}">
+   <!-- mb-28   -->
   @inertia
   <!-- Contenedor oculto del widget de Google Translate -->
   <div id="google_translate_element" style="display: none;"></div>

@@ -4,11 +4,13 @@ import { useLoginUser } from "../../composables/useLoginUser";
 import { useUser } from '../../composables/useUser';
 import { savePrivateChatMessage, subscribeToPrivateChatMessages } from '../../../services/private-chat';
 import { formatDate } from "../../helpers/date.js";
-import { ref, onMounted } from 'vue';
-import NavBar from '../../components/NavBar.vue';
+import { ref, onMounted, watch } from 'vue';
+import NavBarSecondary from '../../components/NavBarSecondary.vue';
 import Spinner from '../../components/Spinner.vue';
 import { getUserName } from '../../../services/users.js';
 import { Link } from "@inertiajs/vue3";
+
+const chatContainer = ref(null);
 
 const page = usePage();
 const { loginUser } = useLoginUser();
@@ -18,19 +20,32 @@ const messages = ref([]);
 const newMessage = ref({ text: null });
 const userName = ref(getUserName(page.props.id));
 const { user } = useUser(page.props.id, page.props.email, userName.value); 
+let nextTick = () => { };
+
 onMounted(() => {
+    nextTick(() => {
+        scrollToBottom();
+    });
     subscribeToPrivateChatMessages(
         loginUser.value.id,
         page.props.id,
-        newMessages => {
+        async newMessages => {
             messages.value = newMessages;
             loadingMessages.value = false;
+            await nextTick(); // Espera a que el DOM actualice
+            // scrollToBottom();
         }
     );
 
     loading.value = false;
 });
 
+
+// Observa los mensajes para realizar el scroll automáticamente al final
+watch( messages, async() => {
+    await nextTick(); 
+  scrollToBottom();
+});
 function handleSubmit() {
     try {
         savePrivateChatMessage(
@@ -43,9 +58,17 @@ function handleSubmit() {
         console.log(error);
     }
 }
+const scrollToBottom = () => {
+    const container = chatContainer.value;
+    if (container) {
+  
+        container.scrollTop = container.scrollHeight;
+
+    }
+};
 </script>
 <template>
-    <NavBar></NavBar>
+<NavBarSecondary></NavBarSecondary>
         <Suspense>
                 <div class="skiptranslate">
                     <h2 class="sr-only">Mensajes privado</h2>
@@ -57,7 +80,7 @@ function handleSubmit() {
                         </div>
                     </div>
 
-                    <div class="p-4 m-1 min-h-[65vh] border rounded">
+                    <div   ref="chatContainer" class="p-4 m-1 h-[75vh] border rounded overflow-y-auto  snap-x snap-end">
                         <ul v-if="!loadingMessages" class="flex flex-col items-start">
                             <li v-for="message in messages" class="my-2 rounded p-2" :class="{
                                 'bg-orange-0/30': loginUser.id !== message.user_id,
@@ -93,3 +116,9 @@ function handleSubmit() {
         </Suspense>
 </template>
 
+<style scoped>
+#app {
+    margin-bottom: 0 !important;
+    /* Sobrescribe el estilo global */
+}
+</style>

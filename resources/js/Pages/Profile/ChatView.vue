@@ -42,7 +42,7 @@ onMounted(async () => {
             </Link>
         </span>
     </div>
-    <div class="skiptranslate">
+    <div class="skiptranslate mb-28">
         <div v-if="!loading" v-for="(chat, index) in chats" :key="index"
             class="flex items-center gap-4  p-4  border-b-[1px]  border-blue-1000">
             <img class="w-10 h-10 rounded-full" :src="chat.photo || '/noimage.png'"

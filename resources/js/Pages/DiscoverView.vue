@@ -137,7 +137,7 @@ defineProps({ genres: Array })
 <template>
     <NavBar></NavBar>
 
-    <section id="discover-view" class="" v-if="!loading">
+    <section id="discover-view" class="mb-28" v-if="!loading">
 
 
         <div v-for="(genero, key)  in serie" :key="key" class="flex  flex-col ">
