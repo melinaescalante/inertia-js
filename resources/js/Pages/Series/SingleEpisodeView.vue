@@ -1,8 +1,6 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
 import NavBar from '../../components/NavBar.vue'
 
-import { onMounted } from 'vue';
 defineProps({
     episode: Object,
 
@@ -13,7 +11,7 @@ defineProps({
 </script>
 <template>
     <NavBar></NavBar>
-    <article class="skiptranslate">
+    <article class="skiptranslate  mt-8" >
         <h1 class="text-2xl font-medium ps-2 mt-3 mb-3 border-t-orange-0 border-b border-t border-b-orange-0">
             {{ episode['name'] }}
 

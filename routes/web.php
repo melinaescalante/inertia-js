@@ -56,7 +56,7 @@ Route::get('/descubrir', [AppController::class, "discover"])
 
 Route::get('/buscador', [SerieController::class, 'buscador']);
 
-Route::get('/buscadorUsuarios', [SerieController::class, 'buscadorUsuarios']);
+Route::get('/buscadorUsuarios', [SerieController::class, 'buscadorUsuarios']) ->middleware(CheckAuthSession::class);
 
 //SubViews de las series del usuario
 Route::get('/wishlist', [AppController::class, "myWishlist"])

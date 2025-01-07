@@ -14,7 +14,7 @@ defineProps({
     <div id="gt-mordadam-43217984" class="hidden">
     </div>
     <h1 class="font-bold text-2xl m-2 mt-3 mb-3">Episodios de {{ name }} temporada {{ season }}</h1>
-    <section id="episodes-by-season" >
+    <section id="episodes-by-season" class="mb-28 mt-8" >
     <div v-for="episodes in episodesBySeason">
         <div
             class=" m-2 flex flex-col items-start bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl ">

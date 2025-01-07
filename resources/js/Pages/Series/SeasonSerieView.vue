@@ -9,7 +9,7 @@ defineProps({
 <template>
     <NavBar></NavBar>
 <h1 class="font-bold text-2xl m-2 mt-3 mb-3">Temporadas {{ name }}</h1>
-<section>
+<section class="mb-28 mt-8">
 
     <div v-for="(season,index) in seasons"  class="mt-2 mb-2 m-2">
         <Link :href="`/show/temporadas/episodios/${name}/${index+1}/${season.id}`" class="flex items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">

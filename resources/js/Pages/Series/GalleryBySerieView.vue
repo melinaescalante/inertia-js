@@ -15,7 +15,7 @@ defineProps({
 <template>
   <NavBar></NavBar>
   <h1 class="font-medium text-2xl m-2 mt-3 mb-3">Galeria {{ name }}</h1>
-  <section id="gallery">
+  <section id="gallery" class="mb-28 mt-8">
     <h2 class="m-2 font-medium text-lg" v-if="posters.length >= 1">Posters</h2>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 m-2">
       <div v-for="image in posters">

@@ -46,7 +46,7 @@ const isBottomSheetOpen = ref(true);
 
 <template>
     <NavBar />
-    <section id="series">
+    <section id="series" class="mt-20">
 
         <h1 class="text-xl m-2 font-medium skiptranslate">Tus series a ver</h1>
         <div v-if="!loading">

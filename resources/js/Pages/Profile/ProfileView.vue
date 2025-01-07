@@ -84,7 +84,7 @@ async function handleFollowed() {
   </template>
   <template v-else>
 
-    <div class="grid grid-cols-3 items-center mt-3 justify-around mb-3 skiptranslate">
+    <div class="grid grid-cols-3 items-center mt-20 justify-around mb-3 skiptranslate">
 
       <img :src="user.photoURL || '/no-image.jpg'" :alt="'Foto de perfil de ' + user.email"
         class=" ms-2 w-20 h-20 col-span-1 rounded-full object-cover group-hover:opacity-50">

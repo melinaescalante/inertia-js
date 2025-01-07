@@ -13,7 +13,7 @@ defineProps({
 </script>
 <template>
     <NavBar></NavBar>
-    <article>
+    <article class="mb-28 mt-8">
     <div class="m-2">
         
         <h1 class="text-xl font-medium  mt-3 mb-3">{{ name }}</h1>

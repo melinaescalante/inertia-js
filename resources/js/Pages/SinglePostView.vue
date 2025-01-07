@@ -40,7 +40,7 @@ onMounted(async () => {
         </div>
     </template>
     <template v-else>
-        <section id="my-post">
+        <section id="my-post" class="mt-20">
 
             <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"
                 :imgAlt="post.image" :serie="post.serie" :idSerie="post.idSerie" :created_at="post.created_at"

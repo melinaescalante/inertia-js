@@ -52,7 +52,7 @@ onMounted(async () => {
     </div>
     <template v-else>
 
-        <div class="skiptranslate grid grid-cols-3 items-center mt-3 justify-around mb-3">
+        <div class="skiptranslate grid grid-cols-3 items-center mt-20 justify-around mb-3">
             <Link href="/editFotoPerfil">
             <div class="relative group w-20 h-20 ms-2">
                 <img :src="loginUser.photoURL || '/no-image.jpg'" :alt="'Foto de perfil de ' + loginUser.email"

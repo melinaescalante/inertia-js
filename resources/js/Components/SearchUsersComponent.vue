@@ -11,35 +11,36 @@ export default {
   },
   data() {
     const page = usePage();
-    const currentPage = page.component; 
+    const currentPage = page.component;
 
     return {
       formInput: '',
       answer: '',
       loading: false,
       users: [],
-      currentPage, 
+      currentPage,
+
     };
   },
   methods: {
     async getAnswer(value) {
       if (value) {
         this.loading = true;
-        this.answer = 'Buscando usuarios...'; 
-        this.users = [];  
+        this.answer = 'Buscando usuarios...';
+        this.users = [];
         try {
-          
+
           await getUsers(value, (array) => {
             this.users = array;
             this.loading = false;
-            
+
             if (this.users.length === 0) {
               this.answer = "No se encontraron usuarios.";
             }
-            if (this.formInput.length===0) {
-                            this.answer = "";
+            if (this.formInput.length === 0) {
+              this.answer = "";
 
-                        }
+            }
           });
         } catch (error) {
           this.answer = 'Error al buscar usuarios.';
@@ -47,8 +48,8 @@ export default {
           this.loading = false;
         }
       } else {
-        this.users = []; 
-        this.answer = ''; 
+        this.users = [];
+        this.answer = '';
       }
     },
     handleSubmit() {
@@ -60,14 +61,15 @@ export default {
 
 
 <template>
+  <section id="buscador-personas" class="mt-20">
   <form @submit.prevent="handleSubmit" class="max-w-2xl m-4 mt-5" method="get">
     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only ">
       Busca a tus amigos
     </label>
     <div class="relative">
       <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-        <svg class="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-          fill="none" viewBox="0 0 20 20">
+        <svg class="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 20 20">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
         </svg>
@@ -84,9 +86,11 @@ export default {
     </div>
   </form>
   <div class="flex gap-4 flex-wrap justify-center">
-        <Link href="/buscador" class="border skiptranslate rounded-lg border-blue-0 px-2 py-1">Series</Link>
-        <Link href="/buscadorUsuarios" :class="currentPage === 'SearchUsersView' ? 'bg-blue-1000 text-white border-blue-1000 font-normal' : 'text-black bg-white border-blue-0 '" class="border rounded-lg px-2 py-1" >Personas</Link>
-    </div>
+    <Link href="/buscador" class="border skiptranslate rounded-lg border-blue-0 px-2 py-1">Series</Link>
+    <Link href="/buscadorUsuarios"
+      :class="currentPage === 'SearchUsersView' ? 'bg-blue-1000 text-white border-blue-1000 font-normal' : 'text-black bg-white border-blue-0 '"
+      class="border rounded-lg px-2 py-1">Personas</Link>
+  </div>
   <div v-if="loading && answer === 'Buscando usuarios...'" class="flex flex-col justify-center items-center">
 
     <p>{{ answer }}</p>
@@ -104,11 +108,13 @@ export default {
         <Link :href="`/perfil/${user.id}`" class="ms-3 font-medium block"> @{{ user.username }}</Link>
         <div class="flex ms-2 flex-wrap">
 
-          <p v-for="genre in user.genres"  class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000 text-sm  font-normal py-0 px-1 m-1 text-center"> {{Object.values(genre)[0]}}</p>
+          <p v-for="genre in user.genres"
+            class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000 text-sm  font-normal py-0 px-1 m-1 text-center">
+            {{ Object.values(genre)[0] }}</p>
         </div>
       </div>
     </li>
 
   </ul>
-
+</section>
 </template>

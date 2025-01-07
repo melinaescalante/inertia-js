@@ -36,27 +36,31 @@ onMounted(async () => {
 </script>
 <template>
     <NavBar></NavBar>
-    <h1 class="font-medium text-2xl m-2 mt-3 mb-5">Seguidos</h1>
-    <div v-if="!loading" v-for="(user, index) in following" :key="index"
+    <section class="mt-20">
+
+        <h1 class="font-medium text-2xl m-2 mt-3 mb-2">Seguidos</h1>
+        
+        <div v-if="!loading" v-for="(user, index) in following" :key="index"
         class="flex items-center gap-4  p-4  border-b-[1px]  border-blue-1000 skiptranslate">
         <img class="w-10 h-10 rounded-full" :src="user.photo || '/noimage.png'"
-            :alt="`Foto de perfil del usuario ${user.username}`">
+        :alt="`Foto de perfil del usuario ${user.username}`">
         <div class="font-medium ">
             <div>
-
+                
                 <Link :href="`/perfil/${user.idUser}`">
-                {{ user.username }}</Link>
-
+                    {{ user.username }}</Link>
+                    
+                </div>
             </div>
+            
         </div>
-
-    </div>
-    <div v-if="following.length == 0 && !loading" class="skiptranslate m-2">
-        <p>Sin seguidos</p>
-    </div>
-    <div v-if="loading">
-
-        <Spinner class="mx-auto" msg="Cargando seguidores"></Spinner>
-    </div>
+        <div v-if="following.length == 0 && !loading" class="skiptranslate m-2">
+            <p>Sin seguidos</p>
+        </div>
+        <div v-if="loading">
+            
+            <Spinner class="mx-auto" msg="Cargando seguidores"></Spinner>
+        </div>
+    </section>
 
 </template>

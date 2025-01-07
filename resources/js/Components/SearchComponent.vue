@@ -2,6 +2,7 @@
 import { router } from '@inertiajs/vue3';
 import Spinner from './Spinner.vue';
 import { Link, usePage } from '@inertiajs/vue3';
+import { useLoginUser } from '../composables/useLoginUser';
 
 let debounceTimeout;
 
@@ -24,8 +25,12 @@ export default {
       answer: '',
       currentPage,
 
-      loading: false
+      loading: false,
+      loginUser: null,
     };
+  }, created() {
+    const { loginUser } = useLoginUser(); // Usar el composable
+    this.loginUser = loginUser; // Asignar a una propiedad de data
   },
   methods: {
     debounce(fn, delay) {
@@ -80,6 +85,9 @@ export default {
 };
 </script>
 <template>
+  <section class="mt-20" id="buscador">
+
+
   <form @submit.prevent="handleSubmit" class="max-w-2xl m-4 mt-5" method="get">
     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only ">
       Busca tu serie
@@ -106,7 +114,8 @@ export default {
     <Link href="/buscador" class="border  rounded-lg px-2 py-1"
       :class="currentPage === 'SearchView' ? 'bg-blue-1000 text-white border-blue-1000 font-normal' : 'text-black bg-white border-blue-0 '">
     Series</Link>
-    <Link href="/buscadorUsuarios" class="border rounded-lg border-blue-0 px-2 py-1">Personas</Link>
+    <Link v-show="loginUser.id" href="/buscadorUsuarios" class="border rounded-lg border-blue-0 px-2 py-1">Personas
+    </Link>
   </div>
   <div v-if="loading" class="flex flex-col justify-center items-center mb-2 skiptranslate">
 
@@ -132,5 +141,5 @@ export default {
   <div v-if="!loading && answer == 'No se encontraron series.'" class="p-4 m-2 bg-red-200 rounded-md">
     <p>{{ answer }}</p>
   </div>
-
+  </section>
 </template>

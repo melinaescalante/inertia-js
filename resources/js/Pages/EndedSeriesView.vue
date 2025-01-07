@@ -33,8 +33,8 @@ onMounted(async () => {
 </script>
 <template>
     <NavBar></NavBar>
+    <section id="ended-series" class="mt-20">
     <h1 class="font-medium text-2xl m-2 mt-3 mb-3 skiptranslate">Series vistas</h1>
-    <section id="ended-series">
 
     <div v-if="!loading">
         <ul v-if="arrayFetch.length >= 1">

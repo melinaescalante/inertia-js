@@ -242,7 +242,7 @@ async function back(id, idSerie, nameSerie) {
 </script>
 <template>
     <NavBar></NavBar>
-    <section id="mis-series" class="mb-28">
+    <section id="mis-series" class="mb-28 mt-20">
         <div v-if="loading" class="flex justify-center mt-[50%]">
             <Spinner msg="Cargando actividad de mis series">
 

@@ -21,27 +21,30 @@ onMounted(async () => {
 
 <template>
     <NavBar></NavBar>
-    <h1 class="font-medium text-2xl m-2 mt-3 mb-5 skiptranslate">Series Vistas</h1>
+    <section class="mt-20">
+    <h1 class="font-medium text-2xl m-2 mt-3 mb-2 skiptranslate">Series Vistas</h1>
     <!-- {{ userId }} -->
-    <div v-if="!loading" v-for="(serie) in series"
-        class="flex items-center gap-4  p-4  border-b-[1px]  border-blue-1000 skiptranslate">
-        <img class="w-10 h-10 rounded-full" :src="serie.urlImage || '/noimage.png'"
-            :alt="`Foto de la serie ${serie.idSerie}`">
-        <div class="font-medium ">
-            <div>
 
-                <Link :href="`/show/${serie.idSerie}`">
-                {{ serie.nameSerie }}</Link>
-
+          <div v-if="!loading" v-for="(serie) in series"
+          class="flex items-center gap-4  p-3  border-b-[1px]  border-blue-1000 skiptranslate">
+          <img class="w-10 h-10 rounded-full" :src="serie.urlImage || '/noimage.png'"
+          :alt="`Foto de la serie ${serie.idSerie}`">
+          <div class="font-medium ">
+              <div>
+                  
+                  <Link :href="`/show/${serie.idSerie}`">
+                    {{ serie.nameSerie }}</Link>
+                    
+                </div>
             </div>
+            
         </div>
-
-    </div>
-    <div v-if="!series?.length  && !loading" class="skiptranslate m-2">
-        <p>Sin series vistas</p>
-    </div>
-    <div v-if="loading">
-
-        <Spinner class="mx-auto" msg="Cargando series vistas"></Spinner>
-    </div>
+        <div v-if="!series?.length  && !loading" class="skiptranslate m-2">
+            <p>Sin series vistas</p>
+        </div>
+        <div v-if="loading">
+            
+            <Spinner class="mx-auto" msg="Cargando series vistas"></Spinner>
+        </div>
+    </section>
 </template>
