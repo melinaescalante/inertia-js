@@ -5,7 +5,7 @@ let latestSeriesIds = ref([]);
 
 export function useLoginUser() {
   // debugger
-  let isReady = ref(false); 
+  let isReady = ref(false);
   let unsubscribeFromAuth = () => { };
   const loginUser = ref({
     id: null,
@@ -51,7 +51,7 @@ export function useLoginUser() {
     const following = await getLastPeopleFollowed(loginUser.value.id);
     // getLastPeopleFollowed(loginUser.value.id).then((following) => {
     //   if (following?.length > 0) {
-        loginUser.value.following = following
+    loginUser.value.following = following
 
     //   }
     // })
@@ -115,12 +115,11 @@ export function useLoginUser() {
       } else {
         await getFollowedPeople();
       }
-      isReady.value=true
+      isReady.value = true
     }
   })
   onUnmounted(() => {
     unsubscribeFromAuth();
-    // loginUser.value = {}
   })
 
   return {

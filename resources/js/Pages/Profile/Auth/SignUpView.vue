@@ -164,7 +164,7 @@ function showPassword() {
             </div>
         </section>
     </NavBarSecondary>
-    <div class="flex flex-col  items-center justify-center">
+    <div class="flex flex-col  items-center justify-center mb-28">
         <p class="mt-7">¿Ya tienes una cuenta?</p>
         <Link class="mt-2 text-blue-1000 font-medium " href="/ingresar">Ingresar</Link>
     </div>

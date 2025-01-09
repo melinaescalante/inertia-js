@@ -1,26 +1,36 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Link, router } from '@inertiajs/vue3'
 import { login } from '../../../../services/auth'
 import NavBarSecondary from '../../../Components/NavBarSecondary.vue';
+import { useLoginUser } from '../../../Composables/useLoginUser';
+const { loginUser } = useLoginUser()
 const msg = ref('')
 const user = ref({
     email: '',
     password: ''
 })
+// onMounted(()=>{
+if (loginUser.id) {
+    router.get('/');
+
+}
+// })
 const loading = ref(false)
 async function handleSubmit() {
     loading.value = true
     try {
         await login({ ...user.value })
-        msg.value = "Se ha ingresado correctamente"
-        router.get('/')
-// debugger
+        // msg.value = "Se ha ingresado correctamente"}
+        loading.value = false
+        setTimeout(() => {
+            router.get('/');
+        }, 2000);
     } catch (error) {
-        if (error.code==='auth/invalid-credential') {
-        msg.value = "Datos inválidos. Intentá de vuelta por favor."
-            
-        }else{
+        if (error.code === 'auth/invalid-credential') {
+            msg.value = "Datos inválidos. Intentá de vuelta por favor."
+
+        } else {
 
             msg.value = "No se ha podido ingresar. Intentá de nuevo por favor."
         }
@@ -36,6 +46,21 @@ function showPassword() {
 }
 </script>
 <template>
+      <!-- Transición entre plantillas -->
+      <Transition
+      name="fade" 
+      mode="out-in">
+    <template v-if="loginUser.id"><div class="flex items-center justify-center min-h-screen bg-white">
+  <img 
+    src="/public/images/ImagotipoEspesorFinalSinApilar.png" 
+    alt="Logo" 
+    class="w-60 h-60 animate-pulse"
+  />
+</div>
+</template>
+</Transition> 
+<template v-if="!loginUser.id">
+
     <NavBarSecondary>
         <section class="skiptranslate">
             <h1 class="text-center text-2xl mt-8 mb-8 font-medium">Inicio de Sesión</h1>
@@ -56,11 +81,12 @@ function showPassword() {
                     <div class="flex gap-1">
 
                         <input id="password" :type="!passwordVisible ? 'password' : 'text'" class="p-2 w-full border rounded-md bg-slate-100 
-                    focus:ring-blue-500 focus:border-blue-500 focus:outline-none" v-model="user.password" required
-                            placeholder="Contraseña" autocomplete="current-password" />
-                        <button type="button" @click="showPassword" class="bg-blue-1000 rounded-lg"><svg v-if="!passwordVisible"
-                                class="w-6 h-6 text-orange-0 fill-transparent " aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            focus:ring-blue-500 focus:border-blue-500 focus:outline-none" v-model="user.password"
+                            required placeholder="Contraseña" autocomplete="current-password" />
+                        <button type="button" @click="showPassword" class="bg-blue-1000 rounded-lg"><svg
+                                v-if="!passwordVisible" class="w-6 h-6 text-orange-0 fill-transparent "
+                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-width="1.5"
                                     d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
                                 <path stroke="currentColor" stroke-width="1.5"
@@ -90,7 +116,20 @@ function showPassword() {
     <div v-if="msg !== 'Se ha ingresado correctamente' && msg !== ''" class="bg-red-200 p-4 m-2 rounded-md">
         <p>{{ msg }}</p>
     </div>
-    <div v-if="msg == 'Se ha ingresado correctamente'" class="bg-green-200 p-4 m-2 rounded-md">
-        <p>{{ msg }}</p>
-    </div>
+    <!-- <div v-if="msg == 'Se ha ingresado correctamente'" class="bg-green-200 p-4 m-2 rounded-md">
+            <p>{{ msg }}</p> -->
+    <!-- </div> -->
 </template>
+</template>
+<style scoped>
+/* Transiciones personalizadas */
+.fade-enter-active,
+.fade-leave-active {
+    @apply transition-opacity duration-500;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    @apply opacity-0;
+}
+</style>

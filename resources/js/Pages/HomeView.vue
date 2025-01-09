@@ -36,10 +36,13 @@ function usePosts() {
 
   onMounted(async () => {
     try {
-      console.log('de la home')
-      while (!isReady.value) {
-        await new Promise((resolve) => setTimeout(resolve, 10)); // Esperar activamente
+      if (loginUser.value.id) {
+        
+        while (!isReady.value) {
+          await new Promise((resolve) => setTimeout(resolve, 10)); // Esperar activamente
+        }
       }
+      console.log('de la home')
       await loadPosts(); // Pasar ids de las series.
 
       setIntersectionObserver();
@@ -112,8 +115,7 @@ function usePosts() {
       ]
       setIntersectionObserver();
     } catch (error) {
-      // msgError.value = '¡Comienza a añadir series a ver o viendo, así podremos comenzar a generarte un para ti!'
-      console.log('[Posts.vue] Error al cargar más posts', error);
+      // console.log('[Posts.vue] Error al cargar más posts', error);
     }
 
     loadingMore.value = false;

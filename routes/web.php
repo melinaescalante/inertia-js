@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\InvertCheckAuthSession;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SerieController;
 use App\Http\Middleware\CheckAuthSession;
@@ -94,10 +95,10 @@ Route::get('/subirPublicacion', [SerieController::class, 'buscadorPost'])
 
 //Rutas para registro y autenticacion
 Route::get('/ingresar', [AppController::class, "login"])
-    ->name('login');
+    ->name('login')    ->middleware(InvertCheckAuthSession::class);
 
 Route::get('/registrarme', [AppController::class, "signUp"])
-    ->name('signUp');
+    ->name('signUp')->middleware(InvertCheckAuthSession::class);
 
 Route::post('/asignarAuth', [AuthController::class, 'setAuth']);
 

@@ -34,6 +34,7 @@ function usePosts() {
 
     onMounted(async () => {
         try {
+          
             while (!isReady.value) {
                 await new Promise((resolve) => setTimeout(resolve, 10)); // Esperar activamente
             }
