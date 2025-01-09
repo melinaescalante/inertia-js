@@ -22,10 +22,10 @@ async function handleSubmit() {
     try {
         await login({ ...user.value })
         // msg.value = "Se ha ingresado correctamente"}
-        loading.value = false
-        setTimeout(() => {
-            router.get('/');
-        }, 2000);
+        // loading.value = false
+        // setTimeout(() => {
+            // router.get('/');}
+        // }, 2000);
     } catch (error) {
         if (error.code === 'auth/invalid-credential') {
             msg.value = "Datos inválidos. Intentá de vuelta por favor."
