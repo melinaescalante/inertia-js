@@ -14,7 +14,7 @@ let loginUser = {
   bio: null,
   genres: null,
   photoURL: null,
-  lastSeriesWatched: null,
+  lastSeriesWatched:  null,
   seriesToWatch: null,
 
   following: null,
@@ -25,19 +25,13 @@ if (localStorage.getItem('user')) {
 }
 if (localStorage.getItem('people')) {
   loginUser.following = JSON.parse(localStorage.getItem('people'))
-} else {
-  useLoginUser()
-}
+} 
 if (localStorage.getItem('ids_series_watching')) {
   loginUser.lastSeriesWatched = JSON.parse(localStorage.getItem('ids_series_watching'))
-} else {
-  useLoginUser()
-}
+} 
 if (localStorage.getItem('ids_series_wishlist')) {
   loginUser.seriesToWatch = JSON.parse(localStorage.getItem('ids_series_wishlist'))
-} else {
-  useLoginUser()
-}
+} 
 let observers = []
 onAuthStateChanged(auth, user => {
   if (user) {
@@ -54,7 +48,8 @@ onAuthStateChanged(auth, user => {
           ...loginUser,
           username: userProfile.username,
           bio: userProfile.bio,
-          genres: userProfile.genres
+          genres: userProfile.genres,
+
         })
       })
   } else {
@@ -68,6 +63,7 @@ onAuthStateChanged(auth, user => {
       genres: null,
       photoURL: null,
       lastSeriesWatched: null,
+      seriesToWatch:null,
       following: null,
     })
     localStorage.removeItem("user")
@@ -89,7 +85,6 @@ export async function editMyProfilePhoto(photo) {
 
     await Promise.all([promiseAuth, promiseFirestore]);
     updateLoginUser({ photoURL });
-
   } catch (error) {
     console.log("Error updating photo URL:", error);
   }
@@ -106,8 +101,6 @@ export async function editProfile({ displayName, bio, genres }) {
     const promiseAuth = updateProfile(auth.currentUser, { displayName })
     const promiseProfile = await updateUserProfile(loginUser.id, { displayName, bio, genres })
     await Promise.all([promiseAuth, promiseProfile])
-
-
     updateLoginUser({
       ...loginUser,
       displayName,
@@ -183,18 +176,13 @@ export async function signUp({ email, password, userName, fullname }) {
 
     await updateProfile(userCredential.user, { displayName: fullname });
 
-    // // const userData = {
-    // //   displayName: userName || "Usuario sin nombre", // 
-    // //   email: email,
-    // //   bio: null,
-    // //   genres: null,
-    // //   photoURL: null,
-    // // };
     const userData = {
       displayName: userName || "Usuario sin nombre",
       username: userName,
       email: email,
       bio: null,
+      seriesToWatch: null,
+      lastSeriesWatched: null,
       genres: null,
       photoURL: null,
     };
@@ -209,13 +197,16 @@ export async function signUp({ email, password, userName, fullname }) {
     });
 
   } catch (error) {
-    
+
     throw error;
   }
 }
 export async function logout() {
   try {
     await signOut(auth)
+    localStorage.clear()
+    // loginUser.lastSeriesWatched=null
+    // loginUser.seriesToWatch=null
   } catch (error) {
     throw error;
   }

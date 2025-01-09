@@ -11,7 +11,7 @@ use App\Http\Middleware\CheckAuthSession;
 Route::get('/', [AppController::class, "home"])
     ->name('home');
 Route::get('/siguiendo', [AppController::class, "homeFollowing"])
-    ->name('homeFollowing');
+    ->name('homeFollowing') ->middleware(CheckAuthSession::class);
 
 Route::get('/chatPrivado/{id}/{email}', [AppController::class, "chatPrivate"])
     ->middleware(CheckAuthSession::class);
@@ -30,7 +30,7 @@ Route::get('/configuraciones', [AppController::class, "configuraciones"])
 
 Route::get('/perfil/{id}', [AppController::class, "profile"])
     ->name('profile')
-    ->whereAlphaNumeric('id');
+    ->whereAlphaNumeric('id')->middleware(CheckAuthSession::class);
 
 Route::get('/miPerfil', [AppController::class, "myProfile"])
     ->name('myProfile')

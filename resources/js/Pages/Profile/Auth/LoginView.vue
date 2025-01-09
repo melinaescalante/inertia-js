@@ -14,13 +14,20 @@ async function handleSubmit() {
     try {
         await login({ ...user.value })
         msg.value = "Se ha ingresado correctamente"
-        router.replace('/')
-
+        router.get('/')
+// debugger
     } catch (error) {
-        msg.value = "No se ha podido ingresar. Intente de nuevo por favor."
+        if (error.code==='auth/invalid-credential') {
+        msg.value = "Datos inválidos. Intentá de vuelta por favor."
+            
+        }else{
+
+            msg.value = "No se ha podido ingresar. Intentá de nuevo por favor."
+        }
+        console.log(error.code)
         setTimeout(() => {
             msg.value = '';
-        }, 3000);
+        }, 4000);
     }
 }
 const passwordVisible = ref(false);

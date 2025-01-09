@@ -11,7 +11,6 @@ import { getLastSeriesToWatch, getLastSeriesWatched, getNameUser, getUserName } 
  */
 export async function addSerieToWatch(idUser, idSerie, nameSerie) {
     try {
-        debugger
         const userDocRef = doc(db, "users", idUser);
         const toWatchDocRef = doc(userDocRef, "series", "toWatch");
         const toWatchSnapshot = await getDoc(toWatchDocRef);

@@ -243,6 +243,7 @@ export async function getUsersProfileById(id, email, displayName) {
         bio: profileDocument.data().bio,
         genres: profileDocument.data().genres,
         photoURL: profileDocument.data().photoURL,
+        
       };
     } else {
 

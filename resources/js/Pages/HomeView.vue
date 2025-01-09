@@ -8,7 +8,7 @@ import { fetchPosts, fetchPostsFrom } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
 import { Link } from '@inertiajs/vue3';
 import { sortArrayFromLocalStorage } from '../../services/users';
-const { loginUser } = useLoginUser()
+const { loginUser, isReady } = useLoginUser()
 const msgError = ref("")
 const msgAlert = ref("")
 const {
@@ -36,7 +36,10 @@ function usePosts() {
 
   onMounted(async () => {
     try {
-
+      console.log('de la home')
+      while (!isReady.value) {
+        await new Promise((resolve) => setTimeout(resolve, 10)); // Esperar activamente
+      }
       await loadPosts(); // Pasar ids de las series.
 
       setIntersectionObserver();
@@ -48,11 +51,15 @@ function usePosts() {
 
   async function loadPosts() {
     try {
-      let series = await sortArrayFromLocalStorage(loginUser.value.lastSeriesWatched||[], loginUser.value.seriesToWatch||[])
-      console.log(loginUser.value.lastSeriesWatched, loginUser.value.seriesToWatch)
+      // if (loginUser) {
+
+      // }
+      let series = await sortArrayFromLocalStorage(loginUser.value.lastSeriesWatched || [], loginUser.value.seriesToWatch || [])
+      // let series = await sortArrayFromLocalStorage(JSON.parse(localStorage.getItem('ids_series_wishlist'))||[], JSON.parse(localStorage.getItem('ids_series_watching'))||[])
+
       unsubscribe = await fetchPosts(loginUser.value.id, series, (newPosts) => {
         posts.value = newPosts;
-       
+
         if (!loginUser.value.lastSeriesWatched?.length && !loginUser.value.seriesToWatch?.length) {
           msgError.value = '¡Comienza a añadir series a ver o viendo, así podremos comenzar a generarte un para ti!'
           loading.value = false;
@@ -131,8 +138,8 @@ function usePosts() {
 <template>
   <NavBar />
 
-    <SwitcherHome v-if="loginUser.id"></SwitcherHome>
-  <section class="posts mb-28 mt-8" >
+  <SwitcherHome v-if="loginUser.id" class="mt-[4.5rem]"></SwitcherHome>
+  <section class="posts mb-28 mt-4">
     <div v-if="!loadingPosts">
       <div v-for="post in posts" :key="post.id">
         <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"
@@ -140,7 +147,7 @@ function usePosts() {
           :comments="post.comments" :userName="post.user" :liked="post.liked" :userId="post.userid"
           :created_at="post.created_at" />
       </div>
-      <div v-if="msgError !== ''"  :class="loginUser.id?'mt-[50%]':'mt-[70%]'">
+      <div v-if="msgError !== ''" :class="loginUser.id ? 'mt-[50%]' : 'mt-[80%]'">
         <p class="text-center skiptranslate p-3">
           {{ msgError }}
         </p>
@@ -148,7 +155,8 @@ function usePosts() {
         bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Iniciar
         búsqueda</Link>
         <Link v-else href="/ingresar" class="block w-2/6 skiptranslate text-center mx-auto py-2 px-4 
-        bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Iniciá sesión</Link>
+        bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Iniciá
+        sesión</Link>
 
       </div>
       <div v-if="msgAlert !== ''" class="mt-[50%] ">
@@ -159,7 +167,8 @@ function usePosts() {
         bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Subir
         posteo</Link>
         <Link v-else href="/ingresar" class="block w-2/6 skiptranslate text-center mx-auto py-2 px-4 
-        bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Iniciá sesión</Link>
+        bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Iniciá
+        sesión</Link>
       </div>
     </div>
     <div v-else class="mt-[50%] p-3 skiptranslate">

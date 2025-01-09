@@ -37,7 +37,7 @@ const excludedPages = [
 <template>
 
     <nav
-        class=" skiptranslate flex justify-between items-center p-2 py-2 ps-5 border-blue-0 border rounded-lg  text-slate-800 fixed w-full bg-white top-0">
+        class=" skiptranslate flex justify-between items-center p-2 py-2 ps-5 border-blue-0 border rounded-lg  text-slate-800 fixed w-full bg-white top-0 md:max-w-xl">
         <div v-if="!loading" class="flex items-center gap-6">
 
             <ButtonGoBack v-if="!excludedPages.includes(currentPage)">

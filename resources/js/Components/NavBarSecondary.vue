@@ -2,7 +2,9 @@
 import { Link } from '@inertiajs/vue3'
 import ButtonGoBack from './ButtonGoBack.vue';
 import { usePage } from '@inertiajs/vue3';
+import { useLoginUser } from '../composables/useLoginUser';
 const page = usePage()
+const {loginUser}=useLoginUser()
 const currentPage = page.component
 console.log(currentPage)
 </script>
@@ -10,7 +12,7 @@ console.log(currentPage)
     <div class="my-component">
 
         <nav class="flex gap-4 items-center p-4 py-2 ps-5 border rounded-lg border-blue-200 text-slate-800 ">
-            <ButtonGoBack></ButtonGoBack>
+            <ButtonGoBack v-if="loginUser.id"></ButtonGoBack>
             <Link href="/" class="text-xl"><img src="/public/images/ImagotipoEspesorFinalApilado.png" alt="Isotipo-TVON"
                 class="block h-auto w-16"></Link>
         </nav>

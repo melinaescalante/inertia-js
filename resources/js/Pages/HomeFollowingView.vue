@@ -7,7 +7,7 @@ import Spinner from '../Components/Spinner.vue'
 import { fetchPostsFollowed, fetchPostsFollowedFrom, } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
 import { Link } from '@inertiajs/vue3';
-const { loginUser } = useLoginUser()
+const { loginUser, isReady } = useLoginUser()
 const msgError = ref("")
 const msgAlert = ref("")
 const {
@@ -34,6 +34,9 @@ function usePosts() {
 
     onMounted(async () => {
         try {
+            while (!isReady.value) {
+                await new Promise((resolve) => setTimeout(resolve, 10)); // Esperar activamente
+            }
             await loadPosts(); // Pasar ids de las series.
             setIntersectionObserver();
         } catch (error) {
@@ -113,9 +116,9 @@ function usePosts() {
 </script>
 <template>
     <NavBar />
-    <SwitcherHome v-if="loginUser.id"></SwitcherHome>
+    <SwitcherHome v-if="loginUser.id" class="mt-[4.5rem]"></SwitcherHome>
 
-    <section class="posts  mb-28 mt-8">
+    <section class="posts  mb-28 mt-4">
         <div v-if="!loadingPosts">
             <div v-for="post in posts" :key="post.id">
                 <PostUser :photoURL="post.photoURL" :id="post.id" :descriptionUser="post.text" :img="post.image"
