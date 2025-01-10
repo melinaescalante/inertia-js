@@ -19,6 +19,12 @@ class AppController extends Controller
        
         return Inertia::render('HomeFollowingView');
     }
+    public function postlikes(Request $request){
+        $postId = request('id');
+
+        return Inertia::render('Profile/PostLikesView', ['id' => $postId]);
+
+    }
     public function following($userId,$username)
     {
        

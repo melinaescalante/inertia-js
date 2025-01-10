@@ -407,6 +407,39 @@ export async function getComments(callback, id) {
     }
 }
 /**
+ * Traemos información de los usuarios que le dieron like a un posteo en específico
+ */
+export async function getLikes(callback, id) {
+    try {
+        const postRef = doc(db, 'posts-public', id);
+        onSnapshot(postRef, async (snapshot) => {
+            const likesData = snapshot.data()?.likes;
+            if (likesData) {
+                let likesArray = [];
+                const promises = likesData.map(async (like) => {
+                    const userid=Object.keys(like)
+                    const username = await getUserName(userid);
+                    const profilePhoto = await getPhotoURL(userid)
+                    const commentFull = {
+                        userid,
+                        username,
+                        profilePhoto,
+                        
+                        
+                    };
+                    likesArray.push(commentFull)
+                });
+                await Promise.all(promises);
+                likesArray.reverse();
+
+                callback(likesArray);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+/**
  * Permite eliminar posteos
  * @param {String} id 
  * @returns {Promise}

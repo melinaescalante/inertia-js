@@ -177,7 +177,7 @@ function handleClose() {
 
                         <span class="sr-only">Like</span>
                         <p v-if="likes !== undefined && likes != 0">
-                            <span class="m-1">{{ likes.length }}</span>
+                            <Link :href="`/${id}/likes`"><span class="m-1">{{ likes.length }}</span></Link>
                         </p>
                         <div @click="giveLike" :id="id" :liked="liked">
 

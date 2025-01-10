@@ -11,8 +11,9 @@ use App\Http\Middleware\CheckAuthSession;
 
 Route::get('/', [AppController::class, "home"])
     ->name('home');
+    
 Route::get('/siguiendo', [AppController::class, "homeFollowing"])
-    ->name('homeFollowing') ->middleware(CheckAuthSession::class);
+    ->name('homeFollowing')->middleware(CheckAuthSession::class);
 
 Route::get('/chatPrivado/{id}/{email}', [AppController::class, "chatPrivate"])
     ->middleware(CheckAuthSession::class);
@@ -25,6 +26,9 @@ Route::get('/{id}/{username}/seriesVistasRegistro', [AppController::class, "seri
 
 Route::get('/{userId}/{username}/seguidos', [AppController::class, "following"])
     ->whereAlphaNumeric('username')->middleware(CheckAuthSession::class);
+
+Route::get('/{id}/likes', [AppController::class, "postlikes"])
+    ->whereAlphaNumeric('id')->middleware(CheckAuthSession::class);
 
 Route::get('/configuraciones', [AppController::class, "configuraciones"])
     ->name('config');
@@ -57,7 +61,7 @@ Route::get('/descubrir', [AppController::class, "discover"])
 
 Route::get('/buscador', [SerieController::class, 'buscador']);
 
-Route::get('/buscadorUsuarios', [SerieController::class, 'buscadorUsuarios']) ->middleware(CheckAuthSession::class);
+Route::get('/buscadorUsuarios', [SerieController::class, 'buscadorUsuarios'])->middleware(CheckAuthSession::class);
 
 //SubViews de las series del usuario
 Route::get('/wishlist', [AppController::class, "myWishlist"])
@@ -95,7 +99,7 @@ Route::get('/subirPublicacion', [SerieController::class, 'buscadorPost'])
 
 //Rutas para registro y autenticacion
 Route::get('/ingresar', [AppController::class, "login"])
-    ->name('login')    ->middleware(InvertCheckAuthSession::class);
+    ->name('login')->middleware(InvertCheckAuthSession::class);
 
 Route::get('/registrarme', [AppController::class, "signUp"])
     ->name('signUp')->middleware(InvertCheckAuthSession::class);
