@@ -195,7 +195,7 @@ function handleClose() {
                 <div>
                     <div class="flex">
                         <span class="sr-only">Comentar</span>
-                        <p v-if="comments != undefined && comments.length > 0">
+                        <p v-if="comments != undefined && comments?.length > 0">
                             <span>{{ comments.length }}</span>
                         </p>
                         <svg @click="seeComments(id)" :id="id" class="w-7 h-7 cursor-pointer" aria-hidden="true"
@@ -238,7 +238,7 @@ function handleClose() {
                     </div>
                     <span class="text-[14px] text-gray-800 self-start">{{ formatDate(comment.created_at) }}</span>
                 </li>
-                <p v-if="!comments.length" class="text-slate-400 ms-2 ">¡Sé el primero en comentar!</p>
+                <p v-if="!comments?.length" class="text-slate-400 ms-2 ">¡Sé el primero en comentar!</p>
 
             </ul>
 
