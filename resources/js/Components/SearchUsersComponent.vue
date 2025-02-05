@@ -29,8 +29,8 @@ export default {
         this.answer = 'Buscando usuarios...';
         this.users = [];
         try {
-
-          await getUsers(value, (array) => {
+const name=value.toLowerCase()
+          await getUsers(name, (array) => {
             this.users = array;
             this.loading = false;
 
@@ -85,7 +85,7 @@ export default {
       </button>
     </div>
   </form>
-  <div class="flex gap-4 flex-wrap justify-center">
+  <div class="flex gap-4 flex-wrap justify-center mb-3">
     <Link href="/buscador" class="border skiptranslate rounded-lg border-blue-0 px-2 py-1">Series</Link>
     <Link href="/buscadorUsuarios"
       :class="currentPage === 'SearchUsersView' ? 'bg-blue-1000 text-white border-blue-1000 font-normal' : 'text-black bg-white border-blue-0 '"
@@ -96,7 +96,7 @@ export default {
     <p>{{ answer }}</p>
     <Spinner msg="Buscando usuarios"></Spinner>
   </div>
-  <div v-if="!loading && answer === 'No se encontraron usuarios.'" class="p-4 m-2 bg-red-200 rounded-md">
+  <div v-if="!loading && answer === 'No se encontraron usuarios.'" class="p-4 m-2  bg-red-200 rounded-md">
     <p>{{ answer }}</p>
   </div>
   <ul class="mb-2 skiptranslate" v-if="!loading && users?.length">

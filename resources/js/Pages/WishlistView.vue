@@ -55,7 +55,7 @@ const isBottomSheetOpen = ref(true);
                     v-for="serie in arrayFetch">
 
                     <Link :href="`/show/${serie.id}`" class=" flex  justify-between">
-                    <div class="flex hover:bg-gray-100 ">
+                    <div class="flex">
 
                         <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1 "
                             :src="serie.image ? serie.image.medium : '/noimage.png'"
