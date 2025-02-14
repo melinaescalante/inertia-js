@@ -19,6 +19,12 @@ class AppController extends Controller
        
         return Inertia::render('HomeFollowingView');
     }
+    public function ratingSerie($name){
+        return Inertia::render('RatingSerieView',[
+            'name' => $name,
+        ]);
+
+    }
     public function postlikes(Request $request){
         $postId = request('id');
 

@@ -269,7 +269,7 @@ async function verifySeasonBefore(idSerie, temporada) {
     if (seasonExists) {
         const beforeSeasonId = seasonExists.id
         const lastEpisode = seasonExists.episodeOrder
-        return { seasonExists, beforeSeasonId,lastEpisode };
+        return { seasonExists, beforeSeasonId, lastEpisode };
     } else {
         false
     }
@@ -381,7 +381,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                             currentSeason: watchingSeason,
                             currentIdSeason: idCurrentSeason,
                             created_at: data[idSerie].created_at,
-                            urlImage:data[idSerie].urlImage
+                            urlImage: data[idSerie].urlImage
                         }
                     });
                 } else {
@@ -456,9 +456,9 @@ export async function backEpisode(idUser, idSerie, idSeason, temporada, capitulo
                 if (watchingSnapshot.exists()) {
                     const data = watchingSnapshot.data();
                     if (data[idSerie]?.currentSeason !== undefined) {
-    
+
                         let watchingSeason = data[idSerie].currentSeason - 1;
-    
+
                         await updateDoc(watchingDocRef, {
                             [idSerie]: {
                                 id: idSerie,
@@ -477,6 +477,28 @@ export async function backEpisode(idUser, idSerie, idSeason, temporada, capitulo
         }
     } catch (error) {
         console.error(error)
+    }
+}
+/**
+ * Guardar puntuación en serie vista
+ */
+export async function rateSerie(rate, idUser, idSerie, nameSerie) {
+    try {
+        debugger
+        const userDocRef = doc(db, "users", idUser);
+        const watchedDocRef = doc(userDocRef, `series/watched`);
+        const watchedSnapshot = await getDoc(watchedDocRef);
+        const serie = watchedSnapshot.find(serie => {serie.idSerie === idSerie
+
+            console.log(serie)
+        });
+        // if (watchedSnapshot.exists()) {
+        //     await updateDoc(watchedSnapshot, {
+        //         [idSerie]: deleteField()
+        //     });
+        // }
+    } catch (error) {
+
     }
 }
 export async function addSerieEnded(idUser, idSerie, nameSerie, created, urlImage) {

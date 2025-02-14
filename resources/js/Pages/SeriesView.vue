@@ -3,12 +3,13 @@ import NavBar from '../components/NavBar.vue'
 import { allSeriesToWatch, allSeriesWatching, nextEpisode, allSeriesWatched, currentInformation, backEpisode } from '../../services/series';
 import ModalComponentDelete from '../components/ModalComponentDelete.vue';
 import { ref, onMounted } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import { useLoginUser } from '../composables/useLoginUser';
 import Spinner from '../Components/Spinner.vue';
 import CardWithData from '../Components/CardWithData.vue';
 import BottomSheet from '../components/BottomSheet.vue';
 import { formatDate } from '../helpers/date';
+import ModalRating from '../Components/ModalRating.vue';
 const seriesToWatch = ref([])
 const seriesWatched = ref([])
 const seriesWatching = ref([])
@@ -167,7 +168,9 @@ async function next(id, idSerie, nameSerie) {
             });
 
             seriesWatchingJson.value = seriesWatchingJson.value.filter(serie => serie.id !== idSerie);
-            await loadSeriesWatched()
+            //Puntuar serie
+            router.visit(`/puntuarSerie/${nameSerie}`, { name: nameSerie })
+            // await loadSeriesWatched()
         }
 
     } catch (error) {
