@@ -67,7 +67,7 @@ Route::get('/buscadorUsuarios', [SerieController::class, 'buscadorUsuarios'])->m
 Route::get('/wishlist', [AppController::class, "myWishlist"])
     ->middleware(CheckAuthSession::class);
 Route::get('/puntuarSerie/{name}/{id}', [AppController::class, "ratingSerie"])
-->whereNumber('id')
+
     ->middleware(CheckAuthSession::class);
 
 Route::get('/seriesVistas', [AppController::class, "endedSeries"])

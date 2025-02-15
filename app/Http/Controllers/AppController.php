@@ -19,8 +19,9 @@ class AppController extends Controller
        
         return Inertia::render('HomeFollowingView');
     }
-    public function ratingSerie($name,$id){
-        var_dump($id);
+    public function ratingSerie(Request $request,$name, $id){
+        // $extraData = $request->input('id');
+        // var_dump($extraData);
         return Inertia::render('RatingSerieView',[
             'name' => $name,
             'id'=>$id

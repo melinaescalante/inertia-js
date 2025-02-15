@@ -19,6 +19,7 @@ const { loginUser } = useLoginUser()
 const loading = ref(true)
 const lastSerie = ref()
 const lastSerieWatched = ref()
+const msgRemove = ref('')
 const isBottomSheetOpen = ref(true);
 function handleClose() {
 
@@ -149,7 +150,7 @@ async function next(id, idSerie, nameSerie) {
                         [idSerie]: {
                             current: 1,
                             currentSeason: season + 1,
-                            currentIdSeason: seasons[season-1].id,
+                            currentIdSeason: seasons[season - 1].id,
                         }
                     };
                 }
@@ -157,7 +158,6 @@ async function next(id, idSerie, nameSerie) {
             });
             localSeriesWatching.value = updatedSeries;
         } else if (value === 'endSeason') {
-// deb
             const updatedSeries = localSeriesWatching.value.map(serie => {
                 if (serie.hasOwnProperty(idSerie)) {
 
@@ -168,14 +168,8 @@ async function next(id, idSerie, nameSerie) {
             });
 
             seriesWatchingJson.value = seriesWatchingJson.value.filter(serie => serie.id !== idSerie);
-            //Puntuar serie
-            const data={
-                id,
-                nameSerie
-            }
-            router.visit(`/puntuarSerie/${nameSerie}/${idSerie}`, { name: nameSerie, id:parseInt(idSerie) })
+            router.replace(`/puntuarSerie/${nameSerie}/${idSerie}`)
 
-            await loadSeriesWatched()
         }
 
     } catch (error) {
@@ -191,10 +185,10 @@ async function back(id, idSerie, nameSerie) {
             seasons = await response.json();
         }
         const { currentEpisode: episode, currentSeason: season, currentIdSeason: idSeason } = await currentInformation(loginUser.value.id, idSerie)
-        
+
         const value = await backEpisode(id, idSerie, idSeason, season, episode, nameSerie)
         if (value === 'episode before') {
-            
+
             const updatedSeries = localSeriesWatching.value.map(serie => {
                 if (serie[idSerie]) {
                     return {
@@ -214,13 +208,13 @@ async function back(id, idSerie, nameSerie) {
         } else if (value === 'season before') {
             const updatedSeries = localSeriesWatching.value.map(serie => {
                 if (serie[idSerie]) {
-                  
+
                     return {
                         ...serie,
                         [idSerie]: {
-                            current:seasons[season-2].episodeOrder,
+                            current: seasons[season - 2].episodeOrder,
                             currentSeason: season - 1,
-                            currentIdSeason: seasons[season-1].id,
+                            currentIdSeason: seasons[season - 1].id,
                         }
                     };
                 }
@@ -240,6 +234,11 @@ async function back(id, idSerie, nameSerie) {
 
             seriesWatchingJson.value = seriesWatchingJson.value.filter(serie => serie.id !== idSerie);
             await loadSeriesWatched()
+            msgRemove.value = 'Se ha removido ' + nameSerie + ' de "Series empezadas"'
+            setTimeout(() => {
+                msgRemove.value = '';
+            }, 2000);
+
         }
 
 
@@ -262,8 +261,18 @@ async function back(id, idSerie, nameSerie) {
                 Oops, no tienes ni una serie empezada!
 
             </h1>
-            <h1 v-else class="text-2xl font-medium ms-7 mt-3 skiptranslate">Series empezadas</h1>
 
+            <h1 v-else class="text-2xl font-medium ms-7 mt-3 skiptranslate">Series empezadas</h1>
+            <div v-if="msgRemove !== ''" class="items-center flex gap-3 bg-yellow-200 p-4 m-2 rounded-md">
+                <svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+
+                <p class="break-words  ">{{ msgRemove }}</p>
+
+            </div>
             <div class="flex flex-col gap-3 m-4 mt-1 ">
                 <Link href="/buscador" v-if="!seriesWatching || seriesWatchingJson.length === 0"
                     class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 skiptranslate">
