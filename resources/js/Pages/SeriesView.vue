@@ -157,7 +157,7 @@ async function next(id, idSerie, nameSerie) {
             });
             localSeriesWatching.value = updatedSeries;
         } else if (value === 'endSeason') {
-
+// deb
             const updatedSeries = localSeriesWatching.value.map(serie => {
                 if (serie.hasOwnProperty(idSerie)) {
 
@@ -169,8 +169,13 @@ async function next(id, idSerie, nameSerie) {
 
             seriesWatchingJson.value = seriesWatchingJson.value.filter(serie => serie.id !== idSerie);
             //Puntuar serie
-            router.visit(`/puntuarSerie/${nameSerie}`, { name: nameSerie })
-            // await loadSeriesWatched()
+            const data={
+                id,
+                nameSerie
+            }
+            router.visit(`/puntuarSerie/${nameSerie}/${idSerie}`, { name: nameSerie, id:parseInt(idSerie) })
+
+            await loadSeriesWatched()
         }
 
     } catch (error) {

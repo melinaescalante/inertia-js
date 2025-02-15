@@ -356,7 +356,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
             }
         } catch (error) {
             console.error('Error en verifySeason:', error);
-            // return 'endSeason';
+            return 'endSeason';
 
         }
 
@@ -484,19 +484,35 @@ export async function backEpisode(idUser, idSerie, idSeason, temporada, capitulo
  */
 export async function rateSerie(rate, idUser, idSerie, nameSerie) {
     try {
-        debugger
         const userDocRef = doc(db, "users", idUser);
-        const watchedDocRef = doc(userDocRef, `series/watched`);
+        const watchedDocRef = doc(userDocRef, "series/watched");
         const watchedSnapshot = await getDoc(watchedDocRef);
-        const serie = watchedSnapshot.find(serie => {serie.idSerie === idSerie
+        if (!watchedSnapshot.exists()) {
+            console.error("No se encontró el documento de series vistas.");
+            return;
+        }
+        debugger
+        const watchedData = watchedSnapshot.data(); // Obtener datos del documento
+        const seriesArray = watchedData?.watched || []; // Array de series
+        console.log('ando aca4?', seriesArray)
+        const serieIndex = seriesArray.findIndex(show =>{ 
+        // console.log(show)
 
-            console.log(serie)
+           return show.idSerie=== parseInt(idSerie)
+
         });
-        // if (watchedSnapshot.exists()) {
-        //     await updateDoc(watchedSnapshot, {
-        //         [idSerie]: deleteField()
-        //     });
-        // }
+        console.log(serieIndex)
+        if (serieIndex === -1) {
+            console.error("La serie no está en la lista de vistas.");
+            return;
+        }
+        seriesArray[serieIndex] = { 
+            ...seriesArray[serieIndex], // Mantiene los datos actuales
+            rate: rate // Solo actualiza el campo `rate`
+        };
+        
+        // ✅ Reemplazar el array completo en Firestore
+        await updateDoc(watchedDocRef, { watched: seriesArray });
     } catch (error) {
 
     }
@@ -509,6 +525,7 @@ export async function addSerieEnded(idUser, idSerie, nameSerie, created, urlImag
     const newWatchedSerie = {
         ['ended_at']: Timestamp.now(), ['created_at']: created, ['nameSerie']: nameSerie, ['idSerie']: idSerie,
         ['urlImage']: urlImage,
+        ['rate']: null
     };
     if (watchedSnapshot.exists()) {
 

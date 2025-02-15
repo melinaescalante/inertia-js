@@ -2,10 +2,11 @@
 import { ref, watch } from 'vue';
 import { rateSerie } from '../../services/series';
 import { useLoginUser } from '../composables/useLoginUser';
+import { usePage } from '@inertiajs/vue3';
 import NavBarSecondary from '../components/NavBarSecondary.vue';
 const num = ref(0);
 const {loginUser}=useLoginUser()
-defineProps({name:String})
+const props=defineProps({name:String, id:Number})
 watch(() =>num, (val) => {
    console.log(num,val)
 });
@@ -16,8 +17,7 @@ function resetNum() {
 async function rate(){
     try {
         
-        await rateSerie(8,loginUser.value.id,41428,`The Queen's Gambit`)
-        // debugger
+        await rateSerie(num.value,loginUser.value.id,props.id,props.name)
     } catch (error) {
         
     }

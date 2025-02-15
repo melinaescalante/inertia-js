@@ -174,9 +174,9 @@ class SerieController extends Controller
         if ($response->successful()) {
             $serie = $response->json();
             $tr = new GoogleTranslate('es');
-            if (isset($serie['name'])) {
-                $serie['name'] = $tr->translate($serie['name']);
-            }
+            // if (isset($serie['name'])) {
+            //     $serie['name'] = $tr->translate($serie['name']);
+            // }
             if (isset($serie['summary'])) {
                 $serie['summary'] = $tr->translate($serie['summary']);
             }

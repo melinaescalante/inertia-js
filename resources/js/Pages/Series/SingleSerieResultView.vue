@@ -13,6 +13,7 @@ const { loginUser } = useLoginUser()
 const props = defineProps({
     serie: Object
 })
+console.log(props.serie)
 const comments = ref([])
 const seriesToWatch = ref([])
 const localseries = ref([])
@@ -67,10 +68,10 @@ async function start(idUser, idSerie, urlImage) {
 </script>
 <template>
     <NavBar></NavBar>
-    <article class="skiptranslate mb-28 mt-20">
+    <article class=" mb-28 mt-20">
         <h1 class="text-2xl font-medium ms-2 mt-3 mb-3">{{ serie.name }}</h1>
 
-        <div class="flex gap-3 md:flex-row flex-col m-2">
+        <div class="flex skiptranslate gap-3 md:flex-row flex-col m-2">
             <img class="max-w-[50%] h-fit" :src="serie.image?.medium ? serie.image.medium : '/noimage.png'"
                 :alt="`Imagen de portada de la serie de ${serie.name}`">
             <div>
