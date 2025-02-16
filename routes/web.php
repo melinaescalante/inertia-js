@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\CheckWatchedSerie;
 use App\Http\Middleware\InvertCheckAuthSession;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SerieController;
@@ -68,7 +69,8 @@ Route::get('/wishlist', [AppController::class, "myWishlist"])
     ->middleware(CheckAuthSession::class);
 Route::get('/puntuarSerie/{name}/{id}', [AppController::class, "ratingSerie"])
 
-    ->middleware(CheckAuthSession::class);
+    ->middleware(CheckAuthSession::class)
+    ->middleware(CheckWatchedSerie::class);
 
 Route::get('/seriesVistas', [AppController::class, "endedSeries"])
     ->middleware(CheckAuthSession::class);
@@ -99,6 +101,9 @@ Route::get('show/{name}/{id}/{idimage}/imagen', [SerieController::class, 'getIma
 Route::get('/subirPublicacion', [SerieController::class, 'buscadorPost'])
     ->middleware(CheckAuthSession::class);
 
+//Ruta para asignar series vistas y verificar
+Route::post('/asignarSeriesVistas', [AuthController::class, 'setSeries'])
+->middleware(CheckAuthSession::class);
 
 //Rutas para registro y autenticacion
 Route::get('/ingresar', [AppController::class, "login"])

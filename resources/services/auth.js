@@ -5,6 +5,7 @@ import { getFileURL, uploadFile } from "./file-storage";
 import { updateUserProfile, getUsersProfileById } from "./users";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebase";
+import { singWatchedSeries } from "./series";
 let loginUser = {
   id: null,
   email: null,
@@ -35,6 +36,9 @@ let observers = []
 onAuthStateChanged(auth, user => {
   if (user) {
     authBackend(user.uid);
+    singWatchedSeries
+    (user.uid);
+
     updateLoginUser({
       id: user.uid,
       email: user.email,

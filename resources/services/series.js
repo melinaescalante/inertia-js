@@ -392,6 +392,24 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
         }
     }
 }
+export async function singWatchedSeries(id) {
+    try {
+    const series=await allSeriesWatched(id)
+      const response = await fetch('/asignarSeriesVistas', {
+        method: 'post',
+        body: JSON.stringify({series, _token: document.body.dataset.csrf,}),
+        headers: {
+          "Content-Type": 'application/json',
+          "X-Requested-With": 'XMLHttpRequest',
+        },
+        credentials: "include",
+      });
+      const json = await response.json();
+      return json.success;
+    } catch (error) {
+      console.error('Error al notificar series vistas.');
+    }
+  }
 /**
  * 
  * @param {*} idUser 
@@ -482,7 +500,7 @@ export async function backEpisode(idUser, idSerie, idSeason, temporada, capitulo
 /**
  * Guardar puntuación en serie vista
  */
-export async function rateSerie(rate, idUser, idSerie, nameSerie) {
+export async function rateSerie(rate, idUser, idSerie) {
     try {
         const userDocRef = doc(db, "users", idUser);
         const watchedDocRef = doc(userDocRef, "series/watched");
@@ -494,24 +512,19 @@ export async function rateSerie(rate, idUser, idSerie, nameSerie) {
         debugger
         const watchedData = watchedSnapshot.data(); // Obtener datos del documento
         const seriesArray = watchedData?.watched || []; // Array de series
-        console.log('ando aca4?', seriesArray)
         const serieIndex = seriesArray.findIndex(show =>{ 
-        // console.log(show)
-
-           return show.idSerie=== parseInt(idSerie)
+       return show.idSerie=== idSerie
 
         });
-        console.log(serieIndex)
         if (serieIndex === -1) {
             console.error("La serie no está en la lista de vistas.");
-            return;
+            return ;
         }
         seriesArray[serieIndex] = { 
-            ...seriesArray[serieIndex], // Mantiene los datos actuales
-            rate: rate // Solo actualiza el campo `rate`
+            ...seriesArray[serieIndex], 
+            rate: rate 
         };
         
-        // ✅ Reemplazar el array completo en Firestore
         await updateDoc(watchedDocRef, { watched: seriesArray });
     } catch (error) {
 
