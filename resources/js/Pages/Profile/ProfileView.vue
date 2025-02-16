@@ -17,7 +17,7 @@ const emailUser = ref(getEmailUser(id.value))
 const { loginUser } = useLoginUser()
 const userName = ref(getUserName(page.props.id));
 const { user } = useUser(id.value, emailUser.value, userName.value);
-
+console.log(user)
 const seriesWatched = ref([])
 onMounted(async () => {
   try {

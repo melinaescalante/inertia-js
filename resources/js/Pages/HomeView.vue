@@ -140,7 +140,7 @@ function usePosts() {
 <template>
   <NavBar />
 
-  <SwitcherHome v-if="loginUser.id" class="mt-[4.5rem]"></SwitcherHome>
+  <SwitcherHome v-if="loginUser.id" class="mt-[4rem]"></SwitcherHome>
   <section class="posts mb-28 mt-4">
     <div v-if="!loadingPosts">
       <div v-for="post in posts" :key="post.id">

@@ -107,13 +107,13 @@ const excludedPages = [
         </ul>
     </nav>
     <div
-        class="skiptranslate fixed z-50 w-full h-18 max-w-lg -translate-x-1/2 bg-white border border-blue-0 rounded-full bottom-4 left-1/2 ">
+        class="skiptranslate fixed  w-full h-18 max-w-lg -translate-x-1/2 bg-white border border-blue-0 rounded-full bottom-4 left-1/2 z-[9999] ">
         <div class="grid h-full max-w-lg grid-cols-[repeat(auto-fit,_minmax(60px,_1fr))] mx-auto">
             <NavItem titleLink="Inicio" route="/" roundedClass="rounded-s-full ">
                 <svg class="w-5 h-5 mb-1  group-hover:text-blue-1000 " aria-hidden="true" :class="{
                     'text-blue-1000': currentPage === 'HomeView' || currentPage === 'HomeFollowingView',
                     'text-gray-500': !(currentPage === 'HomeView' || currentPage === 'HomeFollowingView'),
-                    'mt-[0.7rem]': !loginUser.id // Aplica margen solo si el usuario no está logueado
+                    'mt-[0.7rem]': !loginUser.id 
                 }" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <title>Inicio</title>
                     <path

@@ -42,7 +42,6 @@ class AppController extends Controller
     }
     public function seriesWatchedRegister($userId,$username)
     {
-       
         return Inertia::render('Profile/SeriesWatchedView', [
             'username' => $username,
             'userId' => $userId,

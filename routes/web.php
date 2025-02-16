@@ -22,7 +22,7 @@ Route::get('/chatPrivado/{id}/{email}', [AppController::class, "chatPrivate"])
 Route::get('/chat', [AppController::class, "chat"])
     ->middleware(CheckAuthSession::class);
 
-Route::get('/{id}/{username}/seriesVistasRegistro', [AppController::class, "seriesWatchedRegister"])
+Route::get('/{userId}/{username}/seriesVistasRegistro', [AppController::class, "seriesWatchedRegister"])
     ->whereAlphaNumeric('username')->middleware(CheckAuthSession::class);
 
 Route::get('/{userId}/{username}/seguidos', [AppController::class, "following"])
