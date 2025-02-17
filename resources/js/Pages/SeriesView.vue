@@ -9,7 +9,6 @@ import Spinner from '../Components/Spinner.vue';
 import CardWithData from '../Components/CardWithData.vue';
 import BottomSheet from '../components/BottomSheet.vue';
 import { formatDate } from '../helpers/date';
-import ModalRating from '../Components/ModalRating.vue';
 const seriesToWatch = ref([])
 const seriesWatched = ref([])
 const seriesWatching = ref([])
