@@ -11,7 +11,7 @@ defineProps({
 </script>
 <template>
     <NavBar></NavBar>
-    <article class="skiptranslate  mt-8" >
+    <article class="skiptranslate  mt-20 mb-28" >
         <h1 class="text-2xl font-medium ps-2 mt-3 mb-3 border-t-orange-0 border-b border-t border-b-orange-0">
             {{ episode['name'] }}
 

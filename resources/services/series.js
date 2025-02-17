@@ -509,7 +509,6 @@ export async function rateSerie(rate, idUser, idSerie) {
             console.error("No se encontró el documento de series vistas.");
             return;
         }
-        debugger
         const watchedData = watchedSnapshot.data(); // Obtener datos del documento
         const seriesArray = watchedData?.watched || []; // Array de series
         const serieIndex = seriesArray.findIndex(show =>{ 
@@ -595,6 +594,7 @@ export async function addCommentToSerie(comment, idUser, idSerie) {
         let currentComments
         const seriesInfoRef = doc(db, 'series', String(idSerie));
         const seriesInfoSnapshot = await getDoc(seriesInfoRef);
+        console.log(idUser)
         const newComment = {
             userId: idUser,
             comment: comment,
