@@ -4,7 +4,6 @@ import { login, suscribeToAuthChanged } from "../../services/auth";
 let latestSeriesIds = ref([]);
 
 export function useLoginUser() {
-  // debugger
   let isReady = ref(false);
   let unsubscribeFromAuth = () => { };
   const loginUser = ref({
@@ -49,12 +48,7 @@ export function useLoginUser() {
   }
   async function getFollowedPeople() {
     const following = await getLastPeopleFollowed(loginUser.value.id);
-    // getLastPeopleFollowed(loginUser.value.id).then((following) => {
-    //   if (following?.length > 0) {
     loginUser.value.following = following
-
-    //   }
-    // })
   }
   async function getSeriesToWatch() {
 
@@ -63,28 +57,13 @@ export function useLoginUser() {
 
       if (series?.length > 0) {
         loginUser.value.seriesToWatch = series;
-        console.log('estoy en el if: ', series);
       }
 
-      console.log('afuera del if');
     } catch (error) {
       console.error('Error al obtener las series:', error);
     }
   }
-  // async function getSeriesToWatch() {
-
-  //   getLastSeriesToWatch(loginUser.value.id).then((series) => {
-  //     if (series?.length > 0) {
-  //       loginUser.value.seriesToWatch = series
-  //       console.log('estoy en el if: ', series)
-
-  //     }
-  //     console.log('afuera del if ')
-
-  //   });
-  //   console.log('series: ', loginUser.value.seriesToWatch)
-  // }
-
+ 
   onMounted(async () => {
 
     unsubscribeFromAuth = suscribeToAuthChanged(newUserData => loginUser.value = newUserData)

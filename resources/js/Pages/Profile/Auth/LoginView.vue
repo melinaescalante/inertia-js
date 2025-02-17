@@ -24,7 +24,7 @@ async function handleSubmit() {
         // msg.value = "Se ha ingresado correctamente"}
         loading.value = false
         setTimeout(() => {
-            router.get('/');
+            router.get('/miPerfil');
         }, 2000);
     } catch (error) {
         if (error.code === 'auth/invalid-credential') {
@@ -73,7 +73,7 @@ function showPassword() {
                     <label for="email" class="block mb-2">Email</label>
                     <input type="email" id="email"
                         class=" p-2 mb-2 w-full border rounded-md bg-slate-100   focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-                        v-model="user.email" placeholder="nombre@gmail.com" required>
+                        v-model="user.email" placeholder="nombre@gmail.com" autocomplete="email" required>
                 </div>
 
                 <div class="mb-6">

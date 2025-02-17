@@ -37,7 +37,7 @@ async function handleSubmit() {
         await signUp({ ...user.value })
         loading.value = false
         setTimeout(() => {
-            router.get('/');
+            router.get('/miPerfil');
         }, 2000);
     } catch (error) {
         if (error.code === 'auth/email-already-in-use') {
@@ -80,7 +80,7 @@ function showPassword() {
                         <label for="email" class="block mb-2 ">Email</label>
                         <input type="email" id="email"
                             class=" p-2 mb-2 w-full border rounded-md  bg-slate-100 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-                            v-model="user.email" required placeholder="nombre@gmail.com">
+                            v-model="user.email" autocomplete="email" required placeholder="nombre@gmail.com">
                     </div>
                     <div class="mb-5">
                         <label for="fullname" class="block mb-2 ">Nombre completo</label>

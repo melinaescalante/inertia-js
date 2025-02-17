@@ -12,7 +12,7 @@
   @inertiaHead
 </head>
 
-<body class=" font-fredoka font-light max-w-xl mx-auto box-border" data-csrf="{{ csrf_token() }}">
+<body class=" font-fredoka font-light max-w-2xl mx-auto box-border" data-csrf="{{ csrf_token() }}">
    <!-- mb-28   -->
   @inertia
   <!-- Contenedor oculto del widget de Google Translate -->
@@ -42,7 +42,7 @@
     // Esperar que la API se cargue y cambiar el idioma
     setTimeout(() => {
       setGoogleTranslateLanguage('es'); // Cambiar a inglés automáticamente
-    }, 500); // Ajusta el tiempo si es necesario
+    }, 100); // Ajusta el tiempo si es necesario
   </script>
 
 </body>

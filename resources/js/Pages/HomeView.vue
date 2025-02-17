@@ -6,7 +6,7 @@ import { onMounted, ref, onUnmounted } from 'vue';
 import Spinner from '../Components/Spinner.vue'
 import { fetchPosts, fetchPostsFrom } from '../../services/posts';
 import { useLoginUser } from "../composables/useLoginUser";
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import { sortArrayFromLocalStorage } from '../../services/users';
 const { loginUser, isReady } = useLoginUser()
 const msgError = ref("")
@@ -23,8 +23,6 @@ function usePosts() {
   const newPostLoaderSign = ref(null);
   const loadingMore = ref(false);
   let unsubscribe = () => { };
-  // let unsubscribeFromAuth = () => { };
-
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -33,17 +31,15 @@ function usePosts() {
     });
   });
 
-
   onMounted(async () => {
     try {
       if (loginUser.value.id) {
         
         while (!isReady.value) {
-          await new Promise((resolve) => setTimeout(resolve, 10)); // Esperar activamente
+          await new Promise((resolve) => setTimeout(resolve, 10)); 
         }
       }
-      console.log('de la home')
-      await loadPosts(); // Pasar ids de las series.
+      await loadPosts(); 
 
       setIntersectionObserver();
     } catch (error) {
@@ -54,11 +50,9 @@ function usePosts() {
 
   async function loadPosts() {
     try {
-      // if (loginUser) {
 
-      // }
       let series = await sortArrayFromLocalStorage(loginUser.value.lastSeriesWatched || [], loginUser.value.seriesToWatch || [])
-      // let series = await sortArrayFromLocalStorage(JSON.parse(localStorage.getItem('ids_series_wishlist'))||[], JSON.parse(localStorage.getItem('ids_series_watching'))||[])
+    
 
       unsubscribe = await fetchPosts(loginUser.value.id, series, (newPosts) => {
         posts.value = newPosts;
@@ -115,7 +109,6 @@ function usePosts() {
       ]
       setIntersectionObserver();
     } catch (error) {
-      // console.log('[Posts.vue] Error al cargar más posts', error);
     }
 
     loadingMore.value = false;

@@ -3,7 +3,7 @@ import NavBar from "../../components/NavBar.vue";
 import { onMounted, ref } from "vue";
 import { editMyProfilePhoto } from '../../../services/auth'
 import { useLoginUser } from "../../composables/useLoginUser";
-const {loginUser}=useLoginUser()
+const { loginUser } = useLoginUser()
 const editData = ref({
     photo: null,
     photoPreview: null,
@@ -39,8 +39,8 @@ async function handleFileSelection(e) {
     //Una data url es una url que utiliza el protocolo data y contiene un archivo codificado como string en base64
     reader.readAsDataURL(editData.value.photo)
 }
-onMounted(()=>{
-    editData.value.photo=loginUser.value.photoURL
+onMounted(() => {
+    editData.value.photo = loginUser.value.photoURL
     console.log(editData.value)
 })
 </script>
@@ -55,7 +55,7 @@ onMounted(()=>{
                     <label for="photo" class="block mt-4 mb-6 ms-2">Nueva Foto</label>
                     <input type="file" name="photo" id="mt-3 photo"
                         class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-500 hover:file:bg-violet-100"
-                        @change="handleFileSelection" required/>
+                        @change="handleFileSelection" required />
                 </div>
                 <button
                     class="mt-2 border rounded-lg py-2 px-4 bg-blue-700 text-white hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-900 transition-colors"
@@ -63,18 +63,31 @@ onMounted(()=>{
             </form>
             <div v-if="editData.photo" class="w-1/2 mt-4">
                 <h2 class="font-normal text-lg">Previsualización</h2>
-                <h3 v-if="editData.photo" class="mb-2 ">{{editData.photoPreview?'Imagen seleccionada':'Imagen actual'}}</h3>
+                <h3 v-if="editData.photo" class="mb-2 ">{{ editData.photoPreview ? 'Imagen seleccionada' : 'Imagen actual' }}
+                </h3>
                 <!-- <h3 v-if="editData.photoPreview" class="mb-2">Imagen seleccionada</h3> -->
-                <img v-if="editData.photo" :src="editData.photoPreview||editData.photo"
+                <img v-if="editData.photo" :src="editData.photoPreview || editData.photo"
                     :alt="`Preview de usuario ${editData.photoPreview}`" />
             </div>
         </div>
-        <div v-if="!loading && msg === 'Se ha actualizado la foto de perfil correctamente.'"
-            class="bg-green-200 p-4 m-2 rounded-md">
+        <div  v-if="!loading && msg === 'Se ha actualizado la foto de perfil correctamente.'"
+            class="bg-green-200 flex p-4 m-2 gap-2 items-center rounded-md">
+            <svg class="w-6 h-6 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
+                    d="M4 18V8a1 1 0 0 1 1-1h1.5l1.707-1.707A1 1 0 0 1 8.914 5h6.172a1 1 0 0 1 .707.293L17.5 7H19a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Z" />
+                <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            </svg>
+
             <p>{{ msg }}</p>
         </div>
         <div v-if="!loading && msg === 'No ha actualizado la foto de perfil correctamente.'"
-            class="bg-red-200 p-4 m-2 rounded-md">
+            class="bg-red-200 flex items-center gap-2 p-4 m-2 rounded-md">
+            <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+        </svg>
+
             <p>{{ msg }}</p>
         </div>
     </section>
