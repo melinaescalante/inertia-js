@@ -66,6 +66,8 @@ async function handleSubmit() {
         }, 3000);
     } catch (error) {
         console.log('No se ha podido editar correctamente el perfil.');
+        msg.value = "Perfil actualizado correctamente."
+
 
     }
     loading.value = false;

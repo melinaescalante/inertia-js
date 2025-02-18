@@ -234,9 +234,12 @@ async function back(id, idSerie, nameSerie) {
             seriesWatchingJson.value = seriesWatchingJson.value.filter(serie => serie.id !== idSerie);
             await loadSeriesWatched()
             msgRemove.value = 'Se ha removido ' + nameSerie + ' de "Series empezadas"'
+            msgBoolean.value = true
             setTimeout(() => {
                 msgRemove.value = '';
-            }, 2000);
+                msgBoolean.value = false
+
+            }, 3000);
 
         }
 
@@ -244,6 +247,10 @@ async function back(id, idSerie, nameSerie) {
     } catch (error) {
         console.error(error);
     }
+}
+const msgBoolean = ref(false)
+function closeModal() {
+    msgBoolean.value = false
 }
 </script>
 <template>
@@ -262,7 +269,7 @@ async function back(id, idSerie, nameSerie) {
             </h1>
 
             <h1 v-else class="text-2xl font-medium ms-7 mt-3 skiptranslate">Series empezadas</h1>
-            <div v-if="msgRemove !== ''" class="items-center flex gap-3 bg-yellow-200 p-4 m-2 rounded-md">
+            <div v-show="msgBoolean" id="boolean-warning-msg-series" v-if="msgRemove !== ''" class="items-center flex gap-3 bg-yellow-200 p-4 m-2 rounded-md">
                 <svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                     width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -270,7 +277,16 @@ async function back(id, idSerie, nameSerie) {
                 </svg>
 
                 <p class="break-words  ">{{ msgRemove }}</p>
-
+                <button @click="closeModal" type="button"
+                        class="ms-auto -mx-1.5 -my-1.5 text-gray-800 hover:bg-yellow-400 hover:bg-opacity-80 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 inline-flex items-center justify-center h-8 w-8 "
+                        data-dismiss-target="#boolean-warning-msg-series" aria-label="Cerrar">
+                        <span class="sr-only">Cerrar</span>
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                    </button>
             </div>
             <div class="flex flex-col gap-3 m-4 mt-1 ">
                 <Link href="/buscador" v-if="!seriesWatching || seriesWatchingJson.length === 0"

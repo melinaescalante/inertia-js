@@ -21,7 +21,7 @@ watch(() => props.isclosed, (val) => {
 </script>
 <template>
     <div v-if="showModal"
-        class="fixed top-0 left-0 right-0 bottom-0 bg-gray-600 bg-opacity-80  flex justify-center z-[1000] items-end"
+        class="fixed  top-0 left-0 right-0 bottom-0 bg-gray-600 bg-opacity-80  flex justify-center z-[11000] items-end "
         @click="closeModal">
         <div class="flex  flex-col w-full bg-white max-w-[500px] rounded-3xl rounded-b-none rounded-bl-none  rounded-s-3xl p-7 "
             style="box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);

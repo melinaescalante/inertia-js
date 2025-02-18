@@ -122,10 +122,10 @@ function handleClose() {
         <div class="m-2 shadow-[inset_0_1px_25px_-10px] shadow-orange-0 rounded-2xl p-4 mb-[2rem]">
             <div class="flex flex-row justify-between items-center">
                 <div>
-                    <img :src="photoURL || '/noimage.png'" class=" border rounded-md  w-10 h-10 skiptranslate" alt="">
+                    <img :src="photoURL || '/noimage.png'" class=" border rounded-md  w-10 h-10" alt="">
 
                 </div>
-                <div class="flex flex-col mx-2 ">
+                <div class="flex flex-col mx-2 translate">
 
                     <Link :href="`/perfil/${userId}`" class="text-[1.04rem] font-normal text-center skiptranslate  ">{{ userName }}
                     </Link>
@@ -134,7 +134,7 @@ function handleClose() {
                 </div>
                 <div class="skiptranslate">
                     <BottomSheet v-if="userId === loginUser.id" :isclosed="isBottomSheetOpen">
-                        <div class="flex flex-col">
+                        <div class="flex flex-col ">
                             <div class="flex">
                                 <div>
 

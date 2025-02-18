@@ -11,13 +11,9 @@
   @vite('resources/css/app.css')
   @inertiaHead
 </head>
-
 <body class=" font-fredoka font-light max-w-2xl mx-auto box-border" data-csrf="{{ csrf_token() }}">
-   <!-- mb-28   -->
   @inertia
-  <!-- Contenedor oculto del widget de Google Translate -->
-  <div id="google_translate_element" style="display: none;"></div>
-
+  <div id="google_translate_element" style="display:none "></div>
   <!-- Scripts relacionados con Google Translate -->
   <script>
     function googleTranslateElementInit() {
@@ -29,20 +25,19 @@
   </script>
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-  <!-- Tu script para forzar el cambio de idioma -->
   <script>
     function setGoogleTranslateLanguage(lang) {
       var combo = document.querySelector('.goog-te-combo');
       if (combo) {
-        combo.value = lang; // Establece el idioma deseado (por ejemplo, 'en' para inglés)
-        combo.dispatchEvent(new Event('change')); // Simula el cambio del idioma
+        combo.value = lang;
+        combo.dispatchEvent(new Event('change')); 
       }
     }
 
     // Esperar que la API se cargue y cambiar el idioma
     setTimeout(() => {
       setGoogleTranslateLanguage('es'); // Cambiar a inglés automáticamente
-    }, 100); // Ajusta el tiempo si es necesario
+    }, 1000); // Ajusta el tiempo si es necesario
   </script>
 
 </body>
