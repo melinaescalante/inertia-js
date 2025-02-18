@@ -50,7 +50,6 @@ async function handleSubmit() {
             msg.value = '';
 
         }, 2000);
-        console.log(error)
     }
 }
 const passwordVisible = ref(false);
@@ -170,7 +169,10 @@ function showPassword() {
 
                 </form>
                 <div v-if="msg !== 'Su usuario se ha registrado correctamente' && msg !== ''"
-                    class="bg-red-200 p-4 m-2 rounded-md  fixed w-[-webkit-fill-available]  top-[10%]">
+                    class="bg-red-200 p-4 m-2 rounded-md  fixed w-[-webkit-fill-available]  top-[10%] flex items-center gap-2">
+                    <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                    </svg>
                     <p>{{ msg }}</p>
                 </div>
                 <div v-if="msg == 'Su usuario se ha registrado correctamente'" class="bg-green-200 p-4 m-2 rounded-md">

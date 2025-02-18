@@ -46,12 +46,12 @@ const isBottomSheetOpen = ref(true);
 
 <template>
     <NavBar />
-    <section id="series" class="mt-20">
+    <section id="series" class="mt-20 mb-28">
 
         <h1 class="text-xl m-2 font-medium skiptranslate">Tus series a ver</h1>
         <div v-if="!loading">
-            <ul v-if="arrayFetch.length >= 1">
-                <li class=" m-2  justify-between   bg-white border border-gray-200 rounded-lg shadow flex  md:max-w-xl "
+            <ul v-if="arrayFetch.length >= 1" class="">
+                <li class=" m-2  justify-between   bg-white border border-gray-200 rounded-lg shadow flex  w-auto "
                     v-for="serie in arrayFetch">
 
                     <Link :href="`/show/${serie.id}`" class=" flex  justify-between">

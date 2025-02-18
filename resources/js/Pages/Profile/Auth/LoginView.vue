@@ -62,8 +62,14 @@ function showPassword() {
 <template v-if="!loginUser.id">
 
     <NavBarSecondary>
-        <section class="skiptranslate">
+         <div v-if="msg !== 'Se ha ingresado correctamente' && msg !== ''" class="bg-red-200  fixed w-[-webkit-fill-available]  top-[10%] p-4 m-2 rounded-md flex gap-2 items-center">
+            <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+        </svg>
+            <p>{{ msg }}</p>
+        </div><section class="skiptranslate ">
             <h1 class="text-center text-2xl mt-8 mb-8 font-medium">Inicio de Sesión</h1>
+           
             <div class="h-1/3 w-1/2 m-auto">
 
                 <img src="/public/images/login.svg" alt="Ilustración de logueo">
@@ -109,16 +115,15 @@ function showPassword() {
             </form>
         </section>
     </NavBarSecondary>
-    <div class="flex flex-col  items-center justify-center">
-        <p class="mt-7">¿No tienes una cuenta?</p>
-        <Link class="mt-2 text-blue-1000 font-medium " href="/registrarme">Registrarme</Link>
+    <div class="mb-28">
+
+        <div class="flex flex-col  items-center justify-center ">
+            <p class="mt-7">¿No tienes una cuenta?</p>
+            <Link class="mt-2 text-blue-1000 font-medium " href="/registrarme">Registrarme</Link>
+        </div>
+        
     </div>
-    <div v-if="msg !== 'Se ha ingresado correctamente' && msg !== ''" class="bg-red-200 p-4 m-2 rounded-md">
-        <p>{{ msg }}</p>
-    </div>
-    <!-- <div v-if="msg == 'Se ha ingresado correctamente'" class="bg-green-200 p-4 m-2 rounded-md">
-            <p>{{ msg }}</p> -->
-    <!-- </div> -->
+ 
 </template>
 </template>
 <style scoped>

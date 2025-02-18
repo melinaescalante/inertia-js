@@ -281,7 +281,7 @@ async function back(id, idSerie, nameSerie) {
 
                 </Link>
                 <div v-for="(serie) in seriesWatchingJson" class="md:m-2 m-1 grid items-center bg-white border border-orange-0 rounded-lg shadow 
-           grid-cols-1 md:grid-cols-4 md:max-w-xl md:gap-5">
+           grid-cols-1 md:grid-cols-4 w-auto md:gap-5">
                     <Link :href="`/show/${serie.id}`" class="col-span-3 flex-wrap flex items-center p-2   md:p-1">
                     <div class="flex flex-col md:flex-row justify-center md:items-center">
 

@@ -15,7 +15,7 @@ const props = defineProps({
 <template>
 
     <Link :href="props.route"   
-        class=" m-2 flex  items-center bg-white border border-orange-0 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 ">
+        class=" m-2 flex  items-center bg-white border border-orange-0 rounded-lg shadow md:flex-row w-auto hover:bg-gray-100 ">
 
     <img class="object-cover  rounded-t-lg w-28    md:rounded-none md:rounded-s-lg m-1"
         :src="imgContent || '/noimage.png'"

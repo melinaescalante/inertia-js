@@ -81,7 +81,7 @@ onUnmounted(() => {
     <section class="mt-20 mb-28" id="edit-my-profile">
 
         <div v-if="!loading && msg === 'Perfil actualizado correctamente.'"
-            class="z-[10000] fixed w-[70%]  bg-green-200 p-4 m-2 rounded-md flex items-center gap-2">
+            class="z-[10000] fixed w-auto bg-green-200 p-4 m-2 rounded-md flex items-center gap-2">
             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                 width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-width="2"
