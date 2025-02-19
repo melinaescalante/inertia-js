@@ -12,8 +12,8 @@
   @inertiaHead
 </head>
 <body class=" font-fredoka font-light max-w-2xl mx-auto box-border" data-csrf="{{ csrf_token() }}">
-  @inertia
   <div id="google_translate_element" style="display:none "></div>
+  @inertia
   <!-- Scripts relacionados con Google Translate -->
   <script>
     function googleTranslateElementInit() {
@@ -37,7 +37,7 @@
     // Esperar que la API se cargue y cambiar el idioma
     setTimeout(() => {
       setGoogleTranslateLanguage('es'); // Cambiar a inglés automáticamente
-    }, 1000); // Ajusta el tiempo si es necesario
+    }, 1400); // Ajusta el tiempo si es necesario
   </script>
 
 </body>

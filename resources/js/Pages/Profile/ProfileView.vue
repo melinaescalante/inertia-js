@@ -133,10 +133,10 @@ async function handleFollowed() {
         </div>
       </div>
     </div>
-    <div class="border-t p-2 flex flex-wrap justify-around" v-if="postsById !== undefined">
+    <div class="border-t p-2 grid-cols-3  md:grid-cols-4  grid " v-if="postsById !== undefined">
       <div v-for="post in postsById" class="mt-5 ">
         <Link :href="`/post/${post.id}`" :id="post.id">
-        <img :src="post.image ? post.image : '/text.jpg'" :alt="post.serie" class="w-[7rem] h-[7rem]  bg-cover w">
+        <img :src="post.image ? post.image : '/text.jpg'" :alt="post.serie" class="w-[7rem] h-auto  bg-cover ">
 
         </Link>
       </div>
