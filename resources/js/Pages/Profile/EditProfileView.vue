@@ -91,7 +91,7 @@ onUnmounted(() => {
 
         <div id="boolean-success-msg-profile" v-show="msgBoolean"
             v-if="!loading && msg === 'Perfil actualizado correctamente.'"
-            class=" fixed  bg-green-200 p-4 m-2 rounded-md flex items-center gap-2  w-[100%] max-w-xl  top-[10%]">
+            class=" fixed  bg-green-200 p-4 m-2 mx-auto rounded-md flex items-center gap-2  w-[100%] max-w-xl  top-[10%]">
             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                 width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-width="2"

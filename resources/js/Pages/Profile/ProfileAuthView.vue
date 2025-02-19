@@ -47,12 +47,12 @@ onMounted(async () => {
 
 
 
-    <div v-if="loading" class="flex justify-center mt-80">
+    <div v-if="loading" class="flex justify-center mt-[40vh]">
         <Spinner msg="Cargando perfil"></Spinner>
     </div>
-    <template v-else>
+    <template v-else class="">
 
-        <div class="skiptranslate grid grid-cols-3 items-center mt-20 justify-around mb-3">
+        <div class="skiptranslate grid grid-cols-3 items-center mt-20 justify-around ">
             <Link href="/editFotoPerfil">
             <div class="relative group w-20 h-20 ms-2">
                 <img :src="loginUser.photoURL || '/no-image.jpg'" :alt="'Foto de perfil de ' + loginUser.email"
@@ -97,7 +97,7 @@ onMounted(async () => {
             </div>
         </div>
 
-        <div class="skiptranslate border-t p-2 grid-cols-3  md:grid-cols-4  grid justify-items-center " v-if="postsById !== undefined">
+        <div class="skiptranslate border-t p-2 grid-cols-3  md:grid-cols-4  grid justify-items-center mb-20" v-if="postsById !== undefined">
             <div v-for="post in postsById" class="mt-5 ">
                 <Link :href="`/post/${post.id}`" :id="post.id">
                 <img :src="post.image ? post.image : '/text.jpg'" :alt="post.serie"
@@ -107,7 +107,7 @@ onMounted(async () => {
             </div>
         </div>
 
-        <div class="skiptranslate text-center" v-if="postsById.length === 0">
+        <div class="skiptranslate text-center mb-20" v-if="postsById.length === 0">
             <p>No tienes ni una publicación hecha</p>
         </div>
 

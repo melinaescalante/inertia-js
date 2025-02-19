@@ -78,7 +78,7 @@ onMounted(async () => {
 
                     <div class="flex m-1">
                         <Link :href="`puntuarSerie/${serie.name}/${serie.id}`"
-                            class="mt-3 text-blue-1000 bg-blue-0 hover:bg-blue-200 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5  focus:outline-none">
+                            class="mt-3 mb-3 text-blue-1000 bg-blue-0 hover:bg-blue-200 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5  focus:outline-none">
                         {{ series[index].rate ? 'Puntear devuelta' : 'Puntear' }}</Link>
                     </div>
                     </Link>
