@@ -262,13 +262,6 @@ function closeModal() {
             </Spinner>
         </div>
         <template v-else>
-
-            <h1 class="text-xl m-4 skiptranslate" v-if="!seriesWatching || seriesWatchingJson.length === 0">
-                Oops, no tienes ni una serie empezada!
-
-            </h1>
-
-            <h1 v-else class="text-2xl font-medium ms-7 mt-3 skiptranslate">Series empezadas</h1>
             <div v-show="msgBoolean" id="boolean-warning-msg-series" v-if="msgRemove !== ''" class="items-center flex gap-3 bg-yellow-200 p-4 m-2 rounded-md">
                 <svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                     width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -288,6 +281,14 @@ function closeModal() {
                         </svg>
                     </button>
             </div>
+
+            <h1 class="text-xl m-4 skiptranslate" v-if="!seriesWatching || seriesWatchingJson.length === 0">
+                Oops, no tienes ni una serie empezada!
+
+            </h1>
+
+            <h1 v-else class="text-2xl font-medium ms-7 mt-3 skiptranslate">Series empezadas</h1>
+            
             <div class="flex flex-col gap-3 m-4 mt-1 ">
                 <Link href="/buscador" v-if="!seriesWatching || seriesWatchingJson.length === 0"
                     class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 skiptranslate">

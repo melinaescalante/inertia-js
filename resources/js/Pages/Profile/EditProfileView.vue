@@ -55,21 +55,28 @@ function checkedGenre(genre, genreTraduction) {
 }
 
 const msg = ref('')
+const msgBoolean = ref(false)
+function closeModal() {
+    msgBoolean.value = false
+}
 async function handleSubmit() {
     loading.value = true;
     try {
         await editProfile({ ...editData.value, genres: genres.value });
-
+        msgBoolean.value = true
+        
         msg.value = "Perfil actualizado correctamente."
-        setTimeout(() => {
-            msg.value = '';
-        }, 3000);
     } catch (error) {
-        console.log('No se ha podido editar correctamente el perfil.');
-        msg.value = "Perfil actualizado correctamente."
+        msgBoolean.value = true
+        msg.value = "El perfil no se ha podido actualizar correctamente. Intentá más tarde."
 
 
     }
+    setTimeout(() => {
+        msg.value = '';
+        msgBoolean.value = false
+
+    }, 3000);
     loading.value = false;
 }
 onUnmounted(() => {
@@ -82,8 +89,9 @@ onUnmounted(() => {
     <NavBar></NavBar>
     <section class="mt-20 mb-28" id="edit-my-profile">
 
-        <div v-if="!loading && msg === 'Perfil actualizado correctamente.'"
-            class="z-[10000] fixed w-auto bg-green-200 p-4 m-2 rounded-md flex items-center gap-2">
+        <div id="boolean-success-msg-profile" v-show="msgBoolean"
+            v-if="!loading && msg === 'Perfil actualizado correctamente.'"
+            class=" fixed  bg-green-200 p-4 m-2 rounded-md flex items-center gap-2  w-[100%] max-w-xl  top-[10%]">
             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                 width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-width="2"
@@ -91,6 +99,37 @@ onUnmounted(() => {
             </svg>
 
             <p>{{ msg }}</p>
+            <button @click="closeModal" type="button"
+                class="ms-auto -mx-1.5 -my-1.5 text-gray-800 hover:bg-green-400 hover:bg-opacity-80 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex items-center justify-center h-8 w-8 "
+                data-dismiss-target="#boolean-success-msg-profile" aria-label="Cerrar">
+                <span class="sr-only">Cerrar</span>
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
+            </button>
+        </div>
+        <div id="boolean-error-msg-profile" v-show="msgBoolean"
+            v-if="!loading && msg !== 'Perfil actualizado correctamente.' && msg !== ''"
+            class="z-[10000] fixed  bg-red-200 p-4 m-2 rounded-md flex items-center gap-2  w-[100%] max-w-xl top-[10%]">
+            <svg class="w-6 h-6 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-width="2"
+                    d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            </svg>
+
+            <p>{{ msg }}</p>
+            <button @click="closeModal" type="button"
+                class="ms-auto -mx-1.5 -my-1.5 text-gray-800 hover:bg-red-400 hover:bg-opacity-80 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 inline-flex items-center justify-center h-8 w-8 "
+                data-dismiss-target="#boolean-error-msg-profile" aria-label="Cerrar">
+                <span class="sr-only">Cerrar</span>
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
+            </button>
         </div>
         <h1 class="text-start text-2xl mt-4 mb-4  ms-3 font-medium">Editá tu perfil</h1>
         <form action="#" @submit.prevent="handleSubmit" class="border mx-auto p-6 max-w-lg rounded-lg  m-2">

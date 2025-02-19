@@ -61,7 +61,7 @@ function showPassword() {
         <NavBarSecondary>
             <div v-show="msgBoolean" v-if="msg !== 'Se ha ingresado correctamente' && msg !== ''"
                 id="boolean-error-msg-login"
-                class="bg-red-200  fixed w-[-webkit-fill-available]  top-[10%] p-4 m-2 rounded-md flex gap-2 items-center">
+                class="bg-red-200  fixed w-[100%] max-w-xl top-[10%] p-4 m-2 rounded-md flex gap-2 items-center">
                 <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                     height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

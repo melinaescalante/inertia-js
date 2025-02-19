@@ -76,7 +76,7 @@ onMounted(() => {
             </div>
         </div>
         <div v-show="msgBoolean" v-if="!loading && msg === 'Se ha actualizado la foto de perfil correctamente.'" id="boolean-success-msg"
-            class="bg-green-200 flex p-4 m-2 gap-2 items-center fixed w-[-webkit-fill-available]  top-[10%] rounded-md">
+            class="bg-green-200 flex p-4 m-2 gap-2 items-center fixed w-[100%] max-w-xl  top-[10%] rounded-md">
             <svg class="w-6 h-6 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                 height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
@@ -99,7 +99,7 @@ onMounted(() => {
         </div>
         <div v-show="msgBoolean" v-if="!loading && msg === 'No ha actualizado la foto de perfil correctamente.'"
             id="boolean-error-msg"
-            class="bg-red-200 flex items-center fixed w-[-webkit-fill-available]  top-[10%]  gap-2 p-4 m-2 rounded-md">
+            class="bg-red-200 flex items-center fixed w-[100%] max-w-xl  top-[10%]  gap-2 p-4 m-2 rounded-md">
             <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                 height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
