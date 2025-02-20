@@ -27,7 +27,6 @@ onMounted(async () => {
         const results = await Promise.all(promises);
         loading.value = false
         arrayFetch.value = results
-        console.log(arrayFetch.value)
 
 
     } catch (error) {

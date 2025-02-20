@@ -92,7 +92,7 @@ function usePosts() {
     try {
       let newPosts = []
       if (posts.value[posts.value.length - 1]?.created_at) {
-        newPosts = await fetchPostsFrom(loginUser.value.lastSeriesWatched,
+        newPosts = await fetchPostsFrom(loginUser.value.lastSeriesWatched,loginUser.value.id,
           posts.value[posts.value.length - 1]?.created_at,
         );
 

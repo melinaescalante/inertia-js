@@ -1,6 +1,7 @@
 import { db, storage } from './firebase'
 import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, updateDoc, doc, getDoc, where, deleteDoc, getDocs, limit, startAfter, Timestamp } from 'firebase/firestore'
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { router } from '@inertiajs/vue3';
 import { getNameUser, getPhotoURL, getUserName, sortArrayFromLocalStorage } from './users';
 /**
  * 
@@ -72,6 +73,43 @@ export function fetchPosts(idUser, seriesCurrent, callback) {
         return () => { };
 
     }
+}/**
+ * 
+ * @param {Timestamp} created_at 
+ * @returns {Promise}
+ */
+export async function fetchPostsFrom(seriesCurrent,idUser, created_at) {
+    const posts = await getDocs(
+        query(
+            collection(db, 'posts-public'),
+            where('idSerie', 'in', seriesCurrent),
+
+            orderBy('created_at', 'desc'),
+            limit(4),
+            startAfter(created_at),
+        )
+    );
+    const promises = posts.docs.map(async post => {
+        const like = await isLiked(post.id, idUser);
+
+        return {
+            id: post.id,
+            photoURL: await getPhotoURL(post.data().userid),
+            serie: post.data().serie,
+            idSerie: post.data().idSerie,
+
+            text: post.data().text,
+            image: post.data().image,
+            likes: post.data().likes || [],
+            comments: post.data().comments,
+            shares: post.data().shares,
+            user: await getUserName(post.data().userid),
+            userid: post.data().userid,
+            liked: like,
+            created_at: post.data().created_at,
+        }
+    });
+    return await Promise.all(promises)
 }
 /**
  * Cargamos los últimos 4 posteos de mis seguidos
@@ -162,42 +200,7 @@ export async function fetchPostsFollowedFrom(following, created_at) {
     });
     return await Promise.all(promises)
 }
-/**
- * 
- * @param {Timestamp} created_at 
- * @returns {Promise}
- */
-export async function fetchPostsFrom(seriesCurrent, created_at) {
-    const posts = await getDocs(
-        query(
-            collection(db, 'posts-public'),
-            where('idSerie', 'in', seriesCurrent),
 
-            orderBy('created_at', 'desc'),
-            limit(4),
-            startAfter(created_at),
-        )
-    );
-    const promises = posts.docs.map(async post => {
-        return {
-            id: post.id,
-            photoURL: await getPhotoURL(post.data().userid),
-            serie: post.data().serie,
-            idSerie: post.data().idSerie,
-
-            text: post.data().text,
-            image: post.data().image,
-            likes: post.data().likes || [],
-            comments: post.data().comments,
-            shares: post.data().shares,
-            user: await getUserName(post.data().userid),
-            userid: post.data().userid,
-            liked: like,
-            created_at: post.data().created_at,
-        }
-    });
-    return await Promise.all(promises)
-}
 /**
  * 
  * @param {String} image 
@@ -386,7 +389,6 @@ export async function getComments(callback, id) {
                 const promises = commentsData.map(async (comment) => {
                     const userName = await getUserName(comment.userid);
                     const commentInfo = comment.comment;
-                    console.log(comment.created_at)
                     const commentFull = {
                         userName,
                         userId: comment.userid,
@@ -447,8 +449,10 @@ export async function getLikes(callback, id) {
 export async function deletePost(id) {
     try {
 
+        // debugger
         const postRef = doc(db, "posts-public", id);
         await deleteDoc(postRef);
+        router.get('/')
     } catch (error) {
         console.log(error)
     }

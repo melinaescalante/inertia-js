@@ -84,11 +84,13 @@ async function handleFollowed() {
   </template>
   <template v-else>
 
-    <div class="grid grid-cols-3 items-center mt-20 mb-20 justify-around  skiptranslate">
+    <div class="grid grid-cols-3 mt-20 mb-[1.4rem] items-center justify-around  skiptranslate">
+<div class="mx-auto">
 
-      <img :src="user.photoURL || '/no-image.jpg'" :alt="'Foto de perfil de ' + user.email"
-        class=" ms-2 w-20 h-20 col-span-1 rounded-full object-cover group-hover:opacity-50">
-
+  <img :src="user.photoURL || '/no-image.jpg'" :alt="'Foto de perfil de ' + user.email"
+  class=" ms-2 w-20 h-20 col-span-1 rounded-full object-cover group-hover:opacity-50 mx-auto">
+  
+</div>
 
       <div class="flex flex-col col-span-2">
 
@@ -122,7 +124,7 @@ async function handleFollowed() {
         </div>
         <p class="font-medium text-center">{{ user.displayName }}</p>
 
-        <p class=" text-blue-500 text-center font-medium m-2" v-if="user.bio">{{ user.bio }}</p>
+        <p class=" text-blue-1000 text-center font-medium m-2" v-if="user.bio">{{ user.bio }}</p>
         <div class="flex flex-wrap">
           <ul v-for="genre in user.genres">
             <li
@@ -133,7 +135,7 @@ async function handleFollowed() {
         </div>
       </div>
     </div>
-    <div class="border-t p-2 grid-cols-3  md:grid-cols-4  grid " v-if="postsById !== undefined">
+    <div class="border-t p-2 grid-cols-3 justify-items-center  mb-20  md:grid-cols-4  grid " v-if="postsById !== undefined">
       <div v-for="post in postsById" class="mt-5 ">
         <Link :href="`/post/${post.id}`" :id="post.id">
         <img :src="post.image ? post.image : '/text.jpg'" :alt="post.serie" class="w-[7rem] h-auto  bg-cover ">
@@ -141,7 +143,7 @@ async function handleFollowed() {
         </Link>
       </div>
     </div>
-    <div class="text-center" v-if="postsById.length === 0">
+    <div class="text-center  mb-20 " v-if="postsById.length === 0">
       <p>No tiene ni una publicación hecha</p>
     </div>
 

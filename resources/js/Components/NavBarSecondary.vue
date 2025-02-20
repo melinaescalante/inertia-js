@@ -6,7 +6,6 @@ import { useLoginUser } from '../composables/useLoginUser';
 const page = usePage()
 const {loginUser}=useLoginUser()
 const currentPage = page.component
-console.log(currentPage)
 </script>
 <template>
     <div class="my-component">

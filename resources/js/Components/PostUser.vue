@@ -122,7 +122,7 @@ function handleClose() {
         <div class="m-2 shadow-[inset_0_1px_25px_-10px] shadow-orange-0 rounded-2xl p-4 mb-[2rem]">
             <div class="flex flex-row justify-between items-center">
                 <div>
-                    <img :src="photoURL || '/noimage.png'" class=" border rounded-md  w-10 h-10" alt="">
+                    <img :src="photoURL || '/noimage.png'" class=" border rounded-full  w-10 h-10" alt="">
 
                 </div>
                 <div class="flex flex-col mx-2 translate">
@@ -176,7 +176,7 @@ function handleClose() {
                     <div class="flex">
 
                         <span class="sr-only">Like</span>
-                        <p v-if="likes !== undefined && likes != 0">
+                        <p v-if="likes !== undefined && likes.length !==0">
                             <Link :href="`/${id}/likes`"><span class="m-1">{{ likes.length }}</span></Link>
                         </p>
                         <div @click="giveLike" :id="id" :liked="liked">

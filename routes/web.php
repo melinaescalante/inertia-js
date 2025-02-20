@@ -23,10 +23,12 @@ Route::get('/chat', [AppController::class, "chat"])
     ->middleware(CheckAuthSession::class);
 
 Route::get('/{userId}/{username}/seriesVistasRegistro', [AppController::class, "seriesWatchedRegister"])
-    ->whereAlphaNumeric('username')->middleware(CheckAuthSession::class);
+    // ->whereAlphaNumeric('username')
+    ->middleware(CheckAuthSession::class);
 
 Route::get('/{userId}/{username}/seguidos', [AppController::class, "following"])
-    ->whereAlphaNumeric('username')->middleware(CheckAuthSession::class);
+    // ->whereAlphaNumeric('username')
+    ->middleware(CheckAuthSession::class);
 
 Route::get('/{id}/likes', [AppController::class, "postlikes"])
     ->whereAlphaNumeric('id')->middleware(CheckAuthSession::class);

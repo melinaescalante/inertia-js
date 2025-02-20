@@ -9,6 +9,7 @@ const { loginUser } = useLoginUser()
 defineProps({
     series: Array,
 });
+const isValid=ref(false)
 const msg = ref('')
 const loading = ref(false);
 const imageInput = ref(null);
@@ -49,6 +50,13 @@ async function handlePost() {
     if (loading.value) return;
     if (!newPost.value.text && !newPost.value.image) {
         msg.value = 'Formulario incompleto';
+        msgBoolean.value = true
+
+        setTimeout(() => {
+            msg.value = '';
+            msgBoolean.value = false
+
+        }, 3000);
         return;
     }
     if (newPost.value.serie === null) {
@@ -79,7 +87,6 @@ async function handlePost() {
         msgBoolean.value = true
 
         msg.value = 'Ha ocurrido un error al subir la publicación. Intentálo más tarde.';
-        console.log('error')
         setTimeout(() => {
             msg.value = '';
             msgBoolean.value = false
@@ -99,6 +106,17 @@ async function handlePost() {
 
 function handleImageChange(e) {
     const file = e.target.files[0];
+    if ( !file.type.startsWith('image/')) {
+        msgBoolean.value = true
+
+        msg.value = 'Solo se aceptan imágenes. Elegí una imagen por favor.';
+        setTimeout(() => {
+            msg.value = '';
+            msgBoolean.value = false
+
+        }, 3000);
+        return
+    }
     newPost.value.image = file;
     const reader = new FileReader()
     reader.addEventListener('load', function () {
@@ -109,6 +127,7 @@ function handleImageChange(e) {
 </script>
 <template>
     <NavBarSecondary></NavBarSecondary>
+    
     <section id="subir-posteo" class="mb-20">
 
         <div v-show="msg !== 'Se ha publicado correctamente' && msg !== ''" id="boolean-error-msg-uploadpost"
@@ -172,10 +191,10 @@ function handleImageChange(e) {
                     name="description" id="description" placeholder="Escribe lo que quieras"
                     v-model="newPost.text"></textarea>
             </div>
-            <div class="m-2 mb-4 mt-3 skiptranslate">
+            <div class="m-2 mb-4 mt-3 ">
                 <label class="block">
                     <span class="sr-only">Puedes subir una imagen:</span>
-                    <input ref="imageInput" type="file" @change="handleImageChange"
+                    <input ref="imageInput" type="file" accept="image/*" @change="handleImageChange"
                         class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 
                     file:bg-opacity-50 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-0 file:text-blue-1000 hover:file:bg-blue-0" />
                 </label>
@@ -186,8 +205,8 @@ function handleImageChange(e) {
                     :alt="`Preview de imagen seleccionada para ${imagePreview}`" />
             </div>
 
-            <button type="submit"
-                class="m-2 skiptranslate rounded-lg py-2 px-4 bg-blue-1000 text-white hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-900 transition-colors">
+            <button type="submit" :disabled="!newPost.text && !newPost.image "
+                class="m-2 skiptranslate disabled:bg-gray-300 rounded-lg py-2 px-4 bg-blue-1000 text-white hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-900 transition-colors">
                 {{ !loading ? "Publicar" : "Publicando.." }}
             </button>
         </form>

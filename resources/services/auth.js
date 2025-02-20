@@ -81,7 +81,6 @@ export async function editMyProfilePhoto(photo) {
     await uploadFile(filePath, photo);
 
     const photoURL = await getFileURL(filePath);
-    console.log("New photo URL:", photoURL);
     const promiseAuth = updateProfile(auth.currentUser, { photoURL });
 
     const promiseFirestore = updateUserProfile(loginUser.id, { photoURL });

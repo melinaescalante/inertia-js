@@ -92,7 +92,6 @@ function usePosts() {
             setIntersectionObserver();
         } catch (error) {
             msgError.value = '¡Comienza a seguir gente y conocer acerca de sus gustos!'
-            console.log('[Posts.vue] Error al cargar más posts', error);
         }
 
         loadingMore.value = false;

@@ -102,7 +102,7 @@ const name=value.toLowerCase()
   <ul class="mb-2 skiptranslate" v-if="!loading && users?.length">
 
     <li class="p-2 ps-6 border flex items-center" v-for="user in users">
-      <img class="h-[100%] w-12" :src="user.photoURL ? user.photoURL : 'noimage.png'" :alt="user.username">
+      <img class="w-10 h-10 rounded-full" :src="user.photoURL ? user.photoURL : 'noimage.png'" :alt="user.username">
       <div class="flex flex-col">
 
         <Link :href="`/perfil/${user.id}`" class="ms-3 font-medium block"> @{{ user.username }}</Link>
