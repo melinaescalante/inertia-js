@@ -252,6 +252,7 @@ class SerieController extends Controller
             $seriesArray = $this->getSeriesByName($request->input('name'));
 
         }
+        
         $seriesArrayLimit = array_slice($seriesArray, 0, 4);
 
         return Inertia::render('UploadPostView', [

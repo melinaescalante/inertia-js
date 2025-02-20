@@ -80,7 +80,7 @@ function showPassword() {
             <section class="skiptranslate">
                 <div v-show="msgBoolean" id="boolean-error-msg-singup"
                     v-if="msg !== 'Su usuario se ha registrado correctamente' && msg !== ''"
-                    class="bg-red-200 p-4 m-2 rounded-md fixed  w-[100%] max-w-xl  top-[10%] flex items-center gap-2">
+                    class="shadow-[1px_1px_25px_-8px] mx-auto shadow-blue-1000 bg-red-200 p-4 m-2 rounded-md fixed  w-[100%] max-w-xl  top-[10%] flex items-center gap-2">
                     <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -99,7 +99,7 @@ function showPassword() {
                     </button>
                 </div>
                 <div v-show="msgBoolean" v-if="msg == 'Su usuario se ha registrado correctamente'"
-                    class="bg-green-200 p-4 m-2 fixed w-[100%] max-w-xl top-[10%]  rounded-md" id="boolean-success-msg-singup">
+                    class=" shadow-[1px_1px_25px_-8px] mx-auto shadow-blue-1000 bg-green-200 p-4 m-2 fixed w-[100%] max-w-xl top-[10%]  rounded-md" id="boolean-success-msg-singup">
                     <p>{{ msg }}</p>
                     <button @click="closeModal" type="button"
                         class="ms-auto -mx-1.5 -my-1.5 text-gray-800 hover:bg-green-400 hover:bg-opacity-80 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex items-center justify-center h-8 w-8 "

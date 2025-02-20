@@ -37,7 +37,7 @@
     // Esperar que la API se cargue y cambiar el idioma
     setTimeout(() => {
       setGoogleTranslateLanguage('es'); // Cambiar a inglés automáticamente
-    }, 1400); // Ajusta el tiempo si es necesario
+    }, 2000); // Ajusta el tiempo si es necesario
   </script>
 
 </body>

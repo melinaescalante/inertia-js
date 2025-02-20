@@ -262,7 +262,7 @@ function closeModal() {
             </Spinner>
         </div>
         <template v-else>
-            <div v-show="msgBoolean" id="boolean-warning-msg-series" v-if="msgRemove !== ''" class="items-center flex gap-3 bg-yellow-200 p-4 m-2 rounded-md">
+            <div v-show="msgBoolean" id="boolean-warning-msg-series" v-if="msgRemove !== ''" class="shadow-[1px_1px_25px_-8px]  shadow-blue-1000 mx-auto items-center flex gap-3 bg-yellow-200 p-4 m-2 rounded-md">
                 <svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                     width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

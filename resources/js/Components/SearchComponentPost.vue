@@ -19,6 +19,7 @@ export default {
     data() {
         return {
             formInput: "",
+            formInputES: "",
             answer: "",
             loading: false,
             localSeries: [],
@@ -49,6 +50,7 @@ export default {
             const data = await response.json();
             return data.responseData.translatedText;
         },
+
         async fetchSeries(value) {
             if (this.loading) return;
             //Si sacamos espacios en blanco y no tiene valor retornamos
@@ -60,7 +62,7 @@ export default {
             this.loading = true;
             this.answer = 'Buscando usuarios...';
             const translatedValue = await this.translateToEnglish(value);
-
+            
             try {
                 router.reload({
                     data: { name: translatedValue },
@@ -79,22 +81,23 @@ export default {
                 this.loading = false;
             }
         },
-        selectResult(item) {
-            this.formInput = item.show.name;
+        async selectResult(item) {
+        
+             this.formInput = item.show.name;
             this.localSeries = [];
             this.$emit("id-serie-seleccionada", item.show.id)
-            this.$emit("serie-seleccionada", item.show.name);
+            this.$emit("serie-seleccionada",item.show.name);
         },
         handleInput(value) {
-            this.debounce(this.fetchSeries, 500)(value);
+            this.debounce(this.fetchSeries, 300)(value);
             // Delay de medio segundo
         },
     },
 };
 </script>
 <template>
-    <div class="m-2 skiptranslate">
-        <div class="relative">
+    <div class="m-2 ">
+        <div class="relative ">
             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                 <Spinner v-if="loading"></Spinner>
                 <svg v-else class="w-6 h-6 text-gray-600 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +110,7 @@ export default {
             </div>
             <label for="default-search" class="sr-only">Buscá tu serie</label>
             <input type="search" id="default-search"
-                class="block w-full p-4 ps-12  text-gray-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4 "
+                class="block w-full p-4 ps-12  text-gray-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none mt-4 skiptranslate"
                 v-model="formInput" @input="handleInput(formInput)" placeholder="Buscar serie..." required />
 
 

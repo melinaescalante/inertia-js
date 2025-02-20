@@ -36,6 +36,7 @@ function setIdSerieSelecionada(idSerieSeleccionada) {
         return;
     }
 }
+
 const msgBoolean = ref(false)
 function closeModal() {
     msg.value = '';
@@ -112,7 +113,7 @@ function handleImageChange(e) {
 
         <div v-show="msg !== 'Se ha publicado correctamente' && msg !== ''" id="boolean-error-msg-uploadpost"
             v-if="msg !== 'Se ha publicado correctamente' && msg !== ''"
-            class="bg-red-200 p-4 m-2 rounded-md fixed gap-2 flex items-center top-[10%] skiptranslate">
+            class="ms-1 shadow-[1px_1px_25px_-8px] mx-auto  shadow-blue-1000 bg-red-200 p-4 m-2 rounded-md fixed gap-2 flex items-center top-[10%] skiptranslate">
             <svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -135,7 +136,7 @@ function handleImageChange(e) {
         </div>
 
         <div id="boolean-success-msg-uploadpost" v-if="msg == 'Se ha publicado correctamente'"
-            class="bg-green-200 fixed w-[100%] max-w-xl  flex items-center top-[10%]  p-4 m-2 rounded-md skiptranslate">
+            class="shadow-[1px_1px_25px_-8px]  shadow-blue-1000 bg-green-200 fixed w-[100%] max-w-xl mx-auto flex items-center top-[10%]  p-4 m-2 rounded-md skiptranslate">
             <svg class="  w-6 h-6   me-5" aria-hidden="true" stroke-width="2" xmlns="http://www.w3.org/2000/svg"
                 fill="none" stroke=" #1f2937 " viewBox="0 0 22 20">
                 <path
@@ -157,10 +158,10 @@ function handleImageChange(e) {
         <form action="#" enctype="multipart/form-data" @submit.prevent="handlePost">
             <div class="flex flex-col mb-3 skiptranslate">
                 <span class="sr-only">Escribe la serie con la que te quieres referir</span>
-                <label class="m-2 mb-0" for="serie">¿Sobre qué serie estás pensando?</label>
+                <label class="m-2 mb-0 " for="serie">¿Sobre qué serie estás pensando?</label>
 
                 <SearchComponentPost @serie-seleccionada="setSerieSeleccionada" :series="series"
-                    @id-serie-seleccionada="setIdSerieSelecionada" :refreshCount="refreshCount"></SearchComponentPost>
+                    @id-serie-seleccionada="setIdSerieSelecionada" :refreshCount="refreshCount" ></SearchComponentPost>
 
             </div>
             <div class="flex flex-col mb-3 skiptranslate">

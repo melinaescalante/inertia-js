@@ -132,7 +132,8 @@ function usePosts() {
 </script>
 <template>
   <NavBar />
-
+  <div id="gt-mordadam-43217984" class="hidden">
+  </div>
   <SwitcherHome v-if="loginUser.id" class="mt-[4.3rem]"></SwitcherHome>
   
   <section class="posts mb-28 mt-4">
