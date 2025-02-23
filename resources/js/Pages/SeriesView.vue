@@ -153,6 +153,7 @@ async function next(id, idSerie, nameSerie) {
                         }
                     };
                 }
+
                 return serie;
             });
             localSeriesWatching.value = updatedSeries;
@@ -256,7 +257,7 @@ function closeModal() {
 <template>
     <NavBar></NavBar>
     <section id="mis-series" class="mb-28 mt-20">
-        <div v-if="loading" class="flex justify-center mt-[50%]">
+        <div v-if="loading" class="flex justify-center mt-[40vh]">
             <Spinner msg="Cargando actividad de mis series">
 
             </Spinner>

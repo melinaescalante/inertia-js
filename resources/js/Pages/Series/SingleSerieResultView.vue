@@ -13,7 +13,6 @@ const { loginUser } = useLoginUser()
 const props = defineProps({
     serie: Object
 })
-console.log(props.serie)
 const comments = ref([])
 const seriesToWatch = ref([])
 const localseries = ref([])
@@ -31,7 +30,7 @@ onMounted(async () => {
 
     }
     comments.value = await bringCommentsFromSeries((newComments) => {
-        comments.value = newComments
+        comments.value = newComments.reverse()
     }, props.serie.id)
     loadingSeries.value = false
     loading.value = false

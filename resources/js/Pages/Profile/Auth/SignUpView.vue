@@ -36,7 +36,8 @@ const msgBoolean = ref(false)
 async function handleSubmit() {
     loading.value = true
     try {
-        await signUp({ ...user.value })
+        debugger
+        await signUp({ ...user.value, userName:user.value.userName.trim().toLowerCase() })
         loading.value = false
         setTimeout(() => {
             router.get('/miPerfil');
@@ -70,7 +71,7 @@ function showPassword() {
         <template v-if="loginUser.id">
             <div class="flex items-center justify-center min-h-screen bg-white">
                 <img src="/public/images/ImagotipoEspesorFinalSinApilar.png" alt="Logo"
-                    class="w-60 h-60 animate-pulse" />
+                    class="w-60 h-60 limited-pulse" />
             </div>
         </template>
     </Transition>
@@ -220,6 +221,19 @@ function showPassword() {
     </template>
 </template>
 <style scoped>
+@keyframes limited-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.limited-pulse {
+  animation: limited-pulse 1s ease-in-out 1; /* Duración de 2s, 3 repeticiones */
+}
+
 /* Transiciones personalizadas */
 .fade-enter-active,
 .fade-leave-active {

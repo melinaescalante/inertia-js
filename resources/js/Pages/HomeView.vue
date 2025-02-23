@@ -144,7 +144,7 @@ function usePosts() {
           :comments="post.comments" :userName="post.user" :liked="post.liked" :userId="post.userid"
           :created_at="post.created_at" />
       </div>
-      <div v-if="msgError !== ''" :class="loginUser.id ? 'mt-[40vh]' : 'mt-[40vh]'">
+      <div v-if="msgError !== ''" :class="loginUser.id ? 'mt-[30vh]' : 'mt-[30vh]'">
         <p class="text-center skiptranslate p-3">
           {{ msgError }}
         </p>
@@ -156,7 +156,7 @@ function usePosts() {
         sesión</Link>
 
       </div>
-      <div v-if="msgAlert !== ''" class="mt-[40vh] ">
+      <div v-if="msgAlert !== ''" class="mt-[30vh] ">
         <p class="text-center skiptranslate p-3">
           {{ msgAlert }}
         </p>

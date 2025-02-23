@@ -33,13 +33,13 @@ async function handleComment() {
                 <label for="comment" >Dejá tu comentario</label>
                 <textarea
                     class="border ps-1 rounded-md border-blue-0 resize-none w-full focus:ring-2 focus:ring-blue-0 focus:outline-none"
-                    id="comment" v-model="commentSerie"></textarea>
+                    id="comment" v-model="commentSerie" required></textarea>
             </div>
             <button type="submit"
                 class="border md:me-3 border-blue-0 px-4 py-1 rounded-md  self-end hover:bg-blue-1000 hover:text-white hover:font-medium hover:border-transparent">Enviar</button>
         </form>
     </div>
-    <div>
+    <div class="skiptranslate">
         <ul class="bg-[url('/public/images/asset.png')] bg-[length:200px] bg-repeat-y bg-right" v-if="comments?.length" >
 
    

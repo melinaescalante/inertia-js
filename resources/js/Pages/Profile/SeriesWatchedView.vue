@@ -7,7 +7,6 @@ import Spinner from '../../Components/Spinner.vue';
 const page = usePage()
 const series = ref([])
 const loading = ref(true)
-console.log(page.props.userId)
 onMounted(async () => {
     try {
         series.value = await allSeriesWatched(page.props.userId)

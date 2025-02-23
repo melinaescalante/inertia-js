@@ -1,6 +1,6 @@
 import { db } from "./firebase";
 import { doc, getDoc, updateDoc, setDoc, deleteField, FieldValue, onSnapshot, serverTimestamp, Timestamp } from "firebase/firestore";
-import { getLastSeriesToWatch, getLastSeriesWatched, getNameUser, getUserName } from "./users";
+import { getLastSeriesToWatch, getLastSeriesWatched, getNameUser, getUsername, getUserName } from "./users";
 
 /**
  * Agregamos serie a nuestra lista para ver
@@ -316,6 +316,7 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
     const toWatchDocRef = doc(userDocRef, `series/watching`);
     const toWatchSnapshot = await getDoc(toWatchDocRef);
     const thereIsNextEpisode = await verifyChapter(idSeason, temporada, capitulo)
+    debugger
     if (thereIsNextEpisode !== false && thereIsNextEpisode !== undefined) {
 
         if (toWatchSnapshot.exists()) {
@@ -381,6 +382,8 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
                             currentSeason: watchingSeason,
                             currentIdSeason: idCurrentSeason,
                             created_at: data[idSerie].created_at,
+                            last_modified: Timestamp.now(),
+
                             urlImage: data[idSerie].urlImage
                         }
                     });
@@ -394,22 +397,22 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
 }
 export async function singWatchedSeries(id) {
     try {
-    const series=await allSeriesWatched(id)
-      const response = await fetch('/asignarSeriesVistas', {
-        method: 'post',
-        body: JSON.stringify({series, _token: document.body.dataset.csrf,}),
-        headers: {
-          "Content-Type": 'application/json',
-          "X-Requested-With": 'XMLHttpRequest',
-        },
-        credentials: "include",
-      });
-      const json = await response.json();
-      return json.success;
+        const series = await allSeriesWatched(id)
+        const response = await fetch('/asignarSeriesVistas', {
+            method: 'post',
+            body: JSON.stringify({ series, _token: document.body.dataset.csrf, }),
+            headers: {
+                "Content-Type": 'application/json',
+                "X-Requested-With": 'XMLHttpRequest',
+            },
+            credentials: "include",
+        });
+        const json = await response.json();
+        return json.success;
     } catch (error) {
-      console.error('Error al notificar series vistas.');
+        console.error('Error al notificar series vistas.');
     }
-  }
+}
 /**
  * 
  * @param {*} idUser 
@@ -483,7 +486,10 @@ export async function backEpisode(idUser, idSerie, idSeason, temporada, capitulo
                                 current: beforeEpisode,
                                 currentSeason: watchingSeason,
                                 currentIdSeason: idCurrentSeason,
-                                created_at: data[idSerie].created_at
+                                created_at: data[idSerie].created_at,
+                                last_modified: Timestamp.now(),
+
+                                urlImage: data[idSerie].urlImage
                             }
                         });
                     } else {
@@ -511,19 +517,19 @@ export async function rateSerie(rate, idUser, idSerie) {
         }
         const watchedData = watchedSnapshot.data(); // Obtener datos del documento
         const seriesArray = watchedData?.watched || []; // Array de series
-        const serieIndex = seriesArray.findIndex(show =>{ 
-       return show.idSerie=== idSerie
+        const serieIndex = seriesArray.findIndex(show => {
+            return show.idSerie === idSerie
 
         });
         if (serieIndex === -1) {
             console.error("La serie no está en la lista de vistas.");
-            return ;
+            return;
         }
-        seriesArray[serieIndex] = { 
-            ...seriesArray[serieIndex], 
-            rate: rate 
+        seriesArray[serieIndex] = {
+            ...seriesArray[serieIndex],
+            rate: rate
         };
-        
+
         await updateDoc(watchedDocRef, { watched: seriesArray });
     } catch (error) {
 
@@ -594,7 +600,6 @@ export async function addCommentToSerie(comment, idUser, idSerie) {
         let currentComments
         const seriesInfoRef = doc(db, 'series', String(idSerie));
         const seriesInfoSnapshot = await getDoc(seriesInfoRef);
-        console.log(idUser)
         const newComment = {
             userId: idUser,
             comment: comment,
@@ -624,16 +629,15 @@ export async function addCommentToSerie(comment, idUser, idSerie) {
  */
 export async function bringCommentsFromSeries(callback, idSerie) {
     const seriesInfoRef = doc(db, 'series', String(idSerie));
-
     onSnapshot(seriesInfoRef, async (snapshot) => {
         const commentsData = snapshot.data()?.comments;
         if (commentsData) {
             let commentsArray = [];
             const promises = commentsData.map(async (comment) => {
-                const userName = await getUserName(comment.userId);
+                const userName = await getUsername(comment.userId);
                 const commentInfo = comment.comment;
                 const commentFull = {
-                    userName,
+                    userName:userName,
                     userId: comment.userId,
                     commentInfo,
                     created_at: comment.created_at
@@ -642,7 +646,7 @@ export async function bringCommentsFromSeries(callback, idSerie) {
             });
             await Promise.all(promises);
 
-            callback(commentsArray.reverse());
+            callback(commentsArray);
         }
     });
 }
