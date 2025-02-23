@@ -13,9 +13,9 @@ const currentPage = page.component
         <nav class="flex gap-4 items-center p-4 py-2 ps-5 border rounded-lg border-blue-200 text-slate-800 ">
             <ButtonGoBack v-if="loginUser.id"></ButtonGoBack>
             <Link href="/" class="text-xl">
-            <!-- <img src="/public/images/ImagotipoEspesorFinalApilado.png" alt="Isotipo-TVON"
-                class="block h-auto w-16"> -->
-            <svg class="block h-auto w-16" xmlns="http://www.w3.org/2000/svg" id="Capa_1" data-name="Capa 1"
+            <img src="/public/images/ImagotipoEspesorFinalApilado.png" id="Capa_1" alt="Isotipo-TVON"
+                class="block h-auto w-16">
+            <!-- <svg class="block h-auto w-16" xmlns="http://www.w3.org/2000/svg"  data-name="Capa 1"
                 viewBox="0 0 118.16 85.2">
 
                 <path class="cls-5"
@@ -35,7 +35,7 @@ const currentPage = page.component
                     </tspan>
                 </text>
 
-            </svg>
+            </svg> -->
             </Link>
         </nav>
         <slot></slot>

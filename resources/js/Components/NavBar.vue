@@ -43,8 +43,9 @@ const excludedPages = [
             <ButtonGoBack v-if="!excludedPages.includes(currentPage)">
             </ButtonGoBack>
             <Link href="/" class="text-xl">
-            <!-- <img src="/public/images/ImagotipoEspesorApilado.svg" alt="Isotipo-TVON" class="block h-auto w-16"> -->
-            <svg class="block h-auto w-16 " xmlns="http://www.w3.org/2000/svg" id="Capa_1" data-name="Capa 1" viewBox="0 0 118.16 85.2">
+                <img src="/public/images/ImagotipoEspesorFinalApilado.png" id="Capa_1" alt="Isotipo-TVON"
+                class="block h-auto w-16">
+            <!-- <svg class="block h-auto w-16 " xmlns="http://www.w3.org/2000/svg" id="Capa_1" data-name="Capa 1" viewBox="0 0 118.16 85.2">
 
                 <path class="cls-5 "
                     d="M57.16,40.79c-.01.16-.02.33-.02.49s.01.33.02.49v31.04c0,2.23-1.81,4.03-4.04,4.03-.55,0-1.09-.11-1.57-.32-.03-.01-.06-.02-.08-.04l-.73-.42h-.01l-22.15-12.81,2.06-1.19.67-.39c1.24-.86,2.05-2.29,2.05-3.92s-.83-3.1-2.1-3.95l-.02-.02c-.14-.09-.29-.18-.44-.25l-.03-.02-2.19-1.26,19.03-11,9.55-5.52v5.06Z" />
@@ -63,7 +64,7 @@ const excludedPages = [
                     </tspan>
                 </text>
 
-            </svg>
+            </svg> -->
             </Link>
         </div>
 
