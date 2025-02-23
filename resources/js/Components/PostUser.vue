@@ -41,7 +41,7 @@ async function share(id) {
     let shareData = {
         title: 'TvOn-Post  ',
         text: 'TvOn-Post',
-        url: 'http://127.0.0.1:8000/post/' + id,
+        url: 'https://tvon.com.ar/post/' + id,
     };
 
     if (!navigator.canShare) {

@@ -82,9 +82,9 @@ function showPassword() {
             <section class="skiptranslate ">
                 <h1 class="text-center text-2xl mt-8 mb-8 font-medium">Inicio de Sesión</h1>
 
-                <div class="h-1/3 w-1/2 m-auto">
+                <div class="h-1/3 w-1/2 m-auto ">
 
-                    <img src="/public/images/login.svg" alt="Ilustración de logueo">
+                    <img id="login" src="/public/images/login.svg" alt="Ilustración de logueo">
                 </div>
                 <form action="#" @submit.prevent="handleSubmit" class="p-3">
                     <div class="mb-6">
@@ -160,5 +160,8 @@ function showPassword() {
 .fade-enter-from,
 .fade-leave-to {
     @apply opacity-0;
+}
+#login{
+    filter: drop-shadow(0px 1px 9px white);
 }
 </style>

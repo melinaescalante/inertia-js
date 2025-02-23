@@ -53,7 +53,8 @@ Route::get('/editFotoPerfil', [AppController::class, "editPhotoProfile"])
 
 Route::get('/post/{id}', [AppController::class, "singlePost"])
     ->name('singlePost')
-    ->whereAlphaNumeric('id');
+    ->whereAlphaNumeric('id')
+    ->middleware(CheckAuthSession::class);
 
 Route::get('/misSeries', [AppController::class, "mySeries"])
     ->name('mySeries')

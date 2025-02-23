@@ -115,7 +115,7 @@ function showPassword() {
                 </div>
                 <h1 class="text-center text-2xl mt-8 mb-6 font-medium ">Registrarme</h1>
                 <div class="p-4">
-                    <img src="/public/images/singup.svg" alt="Ilustración de registro" type="image/svg+xml">
+                    <img id="signup" src="/public/images/singup.svg" alt="Ilustración de registro" type="image/svg+xml">
                 </div>
                 <form action="#" @submit.prevent="handleSubmit" class="p-3">
                     <div class="mb-5">
@@ -233,7 +233,9 @@ function showPassword() {
 .limited-pulse {
   animation: limited-pulse 1s ease-in-out 1; /* Duración de 2s, 3 repeticiones */
 }
-
+#signup{
+    filter: drop-shadow(0px 1px 9px white);
+}
 /* Transiciones personalizadas */
 .fade-enter-active,
 .fade-leave-active {

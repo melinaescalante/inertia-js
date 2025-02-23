@@ -168,7 +168,7 @@ function usePosts() {
         sesión</Link>
       </div>
     </div>
-    <div v-else class="mt-[40vh] p-3 skiptranslate">
+    <div v-else class="mt-[30vh] p-3 skiptranslate">
 
       <Spinner msg="Cargando más posteos" />
     </div>
