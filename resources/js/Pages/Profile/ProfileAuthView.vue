@@ -93,7 +93,7 @@ onMounted(async () => {
             <p class=" text-blue-1000 text-center  font-normal m-2 skiptranslate" v-if="loginUser.bio">{{ loginUser.bio
                 }}</p>
             <div class="flex  skiptranslate items-center justify-center mx-[2.5rem]">
-                <ul class="flex-wrap justify-between flex items-center flex-grow w-full">
+                <ul class="flex-wrap justify-stretch flex items-center flex-grow w-full">
                     <li v-for="genre in loginUser.genres"
                         class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000  text-sm font-normal px-2 py-1 m-1 text-center">
                         {{ Object.values(genre)[0] }}</li>
