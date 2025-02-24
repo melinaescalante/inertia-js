@@ -52,9 +52,9 @@ onMounted(async () => {
     </div>
     <template v-else class="">
 
-        <div class="skiptranslate grid grid-cols-3 items-center mt-20 justify-around mb-[1.3rem]">
+        <div class="skiptranslate grid grid-cols-3 grid-rows-auto items-center mt-20 justify-around mb-[1.3rem] gap-8">
             <Link href="/editFotoPerfil" class="mx-auto">
-            <div class="relative group w-20 h-20 ms-2">
+            <div class="relative group w-20 h-20 ">
                 <img :src="loginUser.photoURL || '/no-image.jpg'" :alt="'Foto de perfil de ' + loginUser.email"
                     class="col-span-1 w-full h-full rounded-full object-cover group-hover:opacity-50">
 
@@ -63,41 +63,53 @@ onMounted(async () => {
             </div>
 
             </Link>
-            <div class="flex flex-col col-span-2">
+            <div class="col-span-2 mx-auto ">
 
-                <p class="font-medium text-center">@{{ loginUser.username }}
-                </p>
-                <div class="flex justify-around">
-                    <Link :href="`/${loginUser.id}/${loginUser.username}/seriesVistasRegistro`">
-                    <p class="me-2">Series vistas <span class="text-center block">{{ seriesWatched?.length || 0
-                    }}</span>
-                    </p>
-                    </Link>
-                    <Link :href="`/${loginUser.id}/${loginUser.username}/seguidos`">Seguidos <span
-                        class="text-center block">{{ following?.length || 0 }}</span></Link>
+                <div class=" grid grid-cols-1 grid-rows-2 gap-3  mx-auto ">
+                    <div class="flex items-center flex-wrap justify-stretch gap-4 md:gap-10 ">
+
+                        <p class="font-medium text-start">@{{ loginUser.username }}
+                        </p>
+                        <div>
+
+                            <Link v-if="loginUser.id" href="/perfilinfo/edit"
+                                class="text-center text-white bg-blue-1000 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 ">
+                            Editar Perfil</Link>
+
+                        </div>
+                    </div>
+                    <div class="flex  justify-stretch">
+
+                        <Link :href="`/${loginUser.id}/${loginUser.username}/seriesVistasRegistro`">
+                        <p class="me-2">Series vistas <span class="text-center block">{{ seriesWatched?.length || 0
+                                }}</span>
+                        </p>
+                        </Link>
+                        <Link :href="`/${loginUser.id}/${loginUser.username}/seguidos`">Seguidos <span
+                            class="text-center block">{{ following?.length || 0 }}</span></Link>
+                    </div>
                 </div>
 
-                <div class="mt-2 flex flex-wrap justify-around">
-
-                    <Link v-if="loginUser.id" href="/perfilinfo/edit"
-                        class="text-center text-white bg-blue-1000 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
-                    Editar Perfil</Link>
-
-                </div>
             </div>
-        </div>
-        <div class="flex flex-col items-center justify-center mb-1">
+            <div class="ms-[3vw] md:ms-[6vw] col-span-3 items-start grid grid-rows-auto grid-cols-1  mb-1">
+                <div>
 
-            <p class="font-medium text-center skiptranslate">{{ loginUser.displayName }}
-            </p>
-            <p class=" text-blue-1000 text-center  font-normal m-2 skiptranslate" v-if="loginUser.bio">{{ loginUser.bio
-                }}</p>
-            <div class="flex  skiptranslate items-center justify-center mx-[2.5rem]">
-                <ul class="flex-wrap justify-stretch flex items-center flex-grow w-full">
-                    <li v-for="genre in loginUser.genres"
-                        class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000  text-sm font-normal px-2 py-1 m-1 text-center">
-                        {{ Object.values(genre)[0] }}</li>
-                </ul>
+                    <p class="m-1 font-medium skiptranslate">{{ loginUser.displayName }}
+                    </p>
+                </div>
+                <div>
+
+                    <p class="m-1 mb-2 text-blue-1000   font-normal  skiptranslate" v-if="loginUser.bio">{{
+                        loginUser.bio
+                        }}</p>
+                </div>
+                <div class="flex  skiptranslate items-center justify-center ">
+                    <ul class="flex-wrap  flex items-center flex-grow w-full">
+                        <li v-for="genre in loginUser.genres"
+                            class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000  text-sm font-normal px-2 py-1 m-1 text-center">
+                            {{ Object.values(genre)[0] }}</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
