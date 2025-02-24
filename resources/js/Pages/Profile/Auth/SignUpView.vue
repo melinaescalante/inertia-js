@@ -36,7 +36,6 @@ const msgBoolean = ref(false)
 async function handleSubmit() {
     loading.value = true
     try {
-        debugger
         await signUp({ ...user.value, userName:user.value.userName.trim().toLowerCase() })
         loading.value = false
         setTimeout(() => {

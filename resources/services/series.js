@@ -316,7 +316,6 @@ export async function nextEpisode(idUser, idSerie, idSeason, temporada, capitulo
     const toWatchDocRef = doc(userDocRef, `series/watching`);
     const toWatchSnapshot = await getDoc(toWatchDocRef);
     const thereIsNextEpisode = await verifyChapter(idSeason, temporada, capitulo)
-    debugger
     if (thereIsNextEpisode !== false && thereIsNextEpisode !== undefined) {
 
         if (toWatchSnapshot.exists()) {
