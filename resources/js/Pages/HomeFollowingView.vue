@@ -51,7 +51,7 @@ function usePosts() {
             unsubscribe = await fetchPostsFollowed(loginUser.value.id, loginUser.value.following, (newPosts) => {
                 posts.value = newPosts;
                 if (newPosts.length === 0) {
-                    msgAlert.value = "¡Aún tus seguidos no tienen publicaciones!"
+                    msgAlert.value = "¡Las personas que seguís aún no tienen publicaciones!"
                 }
                 loading.value = false;
             });
@@ -91,7 +91,7 @@ function usePosts() {
             ]
             setIntersectionObserver();
         } catch (error) {
-            msgError.value = '¡Comienza a seguir gente y conocer acerca de sus gustos!'
+            msgError.value = `¡Comenzá a <strong class='font-[500]'>seguir</strong> gente y descubrí sus gustos!`
         }
 
         loadingMore.value = false;
@@ -127,8 +127,7 @@ function usePosts() {
                     :userId="post.userid" :created_at="post.created_at" />
             </div>
             <div v-if="msgError !== ''" class="mt-[50%]">
-                <p class="text-center p-3 skiptranslate">
-                    {{ msgError }}
+                <p v-html="msgError" class="text-center p-3 skiptranslate">
                 </p>
                 <Link href="/buscadorUsuarios" class="block w-2/6  text-center mx-auto py-2 px-4 
         bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Iniciar
@@ -136,8 +135,8 @@ function usePosts() {
 
             </div>
             <div v-if="msgAlert !== ''" class="mt-[50%] ">
-                <p class="text-center p-3 skiptranslate">
-                    {{ msgAlert }}
+                <p class="text-center p-3 skiptranslate" v-html="msgAlert">
+                   
                 </p>
                 <Link href="/subirPublicacion"
                     class="block w-2/6  text-center mx-auto py-2 px-4 

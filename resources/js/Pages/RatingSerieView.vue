@@ -30,7 +30,7 @@ async function rate() {
     } catch (error) {
         msgBoolean.value = true
 
-        msg.value = 'No se ha puntuado la serie ' + props.name + ' correctamente. Inténtelo más tarde.'
+        msg.value = 'No se ha puntuado la serie ' + props.name + ' correctamente. Intentalo más tarde.'
         setTimeout(() => {
             msgBoolean.value = false
 

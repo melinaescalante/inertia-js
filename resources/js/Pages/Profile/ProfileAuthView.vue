@@ -70,7 +70,7 @@ onMounted(async () => {
                 <div class="flex justify-around">
                     <Link :href="`/${loginUser.id}/${loginUser.username}/seriesVistasRegistro`">
                     <p class="me-2">Series vistas <span class="text-center block">{{ seriesWatched?.length || 0
-                            }}</span>
+                    }}</span>
                     </p>
                     </Link>
                     <Link :href="`/${loginUser.id}/${loginUser.username}/seguidos`">Seguidos <span
@@ -84,24 +84,33 @@ onMounted(async () => {
                     Editar Perfil</Link>
 
                 </div>
-                <p class="font-medium text-center">{{ loginUser.displayName }}
-                </p>
-                <p class=" text-blue-1000 text-center  font-medium m-2" v-if="loginUser.bio">{{ loginUser.bio }}</p>
-                <div class="flex flex-wrap">
-                    <ul v-for="genre in loginUser.genres">
-                        <li
-                            class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000  text-sm font-normal px-2 py-1 m-1 text-center">
-                            {{ Object.values(genre)[0] }}</li>
-                    </ul>
-                </div>
+            </div>
+        </div>
+        <div class="flex flex-col items-center justify-center mb-1">
+
+            <p class="font-medium text-center skiptranslate">{{ loginUser.displayName }}
+            </p>
+            <p class=" text-blue-1000 text-center  font-normal m-2 skiptranslate" v-if="loginUser.bio">{{ loginUser.bio
+                }}</p>
+            <div class="flex  skiptranslate items-center justify-center mx-[2.5rem]">
+                <ul class="flex-wrap justify-between flex items-center flex-grow w-full">
+                    <li v-for="genre in loginUser.genres"
+                        class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000  text-sm font-normal px-2 py-1 m-1 text-center">
+                        {{ Object.values(genre)[0] }}</li>
+                </ul>
             </div>
         </div>
 
-        <div class="skiptranslate border-t p-2 grid-cols-3  md:grid-cols-4  grid justify-items-center mb-20" v-if="postsById !== undefined">
-            <div v-for="post in postsById" class="mt-5 ">
+        <div class="skiptranslate border-t p-2 grid-cols-3  md:grid-cols-4  grid justify-items-center mb-20"
+            v-if="postsById !== undefined">
+            <div v-for="post in postsById" class=" ">
                 <Link :href="`/post/${post.id}`" :id="post.id">
-                <img :src="post.image ? post.image : '/text.jpg'" :alt="post.serie"
-                    class="w-[7rem] h-auto  bg-cover ">
+                <!-- <img :src="post.image ? post.image : '/text.jpg'" :alt="post.serie" class="w-[7rem] h-auto  bg-cover "> -->
+
+
+                <div class="w-[7rem] h-[7rem] bg-cover bg-center "
+                    :style="{ backgroundImage: `url(${post.image || '/text.jpg'})` }"></div>
+
 
                 </Link>
             </div>

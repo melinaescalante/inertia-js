@@ -159,6 +159,6 @@ defineProps({ genres: Array })
 
     <div v-else class="mt-[70%] ">
 
-        <Spinner msg="Cargando series para ti"></Spinner>
+        <Spinner msg="Cargando series para vos"></Spinner>
     </div>
 </template>

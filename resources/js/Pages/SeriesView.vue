@@ -234,7 +234,7 @@ async function back(id, idSerie, nameSerie) {
 
             seriesWatchingJson.value = seriesWatchingJson.value.filter(serie => serie.id !== idSerie);
             await loadSeriesWatched()
-            msgRemove.value = 'Se ha removido ' + nameSerie + ' de "Series empezadas"'
+            msgRemove.value = 'Se ha eliminado ' + nameSerie + ' de "Series empezadas"'
             msgBoolean.value = true
             setTimeout(() => {
                 msgRemove.value = '';

@@ -58,12 +58,12 @@ function usePosts() {
         posts.value = newPosts;
 
         if (!loginUser.value.lastSeriesWatched?.length && !loginUser.value.seriesToWatch?.length) {
-          msgError.value = '¡Comienza a añadir series a ver o viendo, así podremos comenzar a generarte un para ti!'
+          msgError.value = `¡Comenzá a añadir las <strong class='font-[500]'>series</strong> que estás <strong class='font-[500]' >viendo</strong> o <strong class='font-[500]'>querés ver</strong>, así podremos mostrarte posteos relacionados!`
           loading.value = false;
           return
         }
         if (newPosts.length === 0) {
-          msgAlert.value = "¡Aún no hay posteos sobre tus gustos, sé el primero!"
+          msgAlert.value = "Aún no hay posteos sobre tus gustos. ¡Sé el primero en compartirlos!"
         }
         loading.value = false;
       });
@@ -144,9 +144,8 @@ function usePosts() {
           :comments="post.comments" :userName="post.user" :liked="post.liked" :userId="post.userid"
           :created_at="post.created_at" />
       </div>
-      <div v-if="msgError !== ''" :class="loginUser.id ? 'mt-[30vh]' : 'mt-[30vh]'">
-        <p class="text-center skiptranslate p-3">
-          {{ msgError }}
+      <div v-if="msgError !== ''" :class="loginUser.id ? 'mt-[30vh]' : 'mt-[40vh]'">
+        <p class="text-center skiptranslate p-3" v-html="msgError"> 
         </p>
         <Link v-if="loginUser.id" href="/buscador" class="block w-2/6 skiptranslate text-center mx-auto py-2 px-4 
         bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Iniciar
@@ -157,8 +156,7 @@ function usePosts() {
 
       </div>
       <div v-if="msgAlert !== ''" class="mt-[30vh] ">
-        <p class="text-center skiptranslate p-3">
-          {{ msgAlert }}
+        <p class="text-center skiptranslate p-3" v-html="msgAlert" >
         </p>
         <Link v-if="loginUser.id" href="/subirPublicacion" class="block w-2/6 skiptranslate text-center mx-auto py-2 px-4 
         bg-opacity-50 rounded-full border-0 text-sm font-semibold bg-blue-0 text-blue-1000 hover:bg-blue-0">Subir

@@ -259,7 +259,7 @@ export async function readPostsByUser(callback, userid) {
     const postQuery = query(
         collection(db, "posts-public"),
         where("userid", "==", userid),
-        orderBy("created_at", "desc")
+        // orderBy("created_at", "desc")
     );
 
     onSnapshot(postQuery, async (snapshot) => {
@@ -286,7 +286,10 @@ export async function readPostsByUser(callback, userid) {
         });
         await Promise.all(promises);
 
-        callback(posts);
+        const sortedPosts = posts.sort((a, b) => b.created_at - a.created_at);
+
+        // ✅ Llamada al callback con los posts ordenados
+        callback(sortedPosts);
     });
 }
 /**
