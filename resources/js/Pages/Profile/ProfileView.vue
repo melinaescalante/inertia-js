@@ -83,61 +83,86 @@ async function handleFollowed() {
   </template>
   <template v-else>
 
-    <div class="grid grid-cols-3 mt-20 mb-[1.4rem] items-center justify-around  skiptranslate">
-<div class="mx-auto">
+    <div class="grid grid-cols-3 grid-rows-auto mt-20 mb-[1.4rem] items-center justify-around  skiptranslate">
+      <div class="mx-auto">
 
-  <img :src="user.photoURL || '/no-image.jpg'" :alt="'Foto de perfil de ' + user.email"
-  class=" ms-2 w-20 h-20 col-span-1 rounded-full object-cover group-hover:opacity-50 mx-auto">
-  
-</div>
+        <img :src="user.photoURL || '/no-image.jpg'" :alt="'Foto de perfil de ' + user.email"
+          class=" ms-2 w-20 h-20 col-span-1 rounded-full object-cover group-hover:opacity-50 mx-auto">
 
-      <div class="flex flex-col col-span-2">
+      </div>
 
-        <p class="font-medium text-center">@{{ user.username }}</p>
-        <div class="flex justify-around">
+      <div class="mx-auto col-span-2">
 
-          <Link :href="`/${user.id}/${user.username}/seriesVistasRegistro`">
-          Series vistas <span class="text-center block">{{ seriesWatched?.length || 0
+        <div class=" grid grid-cols-1 mt-2 grid-rows-2 gap-3  mx-auto ">
+          <div class="">
+            <!-- <div class="flex items-center flex-wrap justify-stretch gap-4 md:gap-10 "> -->
+            <div class=" flex flex-wrap items-center gap-4 md:gap-10 justify-stretch" v-if="user.id !== loginUser.id">
+              <p class="font-medium text-start">@{{ user.username }}</p>
+
+              <div class=" flex gap-4">
+
+                <Link :href="`/chatPrivado/${user.id}/${user.email}`"
+                  class="text-center text-white bg-blue-1000 transition-colors  hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5">
+                Chatear</Link>
+                <button type="button" @click="makeFollow"
+                  class="text-center border border-blue-1000  text-blue-1000 hover:bg-blue-0 hover:border-transparent transition-colors focus:ring-4 font-medium rounded-lg text-sm px-5 py-1.5 ">
+                  {{ isFollow ? 'Siguiendo ' : 'Seguir' }}</button>
+              </div>
+            </div>
+            <div class=" flex items-center flex-wrap justify-stretch gap-4 md:gap-10" v-else>
+              <p class="font-medium text-start">@{{ user.username }}</p>
+
+              <Link v-if="loginUser.id" href="/perfilinfo/edit"
+                class="text-center text-white bg-blue-1000 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
+              Editar Perfil</Link>
+            </div>
+          </div>
+          <div class="flex justify-stretch">
+
+            <Link :href="`/${user.id}/${user.username}/seriesVistasRegistro`">
+            Series vistas <span class="text-center block">{{ seriesWatched?.length || 0
             }}</span>
 
-          </Link>
-          <Link :href="`/${user.id}/${user.username}/seguidos`">
-          Seguidos <span class="text-center block">{{ following?.length || 0 }}</span>
-          </Link>
+            </Link>
+            <Link :href="`/${user.id}/${user.username}/seguidos`">
+            Seguidos <span class="text-center block">{{ following?.length || 0 }}</span>
+            </Link>
+
+          </div>
+
+
 
         </div>
-        <div class="mt-2 flex flex-wrap justify-around" v-if="user.id !== loginUser.id">
+      </div>
+      <div class="ms-[2vw] md:ms-[2vw] col-span-3 items-start grid grid-rows-auto grid-cols-1 mb-1">
+        <div>
 
-
-          <Link :href="`/chatPrivado/${user.id}/${user.email}`"
-            class="text-center text-white bg-blue-1000 transition-colors  hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
-          Chatear</Link>
-          <button type="button" @click="makeFollow"
-            class="text-center border border-blue-1000  text-blue-1000 hover:bg-blue-0 hover:border-transparent transition-colors focus:ring-4 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
-            {{ isFollow ? 'Siguiendo ' : 'Seguir' }}</button>
+          <p class="font-medium m-1 ">{{ user.displayName }}</p>
         </div>
-        <div class=" flex flex-wrap justify-around" v-else>
-          <Link v-if="loginUser.id" href="/perfilinfo/edit"
-            class="text-center text-white bg-blue-1000 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 m-3">
-          Editar Perfil</Link>
-        </div>
-        <p class="font-medium text-center">{{ user.displayName }}</p>
+        <div>
 
-        <p class=" text-blue-1000 text-center font-medium m-2" v-if="user.bio">{{ user.bio }}</p>
-        <div class="flex flex-wrap">
-          <ul v-for="genre in user.genres">
-            <li
+          <p class=" text-blue-1000 m-1 mb-2 font-normal" v-if="user.bio">{{ user.bio }}</p>
+        </div>
+        <div class="flex skiptranslate items-center">
+          <ul class="flex-wrap flex items-center flex-grow w-full">
+            <liv v-for="genre in user.genres"
               class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000 text-sm  font-normal py-1 px-2 m-1 text-center">
               {{
-                Object.values(genre)[0] }}</li>
+                Object.values(genre)[0] }}</liv>
           </ul>
         </div>
       </div>
+
     </div>
-    <div class="border-t p-2 grid-cols-3 justify-items-center  mb-20  md:grid-cols-4  grid " v-if="postsById !== undefined">
+    <div class="border-t p-2 grid-cols-3 justify-items-center  mb-20  md:grid-cols-4  grid "
+      v-if="postsById !== undefined">
       <div v-for="post in postsById" class="mt-5 ">
         <Link :href="`/post/${post.id}`" :id="post.id">
-        <img :src="post.image ? post.image : '/text.jpg'" :alt="post.serie" class="w-[7rem] h-auto  bg-cover ">
+        <!-- <img :src="post.image ? post.image : '/text.jpg'" :alt="post.serie" class="w-[7rem] h-auto  bg-cover "> -->
+        
+        <div class="w-[7rem] h-[7rem] bg-cover bg-center "
+                    :style="{ backgroundImage: `url(${post.image || '/text.jpg'})` }"></div>
+
 
         </Link>
       </div>

@@ -8,7 +8,7 @@ defineProps({
 })
 </script>
 <template>
-    <div class="flex flex-col justify-end items-center mt-2">
+    <div class="flex flex-col justify-center items-center mt-2">
 
         
         <Link :title="titleLink" :href="`${route}`"
@@ -20,6 +20,6 @@ defineProps({
 
 
     </Link>
-    <span class="text-center text-sm m-1">{{   titleLink==='Postear'? titleLink: '' }}</span>
+    <span class="text-center text-sm m-1" :class="{'hidden':titleLink!=='Postear'}">{{   titleLink==='Postear'? titleLink: '' }}</span>
 </div>
 </template>

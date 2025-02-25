@@ -263,24 +263,25 @@ function closeModal() {
             </Spinner>
         </div>
         <template v-else>
-            <div v-show="msgBoolean" id="boolean-warning-msg-series" v-if="msgRemove !== ''" class="shadow-[1px_1px_25px_-8px]  shadow-blue-1000 mx-auto items-center flex gap-3 bg-yellow-200 p-4 m-2 rounded-md">
-                <svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <div v-show="msgBoolean" id="boolean-warning-msg-series" v-if="msgRemove !== ''"
+                class="shadow-[1px_1px_25px_-8px]  shadow-blue-1000 mx-auto items-center flex gap-3 bg-yellow-200 p-4 m-2 rounded-md">
+                <svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
 
                 <p class="break-words  ">{{ msgRemove }}</p>
                 <button @click="closeModal" type="button"
-                        class="ms-auto -mx-1.5 -my-1.5 text-gray-800 hover:bg-yellow-400 hover:bg-opacity-80 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 inline-flex items-center justify-center h-8 w-8 "
-                        data-dismiss-target="#boolean-warning-msg-series" aria-label="Cerrar">
-                        <span class="sr-only">Cerrar</span>
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                    </button>
+                    class="ms-auto -mx-1.5 -my-1.5 text-gray-800 hover:bg-yellow-400 hover:bg-opacity-80 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 inline-flex items-center justify-center h-8 w-8 "
+                    data-dismiss-target="#boolean-warning-msg-series" aria-label="Cerrar">
+                    <span class="sr-only">Cerrar</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                </button>
             </div>
 
             <h1 class="text-xl m-4 skiptranslate" v-if="!seriesWatching || seriesWatchingJson.length === 0">
@@ -289,7 +290,7 @@ function closeModal() {
             </h1>
 
             <h1 v-else class="text-2xl font-medium ms-7 mt-3 skiptranslate">Series empezadas</h1>
-            
+
             <div class="flex flex-col gap-3 m-4 mt-1 ">
                 <Link href="/buscador" v-if="!seriesWatching || seriesWatchingJson.length === 0"
                     class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 skiptranslate">
@@ -300,8 +301,8 @@ function closeModal() {
                 </Link>
                 <div v-for="(serie) in seriesWatchingJson" class="md:m-2 m-1 grid items-center bg-white border border-orange-0 rounded-lg shadow 
            grid-cols-1 md:grid-cols-4 w-auto md:gap-5">
-                    <Link :href="`/show/${serie.id}`" class="col-span-3 flex-wrap flex items-center p-2   md:p-1">
-                    <div class="flex flex-col md:flex-row justify-center md:items-center">
+                    <Link :href="`/show/${serie.id}`" class="col-span-3 flex-wrap flex items-center p-2 mx-auto md:mx-0 md:p-1">
+                    <div class="flex flex-col md:flex-row justify-center items-center">
 
 
                         <img class="object-cover w-28 h-auto rounded-lg"
@@ -309,21 +310,34 @@ function closeModal() {
                             :alt="`Portada de la última serie en la wishlist ${serie.name}`">
                         <div class="flex flex-col sm:flex-wrap mx-1 md:mx-2">
                             <h2
-                                class="text-2xl font-normal  tracking-tight text-gray-900 hover:text-blue-1000 hover:font-medium">
+                                class="text-2xl font-normal text-center md:text-start  tracking-tight text-gray-900 hover:text-blue-1000 hover:font-medium">
                                 {{ serie.name }}</h2>
                             <p v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
-                                class=" skiptranslate">
-                                Estas viendo de la temporada {{ localSeriesWatching.find(series =>
-                                    series[serie.id])?.[serie.id].currentSeason }}
-                                capítulo {{ localSeriesWatching.find(series => series[serie.id])?.[serie.id].current }}
+                                class=" skiptranslate text-center  md:text-start" >
+                                Estas viendo de la temporada {{localSeriesWatching.find(series =>
+                                    series[serie.id])?.[serie.id].currentSeason}}
+                                capítulo {{localSeriesWatching.find(series => series[serie.id])?.[serie.id].current}}
                             </p>
 
 
                         </div>
                     </div>
                     </Link>
-                    <div class="flex md:flex-col flex-row-reverse  justify-between space-x-2 col-span-1 p-2">
-                        <div class="self-end mb-2 md:mt-0">
+                    <div class="grid grid-cols-[1fr_1fr_0.3fr] grid-rows-1 md:grid-rows-[1fr_1fr_0.3fr] md:my-auto  md:grid-cols-1 gap-2 justify-items-end md:justify-items-stretch md:me-2 col-span-1 md:mb-0 mb-2">
+
+                        <button v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
+                            @click.stop="back(loginUser.id, serie.id, serie.name)" type="button" class="text-red-800  hover:text-white    border border-red-800 hover:bg-red-800  focus:outline-none focus:border
+                            focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                            skiptranslate sm:items-start">
+                            Volver
+                        </button>
+                        <button v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
+                            @click.stop="next(loginUser.id, serie.id, serie.name)" type="button" class="text-blue-1000   hover:text-white border border-blue-1000 hover:bg-blue-1000  focus:outline-none focus:border
+                            focus:ring-0 font-medium rounded-lg text-sm px-4 py-2.5 text-center 
+                            skiptranslate  ">
+                            Siguiente
+                        </button>
+                        <div class="self-end ms-auto md:my-auto md:mt-0 md:">
                             <BottomSheet>
                                 <div class="flex flex-col skiptranslate">
                                     <div class="flex">
@@ -340,7 +354,7 @@ function closeModal() {
                                         </div>
                                         <p class="text-gray-600  ms-2">Fecha de inicio: {{
                                             formatDate(seriesWatching.find(series =>
-                                                series[serie.id])?.[serie.id].created_at) }}</p>
+                                                series[serie.id])?.[serie.id].created_at)}}</p>
                                     </div>
 
                                     <div class="max-w-[50%] mt-2">
@@ -355,18 +369,6 @@ function closeModal() {
                             </BottomSheet>
 
                         </div>
-                        <button v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
-                            @click.stop="next(loginUser.id, serie.id, serie.name)" type="button" class="text-blue-1000  hover:text-white border border-blue-1000 hover:bg-blue-1000  focus:outline-none focus:border
-                            focus:ring-0 font-medium rounded-lg text-sm px-4 py-2.5 text-center 
-                            skiptranslate  md:m-2 mb-2 ms-2 md:mt-9   sm:m-2 ">
-                            Siguiente
-                        </button>
-                        <button v-if="localSeriesWatching.find(series => series[serie.id])?.[serie.id].state !== 'end'"
-                            @click.stop="back(loginUser.id, serie.id, serie.name)" type="button" class="text-red-800  hover:text-white border border-red-800 hover:bg-red-800  focus:outline-none focus:border
-                            focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
-                            skiptranslate sm:items-start md:m-2 mb-2 ms-2  md:mb-10 sm:m-2">
-                            Volver
-                        </button>
                     </div>
                 </div>
 

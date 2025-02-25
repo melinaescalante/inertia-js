@@ -61,7 +61,6 @@ onMounted(async () => {
                 <img src="/public/images/camera.svg" alt="Icono de cámara"
                     class="absolute top-1/2 left-1/2 w-6 h-6 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             </div>
-
             </Link>
             <div class="col-span-2 mx-auto ">
 
@@ -82,7 +81,7 @@ onMounted(async () => {
 
                         <Link :href="`/${loginUser.id}/${loginUser.username}/seriesVistasRegistro`">
                         <p class="me-2">Series vistas <span class="text-center block">{{ seriesWatched?.length || 0
-                                }}</span>
+                        }}</span>
                         </p>
                         </Link>
                         <Link :href="`/${loginUser.id}/${loginUser.username}/seguidos`">Seguidos <span
@@ -91,7 +90,7 @@ onMounted(async () => {
                 </div>
 
             </div>
-            <div class="ms-[3vw] md:ms-[6vw] col-span-3 items-start grid grid-rows-auto grid-cols-1  mb-1">
+            <div class="ms-[2vw] md:ms-[2vw] col-span-3 items-start grid grid-rows-auto grid-cols-1  mb-1">
                 <div>
 
                     <p class="m-1 font-medium skiptranslate">{{ loginUser.displayName }}
@@ -101,9 +100,9 @@ onMounted(async () => {
 
                     <p class="m-1 mb-2 text-blue-1000   font-normal  skiptranslate" v-if="loginUser.bio">{{
                         loginUser.bio
-                        }}</p>
+                    }}</p>
                 </div>
-                <div class="flex  skiptranslate items-center justify-center ">
+                <div class="flex  skiptranslate items-center ">
                     <ul class="flex-wrap  flex items-center flex-grow w-full">
                         <li v-for="genre in loginUser.genres"
                             class="rounded-xl bg-opacity-70   border border-orange-0 text-blue-1000  text-sm font-normal px-2 py-1 m-1 text-center">
