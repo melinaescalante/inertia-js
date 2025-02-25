@@ -47,7 +47,7 @@ async function handleSubmit() {
         if (error.code === 'auth/email-already-in-use') {
             msg.value = "El email ingresado ya se encuentra en uso."
         } else if (error.code === 'default') {
-            msg.value = "Ha ocurrido un error inesperado. Por favor inténtelo de nuevo en unos minutos."
+            msg.value = "Ha ocurrido un error inesperado. Por favor intentá de nuevo en unos minutos."
 
         }
     }

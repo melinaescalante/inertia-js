@@ -78,7 +78,7 @@ async function handlePost() {
         refreshCount.value++;
         msgBoolean.value = true
 
-        msg.value = 'Se ha publicado correctamente';
+        msg.value = 'Se ha publicado correctamente el posteo';
         setTimeout(() => {
             msg.value = '';
             router.replace('/')
@@ -130,8 +130,8 @@ function handleImageChange(e) {
     
     <section id="subir-posteo" class="mb-20">
 
-        <div v-show="msg !== 'Se ha publicado correctamente' && msg !== ''" id="boolean-error-msg-uploadpost"
-            v-if="msg !== 'Se ha publicado correctamente' && msg !== ''"
+        <div v-show="msg !== 'Se ha publicado correctamente el posteo' && msg !== ''" id="boolean-error-msg-uploadpost"
+            v-if="msg !== 'Se ha publicado correctamente el posteo' && msg !== ''"
             class="ms-1 shadow-[1px_1px_25px_-8px] mx-auto  shadow-blue-1000 bg-red-200 p-4 m-2 rounded-md fixed gap-2 flex items-center top-[10%] skiptranslate">
             <svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 fill="none" viewBox="0 0 24 24">
@@ -154,7 +154,7 @@ function handleImageChange(e) {
             </button>
         </div>
 
-        <div id="boolean-success-msg-uploadpost" v-if="msg == 'Se ha publicado correctamente'"
+        <div id="boolean-success-msg-uploadpost" v-if="msg == 'Se ha publicado correctamente el posteo'"
             class="shadow-[1px_1px_25px_-8px]  shadow-blue-1000 bg-green-200 fixed w-[100%] max-w-xl mx-auto flex items-center top-[10%]  p-4 m-2 rounded-md skiptranslate">
             <svg class="  w-6 h-6   me-5" aria-hidden="true" stroke-width="2" xmlns="http://www.w3.org/2000/svg"
                 fill="none" stroke=" #1f2937 " viewBox="0 0 22 20">

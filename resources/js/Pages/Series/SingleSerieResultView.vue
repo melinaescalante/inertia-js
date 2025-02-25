@@ -139,7 +139,7 @@ async function start(idUser, idSerie, urlImage) {
                 </div>
             </div>
             <div v-else class="mt-2">
-                <Spinner msg="Cargando informacion de la serie"></Spinner>
+                <Spinner msg="Cargando información de la serie"></Spinner>
             </div>
         </template>
         <CommentSection :loading="loading" :idSerie="serie.id" :comments="comments"></CommentSection>
