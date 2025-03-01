@@ -72,7 +72,7 @@ const scrollToBottom = () => {
         <Suspense>
                 <div class="skiptranslate">
                     <h2 class="sr-only">Mensajes privado</h2>
-                    <div class="flex items-center gap-4 m-4 ms-2">
+                    <div class="flex items-center gap-4 m-4 my-2 ms-2">
                         <img class="w-10 h-10 rounded-full" :src="user.photoURL|| '/noimage.png'" :alt="`Imagen de perfil del usuario ${user.displayName}`">
                         <div class="font-medium ">
                             <div><Link :href="`/perfil/${user.id}`">{{ user.displayName }}
