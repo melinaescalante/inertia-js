@@ -22,7 +22,7 @@ router.replace('/ingresar')
       </form>
       <div class=" mx-auto text-center mt-4">
         
-        <Link class="text-blue-1000 text-center font-medium skiptranslate" href="https://tvonlandingpage.netlify.app">Landing page TVON</Link>
+        <a   target="_blank" class="text-blue-1000 text-center font-medium skiptranslate" href="https://tvonlandingpage.netlify.app">Landing page TVON</a>
       </div>
     </section>
 </template>
