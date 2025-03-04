@@ -165,7 +165,7 @@ function showPassword() {
 
 
                                 </div>
-                                <p class="text-green-600">Este nombre de está disponible.
+                                <p class="text-green-600">Este nombre de usuario está disponible.
                                 </p>
 
                             </div>
