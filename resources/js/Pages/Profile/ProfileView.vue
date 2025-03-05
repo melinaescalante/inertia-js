@@ -94,7 +94,7 @@ async function handleFollowed() {
       <div class="mx-auto col-span-2">
 
         <div class=" grid grid-cols-1 mt-2 grid-rows-2 gap-3  mx-auto ">
-          <div class="">
+          <div class="m-1">
             <!-- <div class="flex items-center flex-wrap justify-stretch gap-4 md:gap-10 "> -->
             <div class=" flex flex-wrap items-center gap-4 md:gap-10 justify-stretch" v-if="user.id !== loginUser.id">
               <p class="font-medium text-start">@{{ user.username }}</p>
@@ -158,7 +158,7 @@ async function handleFollowed() {
       v-if="postsById !== undefined">
       <div v-for="post in postsById" class="mt-5 ">
         <Link :href="`/post/${post.id}`" :id="post.id">
-        <!-- <img :src="post.image ? post.image : '/text.jpg'" :alt="post.serie" class="w-[7rem] h-auto  bg-cover "> -->
+   
         
         <div class="w-[7rem] h-[7rem] bg-cover bg-center "
                     :style="{ backgroundImage: `url(${post.image || '/text.jpg'})` }"></div>
