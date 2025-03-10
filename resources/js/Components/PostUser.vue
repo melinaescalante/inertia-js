@@ -221,7 +221,7 @@ function handleClose() {
             </div>
             <ul v-if="areCommentsVisible && !loadingComments" class="skiptranslate">
 
-                              <li class=" flex flex-col  bg-opacity-35 m-3 p-3 rounded-lg break-words" v-for="comment in commentsArray">
+                              <li class=" flex flex-col  bg-opacity-35 m-3 rounded-lg break-words" v-for="comment in commentsArray">
 
                     <div class="flex gap-4 flex-wrap">
 
