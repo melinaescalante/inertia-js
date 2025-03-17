@@ -17,12 +17,15 @@
 - Subir posteos, eliminar posteo, comentar, dar like y compartir.
 
 - Personalizar tu perfil: géneros preferidos,nombre de usuario.
+- Seguir a amigos
 - Chat en privado.
 - Recomendaciones según géneros favoritos
 - Buscador de series y usuarios.
 - Seguimiento de series: series viendo, vistas y en tu lista.
+- Home personalizada en base a series viendo y en tu lista para ver
 - Vista de cada serie con información de elenco, galería, episodios totales y sus temporadas.
 - Reviews disponibles para cada serie.
+- Puntuación de serie al terminarla.
 
 #### ¿Cómo abrirlo?
 1. Clonar repositorio dentro de la carpeta xampp/  htdocs
